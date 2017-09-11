@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="NumberTile">
+        <attr name="numerator" format="integer"/>
+        <attr name="denominator" format="integer"/>
+    </declare-styleable>
+
+    <declare-styleable name="OperationTile">
+        <attr name="operation" format="enum">
+            <enum name="add" value="0"/>
+            <enum name="subtract" value="1"/>
+            <enum name="multiply" value="2"/>
+            <enum name="divide" value="3"/>
+        </attr>
+    </declare-styleable>
+</resources>
