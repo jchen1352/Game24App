@@ -49,7 +49,6 @@ public abstract class BaseTile extends View {
             textPaint.setColor(Color.GREEN);
             borderPaint.setColor(Color.GREEN);
         }
-        System.out.println("toggled");
         invalidate();
     }
 
