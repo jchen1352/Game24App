@@ -1,4 +1,4 @@
-package org.jeff.game24app;
+package org.jeff.game24app.solver;
 
 import java.util.ArrayList;
 import java.util.List;

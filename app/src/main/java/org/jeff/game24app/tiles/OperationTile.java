@@ -1,14 +1,12 @@
-package org.jeff.game24app;
+package org.jeff.game24app.tiles;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.view.View;
+
+import org.jeff.game24app.R;
+import org.jeff.game24app.solver.Operation;
 
 public class OperationTile extends BaseTile {
 

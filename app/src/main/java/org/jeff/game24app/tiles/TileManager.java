@@ -1,7 +1,9 @@
-package org.jeff.game24app;
+package org.jeff.game24app.tiles;
 
-import android.util.Log;
 import android.view.View;
+
+import org.jeff.game24app.solver.Operation;
+import org.jeff.game24app.solver.Rational;
 
 public class TileManager {
 
@@ -9,8 +11,8 @@ public class TileManager {
     private int numsSelectedLen;
     private NumberTile[] numsSelected;
     private OperationTile opSelected;
-    public View.OnClickListener numListener;
-    public View.OnClickListener opListener;
+    private View.OnClickListener numListener;
+    private View.OnClickListener opListener;
 
     public TileManager() {
         numsSelectedLen = 0;
@@ -74,13 +76,16 @@ public class TileManager {
         };
     }
 
+    public View.OnClickListener getNumListener() {
+        return numListener;
+    }
+
+    public View.OnClickListener getOpListener() {
+        return opListener;
+    }
+
     private boolean readyForOperation() {
         boolean ready = numsSelectedLen == 2 && opSelected != null;
-        if (ready) {
-            Log.d("ready", "ready for operation");
-        } else {
-            Log.d("ready", "not yet ready");
-        }
         return numsSelectedLen == 2 && opSelected != null;
     }
 
@@ -92,10 +97,13 @@ public class TileManager {
         Rational num0 = numTile0.getValue();
         Rational num1 = numTile1.getValue();
         Operation.ArithmeticOp op = opSelected.getOp();
-        Operation operation = new Operation(num0, num1, op);
-        Rational result = operation.evaluate();
-        numTile1.setValue(result);
-        numTile0.setExists(false);
+        //don't divide by 0
+        if (!(op == Operation.ArithmeticOp.DIVIDE && num1.getNumerator() == 0)) {
+            Operation operation = new Operation(num0, num1, op);
+            Rational result = operation.evaluate();
+            numTile1.setValue(result);
+            numTile0.setExists(false);
+        }
 
         //reset selections
         numTile0.toggle();

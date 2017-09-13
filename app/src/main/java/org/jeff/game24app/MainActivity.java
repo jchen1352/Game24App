@@ -1,9 +1,15 @@
 package org.jeff.game24app;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+
+import org.jeff.game24app.solver.Game24Generator;
+import org.jeff.game24app.solver.Rational;
+import org.jeff.game24app.tiles.NumberTile;
+import org.jeff.game24app.tiles.OperationTile;
+import org.jeff.game24app.tiles.TileManager;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -52,14 +58,14 @@ public class MainActivity extends AppCompatActivity {
         tileMul = (OperationTile) findViewById(R.id.tile_multiply);
         tileDiv = (OperationTile) findViewById(R.id.tile_divide);
         tileManager = new TileManager();
-        tile0.setOnClickListener(tileManager.numListener);
-        tile1.setOnClickListener(tileManager.numListener);
-        tile2.setOnClickListener(tileManager.numListener);
-        tile3.setOnClickListener(tileManager.numListener);
-        tileAdd.setOnClickListener(tileManager.opListener);
-        tileSub.setOnClickListener(tileManager.opListener);
-        tileMul.setOnClickListener(tileManager.opListener);
-        tileDiv.setOnClickListener(tileManager.opListener);
+        tile0.setOnClickListener(tileManager.getNumListener());
+        tile1.setOnClickListener(tileManager.getNumListener());
+        tile2.setOnClickListener(tileManager.getNumListener());
+        tile3.setOnClickListener(tileManager.getNumListener());
+        tileAdd.setOnClickListener(tileManager.getOpListener());
+        tileSub.setOnClickListener(tileManager.getOpListener());
+        tileMul.setOnClickListener(tileManager.getOpListener());
+        tileDiv.setOnClickListener(tileManager.getOpListener());
     }
 
     private void setupPuzzle(Rational[] puzzle) {

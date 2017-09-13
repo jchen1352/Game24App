@@ -1,4 +1,4 @@
-package org.jeff.game24app;
+package org.jeff.game24app.solver;
 
 public class Game24Generator {
 

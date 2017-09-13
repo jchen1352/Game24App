@@ -1,9 +1,9 @@
-package org.jeff.game24app;
+package org.jeff.game24app.solver;
 
 public class Operation {
 
     private Rational num0, num1;
-    enum ArithmeticOp {
+    public enum ArithmeticOp {
         ADD,
         SUBTRACT,
         MULTIPLY,

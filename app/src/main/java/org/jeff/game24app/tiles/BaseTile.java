@@ -1,4 +1,4 @@
-package org.jeff.game24app;
+package org.jeff.game24app.tiles;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -7,7 +7,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 public abstract class BaseTile extends View {

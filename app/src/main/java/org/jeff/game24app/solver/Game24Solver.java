@@ -1,4 +1,4 @@
-package org.jeff.game24app;
+package org.jeff.game24app.solver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,16 +16,6 @@ public class Game24Solver {
 		solutions = new HashSet<Solution>();
 		solutionBuffer.add(new Solution(new SolutionSteps(), numbers));
 	}
-	
-//	public Game24Solver(int[] ints) {
-//		Rational[] numbers = new Rational[ints.length];
-//		for (int i = 0; i < ints.length; i++) {
-//			numbers[i] = new Rational(ints[i]);
-//		}
-//		solutionBuffer = new ArrayList<Solution>();
-//		solutions = new HashSet<Solution>();
-//		solutionBuffer.add(new Solution(new SolutionSteps(), numbers));
-//	}
 
 	public boolean isSolvable() {
         return !getSolutions().isEmpty();

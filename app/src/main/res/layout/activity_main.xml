@@ -18,25 +18,25 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/op_tile_group">
 
-        <org.jeff.game24app.NumberTile
+        <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile0"
             style="@style/NumTile"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
-        <org.jeff.game24app.NumberTile
+        <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile1"
             style="@style/NumTile"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 
-        <org.jeff.game24app.NumberTile
+        <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile2"
             style="@style/NumTile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintLeft_toLeftOf="parent" />
 
-        <org.jeff.game24app.NumberTile
+        <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile3"
             style="@style/NumTile"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -52,7 +52,7 @@
         app:layout_constraintTop_toBottomOf="@+id/num_tile_group"
         app:layout_constraintBottom_toTopOf="@+id/buttons">
 
-        <org.jeff.game24app.OperationTile
+        <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_add"
             style="@style/OpTile"
             app:layout_constraintStart_toStartOf="parent"
@@ -61,7 +61,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="add" />
 
-        <org.jeff.game24app.OperationTile
+        <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_subtract"
             style="@style/OpTile"
             app:layout_constraintStart_toEndOf="@id/tile_add"
@@ -70,7 +70,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="subtract" />
 
-        <org.jeff.game24app.OperationTile
+        <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_multiply"
             style="@style/OpTile"
             app:layout_constraintStart_toEndOf="@id/tile_subtract"
@@ -79,7 +79,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="multiply" />
 
-        <org.jeff.game24app.OperationTile
+        <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_divide"
             style="@style/OpTile"
             app:layout_constraintStart_toEndOf="@id/tile_multiply"
