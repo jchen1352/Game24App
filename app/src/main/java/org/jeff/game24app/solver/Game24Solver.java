@@ -2,26 +2,24 @@ package org.jeff.game24app.solver;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Game24Solver {
 	
 	private List<Solution> solutionBuffer;
-	private Set<Solution> solutions;
+	private List<Solution> solutions;
 	
 	public Game24Solver(Rational[] numbers) {
 		solutionBuffer = new ArrayList<Solution>();
-		solutions = new HashSet<Solution>();
-		solutionBuffer.add(new Solution(new SolutionSteps(), numbers));
+		solutions = new ArrayList<Solution>();
+		solutionBuffer.add(new Solution(new ArrayList<Operation>(), numbers));
 	}
 
 	public boolean isSolvable() {
         return !getSolutions().isEmpty();
     }
 	
-	public Set<Solution> getSolutions() {
+	public List<Solution> getSolutions() {
 		while (!solutionBuffer.isEmpty()) {
 			updateBufferOnce();
 		}
@@ -51,13 +49,12 @@ public class Game24Solver {
 					if (numbers[i].compareTo(numbers[j]) > 0) {
 						ops.add(new Operation(numbers[i], numbers[j], Operation.ArithmeticOp.ADD));
 						ops.add(new Operation(numbers[i], numbers[j], Operation.ArithmeticOp.MULTIPLY));
+						ops.add(new Operation(numbers[i], numbers[j], Operation.ArithmeticOp.SUBTRACT));
 					}
 					else {
 						ops.add(new Operation(numbers[j], numbers[i], Operation.ArithmeticOp.ADD));
 						ops.add(new Operation(numbers[j], numbers[i], Operation.ArithmeticOp.MULTIPLY));
 					}
-					ops.add(new Operation(numbers[i], numbers[j], Operation.ArithmeticOp.SUBTRACT));
-					ops.add(new Operation(numbers[j], numbers[i], Operation.ArithmeticOp.SUBTRACT));
 					Operation divideOp0 = new Operation(numbers[i], numbers[j], Operation.ArithmeticOp.DIVIDE);
 					if (divideOp0.canDivide()) {
 						ops.add(divideOp0);
@@ -69,9 +66,9 @@ public class Game24Solver {
 					
 					for (Operation op : ops) {
 						newNumbers[newI] = op.evaluate();
-						SolutionSteps stepsCopy = sol.getSteps().copy();
-						stepsCopy.addStep(op);
-						solutionBuffer.add(new Solution(stepsCopy, Arrays.copyOf(newNumbers, newNumbers.length)));
+						List<Operation> steps = sol.getOpsCopy();
+						steps.add(op);
+						solutionBuffer.add(new Solution(steps, Arrays.copyOf(newNumbers, newNumbers.length)));
 					}
 				}
 			}
