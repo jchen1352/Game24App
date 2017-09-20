@@ -6,7 +6,6 @@ import android.view.View;
 import android.widget.ImageButton;
 
 import org.jeff.game24app.solver.Game24Generator;
-import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
 import org.jeff.game24app.tiles.NumberTile;
 import org.jeff.game24app.tiles.OperationTile;
@@ -65,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
         for (NumberTile tile : numTiles) {
             tile.setOnClickListener(tileManager.getNumListener());
         }
+
         for (OperationTile tile : opTiles) {
             tile.setOnClickListener(tileManager.getOpListener());
         }
@@ -89,4 +89,5 @@ public class MainActivity extends AppCompatActivity {
     public void restartPuzzle() {
         setupPuzzle(generator.restartPuzzle());
     }
+
 }

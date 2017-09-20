@@ -2,15 +2,22 @@ package org.jeff.game24app.tiles;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 
 import org.jeff.game24app.R;
 import org.jeff.game24app.solver.Operation;
 
+/**
+ * A tile that handles an Operation.
+ */
 public class OperationTile extends BaseTile {
 
     private Operation.ArithmeticOp op;
+
+    private static final int PAD = 50;
 
     public OperationTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -27,21 +34,26 @@ public class OperationTile extends BaseTile {
     }
 
     @Override
-    protected String getString() {
-        String opString = "";
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        Drawable pic;
         switch (op) {
             case ADD:
-                opString = "+";
+                pic = getResources().getDrawable(R.drawable.ic_op_add, null);
                 break;
             case SUBTRACT:
-                opString = "-";
+                pic = getResources().getDrawable(R.drawable.ic_op_sub, null);
                 break;
             case MULTIPLY:
-                opString = "*";
+                pic = getResources().getDrawable(R.drawable.ic_op_mul, null);
                 break;
             case DIVIDE:
-                opString = "/";
+                pic = getResources().getDrawable(R.drawable.ic_op_div, null);
+                break;
+            default:
+                pic = getResources().getDrawable(R.drawable.ic_op_add, null);
         }
-        return opString;
+        pic.setBounds(PAD, PAD, getWidth() - PAD, getHeight() - PAD);
+        pic.draw(canvas);
     }
 }

@@ -9,12 +9,10 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/num_tile_group"
-        android:layout_width="300dp"
-        android:layout_height="300dp"
-        android:layout_marginTop="25dp"
-        android:layout_marginBottom="25dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="@dimen/num_group_width"
+        android:layout_height="@dimen/num_group_height"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/op_tile_group">
 
@@ -22,41 +20,49 @@
             android:id="@+id/tile0"
             style="@style/NumTile"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tile1"
+            app:layout_constraintBottom_toTopOf="@+id/tile2" />
 
         <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile1"
             style="@style/NumTile"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/tile3"
+            app:layout_constraintLeft_toRightOf="@id/tile0"/>
 
         <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile2"
             style="@style/NumTile"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent" />
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tile3"
+            app:layout_constraintTop_toBottomOf="@id/tile0"/>
 
         <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile3"
             style="@style/NumTile"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tile2"
+            app:layout_constraintTop_toBottomOf="@id/tile1"/>
     </android.support.constraint.ConstraintLayout>
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/op_tile_group"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/num_tile_group"
         app:layout_constraintBottom_toTopOf="@+id/buttons">
 
         <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_add"
             style="@style/OpTile"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/tile_subtract"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/tile_subtract"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="add" />
@@ -64,8 +70,8 @@
         <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_subtract"
             style="@style/OpTile"
-            app:layout_constraintStart_toEndOf="@id/tile_add"
-            app:layout_constraintEnd_toStartOf="@+id/tile_multiply"
+            app:layout_constraintLeft_toRightOf="@id/tile_add"
+            app:layout_constraintRight_toLeftOf="@+id/tile_multiply"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="subtract" />
@@ -73,8 +79,8 @@
         <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_multiply"
             style="@style/OpTile"
-            app:layout_constraintStart_toEndOf="@id/tile_subtract"
-            app:layout_constraintEnd_toStartOf="@+id/tile_divide"
+            app:layout_constraintLeft_toRightOf="@id/tile_subtract"
+            app:layout_constraintRight_toLeftOf="@+id/tile_divide"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="multiply" />
@@ -82,8 +88,8 @@
         <org.jeff.game24app.tiles.OperationTile
             android:id="@+id/tile_divide"
             style="@style/OpTile"
-            app:layout_constraintStart_toEndOf="@id/tile_multiply"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/tile_multiply"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
             app:operation="divide" />
@@ -94,8 +100,8 @@
         android:id="@+id/buttons"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/op_tile_group"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -105,8 +111,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_add_black_24dp"
             android:contentDescription="new"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/restart_button"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/restart_button"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -116,8 +122,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_refresh_black_24dp"
             android:contentDescription="restart"
-            app:layout_constraintStart_toEndOf="@id/new_button"
-            app:layout_constraintEnd_toStartOf="@+id/hint_button"
+            app:layout_constraintLeft_toRightOf="@id/new_button"
+            app:layout_constraintRight_toLeftOf="@+id/hint_button"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
@@ -127,11 +133,18 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_lightbulb_outline_black_24dp"
             android:contentDescription="hint"
-            app:layout_constraintStart_toEndOf="@id/restart_button"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintLeft_toRightOf="@id/restart_button"
+            app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     </android.support.constraint.ConstraintLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/credits"/>
 
 </android.support.constraint.ConstraintLayout>

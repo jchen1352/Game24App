@@ -106,6 +106,10 @@ public class TileManager {
         if (!(op == Operation.ArithmeticOp.DIVIDE && num1.getNumerator() == 0)) {
             Operation operation = new Operation(num0, num1, op);
             Rational result = operation.evaluate();
+            //Take absolute value because negatives aren't necessary
+            if (result.getDoubleValue() < 0) {
+                result = new Rational(-result.getNumerator(), result.getDenominator());
+            }
             numTile1.setValue(result);
             numTile0.setExists(false);
             numExists--;
