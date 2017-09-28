@@ -1,9 +1,11 @@
 package org.jeff.game24app;
 
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Rational;
@@ -11,7 +13,7 @@ import org.jeff.game24app.tiles.NumberTile;
 import org.jeff.game24app.tiles.OperationTile;
 import org.jeff.game24app.tiles.TileManager;
 
-public class MainActivity extends AppCompatActivity {
+public class GameActivity extends AppCompatActivity {
 
     private NumberTile tile0, tile1, tile2, tile3;
     private NumberTile[] numTiles;
@@ -24,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_game);
         setupTiles();
 
         generator = new Game24Generator();

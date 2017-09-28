@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="org.jeff.game24app.MainActivity">
+    tools:context="org.jeff.game24app.GameActivity">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/num_tile_group"
@@ -141,10 +141,11 @@
     </android.support.constraint.ConstraintLayout>
 
     <TextView
+        android:id="@+id/credits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/credits"/>
+        android:text="@string/credits" />
 
 </android.support.constraint.ConstraintLayout>

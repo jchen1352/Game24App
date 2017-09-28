@@ -2,7 +2,7 @@ package org.jeff.game24app.tiles;
 
 import android.view.View;
 
-import org.jeff.game24app.MainActivity;
+import org.jeff.game24app.GameActivity;
 import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
 
@@ -15,9 +15,9 @@ public class TileManager {
     private OperationTile opSelected;
     private View.OnClickListener numListener;
     private View.OnClickListener opListener;
-    private MainActivity activity;
+    private GameActivity activity;
 
-    public TileManager(MainActivity a) {
+    public TileManager(GameActivity a) {
         numsSelectedLen = 0;
         numsSelected = new NumberTile[2];
         numExists = 4;

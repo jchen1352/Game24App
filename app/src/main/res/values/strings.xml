@@ -1,4 +1,11 @@
 <resources>
     <string name="app_name">Game24App</string>
     <string name="credits">Art from Vecteezy</string>
+    <string name="start">Play!</string>
+    <string name="time_trial">Time Trial</string>
+    <string name="free_play">Free Play</string>
+    <string name="easy">Easy</string>
+    <string name="medium">Medium</string>
+    <string name="hard">Hard</string>
+    <string name="back">Back</string>
 </resources>

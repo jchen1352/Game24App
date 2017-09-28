@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.jeff.game24app.R;
-import org.jeff.game24app.animations.TileAnimatorFactory;
+import org.jeff.game24app.animations.ViewAnimatorFactory;
 
 /**
  * The base View that encompasses the tiles in the game.
@@ -25,7 +25,7 @@ public abstract class BaseTile extends View {
         super(context, attrs);
         boundingRect = new Rect();
         isSelected = false;
-        animator = new TileAnimatorFactory(this).getAnimator();
+        animator = new ViewAnimatorFactory(this).getBobbleAnimator();
     }
 
     /**
