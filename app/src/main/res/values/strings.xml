@@ -4,8 +4,7 @@
     <string name="start">Play!</string>
     <string name="time_trial">Time Trial</string>
     <string name="free_play">Free Play</string>
-    <string name="easy">Easy</string>
-    <string name="medium">Medium</string>
-    <string name="hard">Hard</string>
+    <string name="classic">Classic</string>
+    <string name="fractions">Fractions</string>
     <string name="back">Back</string>
 </resources>

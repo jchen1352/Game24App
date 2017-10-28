@@ -1,4 +1,4 @@
-package org.jeff.game24app;
+package org.jeff.game24app.views;
 
 import android.animation.Animator;
 import android.content.Context;

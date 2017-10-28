@@ -54,6 +54,7 @@ public class Game24Solver {
 					else {
 						ops.add(new Operation(numbers[j], numbers[i], Operation.ArithmeticOp.ADD));
 						ops.add(new Operation(numbers[j], numbers[i], Operation.ArithmeticOp.MULTIPLY));
+						ops.add(new Operation(numbers[j], numbers[i], Operation.ArithmeticOp.SUBTRACT));
 					}
 					Operation divideOp0 = new Operation(numbers[i], numbers[j], Operation.ArithmeticOp.DIVIDE);
 					if (divideOp0.canDivide()) {

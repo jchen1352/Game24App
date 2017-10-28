@@ -1,24 +1,20 @@
 package org.jeff.game24app;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
-import android.widget.RadioGroup;
 
-import org.jeff.game24app.animations.ViewAnimatorFactory;
+import org.jeff.game24app.views.HomeButton;
+import org.jeff.game24app.views.HomeRadioGroup;
 
 public class HomeActivity extends AppCompatActivity {
 
+    public static final String GEN_FRAC = "gen_frac";
     private HomeButton start, timeTrial, freePlay, back;
-    private RadioGroup difficulty;
-    //Temporary for animating the radio group
-    private Animator difficultyFadeIn, difficultyFadeOut;
+    private HomeRadioGroup difficulty;
     private boolean atSelectionScreen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +26,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 timeTrial.fadeIn();
                 freePlay.fadeIn();
-                difficulty.setVisibility(View.VISIBLE);
-                difficultyFadeIn.start();
+                difficulty.fadeIn();
                 back.fadeIn();
                 start.fadeOut();
                 atSelectionScreen = true;
@@ -53,15 +48,13 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, GameActivity.class);
+                intent.putExtra(GEN_FRAC, difficulty.getCheckedRadioButtonId() == R.id.fractions);
                 startActivity(intent);
             }
         });
 
-        difficulty = (RadioGroup) findViewById(R.id.difficulty);
+        difficulty = (HomeRadioGroup) findViewById(R.id.difficulty);
         difficulty.setVisibility(View.GONE);
-        ViewAnimatorFactory factory = new ViewAnimatorFactory(difficulty);
-        difficultyFadeIn = factory.getFadeInAnimator();
-        difficultyFadeOut = factory.getFadeOutAnimator();
 
         back = (HomeButton) findViewById(R.id.back);
         back.setVisibility(View.GONE);
@@ -79,7 +72,7 @@ public class HomeActivity extends AppCompatActivity {
         start.fadeIn();
         timeTrial.fadeOut();
         freePlay.fadeOut();
-        difficultyFadeOut.start();
+        difficulty.fadeOut();
         back.fadeOut();
         atSelectionScreen = false;
     }

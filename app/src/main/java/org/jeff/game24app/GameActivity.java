@@ -1,11 +1,10 @@
 package org.jeff.game24app;
 
-import android.graphics.Typeface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Rational;
@@ -29,7 +28,8 @@ public class GameActivity extends AppCompatActivity {
         setContentView(R.layout.activity_game);
         setupTiles();
 
-        generator = new Game24Generator();
+        Intent intent = getIntent();
+        generator = new Game24Generator(intent.getBooleanExtra(HomeActivity.GEN_FRAC, false));
 
         newButton = (ImageButton) findViewById(R.id.new_button);
         restartButton = (ImageButton) findViewById(R.id.restart_button);
@@ -85,7 +85,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void newPuzzle() {
-        setupPuzzle(generator.generateIntPuzzle());
+        setupPuzzle(generator.generatePuzzle());
     }
 
     public void restartPuzzle() {
