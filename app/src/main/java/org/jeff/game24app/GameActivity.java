@@ -12,7 +12,7 @@ import org.jeff.game24app.tiles.NumberTile;
 import org.jeff.game24app.tiles.OperationTile;
 import org.jeff.game24app.tiles.TileManager;
 
-public class GameActivity extends AppCompatActivity {
+public class GameActivity extends BaseActivity {
 
     private NumberTile tile0, tile1, tile2, tile3;
     private NumberTile[] numTiles;

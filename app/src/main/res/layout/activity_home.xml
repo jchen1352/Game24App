@@ -76,13 +76,32 @@
         app:layout_constraintTop_toBottomOf="@id/difficulty"
         android:text="@string/back"/>
 
-    <ImageButton
-        android:id="@+id/settings"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
+    <ToggleButton
+        android:id="@+id/music"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/volume_button_margin"
+        android:layout_marginRight="@dimen/volume_button_margin"
         app:layout_constraintTop_toTopOf="parent"
-        android:src="@drawable/ic_settings_black_24dp"
-        android:background="?android:selectableItemBackground"/>
+        app:layout_constraintRight_toLeftOf="@+id/sound"
+        android:textOn=""
+        android:textOff=""
+        android:background="@null"
+        android:button="@drawable/music_button"
+        android:checked="true"/>
+
+    <ToggleButton
+        android:id="@+id/sound"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="@dimen/volume_button_margin"
+        android:layout_marginRight="@dimen/volume_button_margin"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:textOn=""
+        android:textOff=""
+        android:background="@null"
+        android:button="@drawable/sound_button"
+        android:checked="true"/>
 
 </android.support.constraint.ConstraintLayout>
