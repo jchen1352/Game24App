@@ -8,4 +8,9 @@
     <string name="fractions">Fractions</string>
     <string name="back">Back</string>
     <string name="settings_title">Settings</string>
+    <string name="score">Score: %1$d</string>
+    <string name="game_over">Time\'s Up!</string>
+    <string name="game_over_score">Your Score was: %1$d</string>
+    <string name="game_over_replay">Play Again</string>
+    <string name="game_over_end">Main Menu</string>
 </resources>

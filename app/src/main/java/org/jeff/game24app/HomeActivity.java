@@ -18,11 +18,15 @@ import org.jeff.game24app.views.HomeRadioGroup;
 
 public class HomeActivity extends BaseActivity {
 
+    /** Intent key that determines generating fraction puzzles **/
     public static final String GEN_FRAC = "gen_frac";
-    private HomeButton start, timeTrial, freePlay, back;
+    /** Intent key that determines time trial mode for game **/
+    public static final String TIME_TRIAL = "time_trial";
+    private HomeButton start, settings, timeTrial, freePlay, back;
     private HomeRadioGroup difficulty;
     private boolean atSelectionScreen;
     private ToggleButton musicButton, soundButton;
+    private AlertDialog settingsDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,21 +36,25 @@ public class HomeActivity extends BaseActivity {
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                timeTrial.fadeIn();
-                freePlay.fadeIn();
-                difficulty.fadeIn();
-                back.fadeIn();
-                start.fadeOut();
-                atSelectionScreen = true;
+                onStartClicked();
             }
         });
+
+        settings = (HomeButton) findViewById(R.id.settings);
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onSettingsClicked();
+            }
+        });
+        setupSettingsDialog();
 
         timeTrial = (HomeButton) findViewById(R.id.time_trial);
         timeTrial.setVisibility(View.GONE);
         timeTrial.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                onTimeTrialClicked();
             }
         });
 
@@ -55,9 +63,7 @@ public class HomeActivity extends BaseActivity {
         freePlay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, GameActivity.class);
-                intent.putExtra(GEN_FRAC, difficulty.getCheckedRadioButtonId() == R.id.fractions);
-                startActivity(intent);
+                onFreePlayClicked();
             }
         });
 
@@ -73,7 +79,14 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        musicButton = (ToggleButton) findViewById(R.id.music);
+        atSelectionScreen = false;
+    }
+
+    private void setupSettingsDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.dialog_settings, null);
+        musicButton = (ToggleButton) layout.findViewById(R.id.music);
         musicButton.setChecked(playMusic);
         musicButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,13 +100,42 @@ public class HomeActivity extends BaseActivity {
                 updatePreferences(playMusic);
             }
         });
-        soundButton = (ToggleButton) findViewById(R.id.sound);
+        soundButton = (ToggleButton) layout.findViewById(R.id.sound);
+        builder.setView(layout);
+        settingsDialog = builder.create();
+    }
 
-        atSelectionScreen = false;
+    private void onStartClicked() {
+        timeTrial.fadeIn();
+        freePlay.fadeIn();
+        difficulty.fadeIn();
+        back.fadeIn();
+        start.fadeOut();
+        settings.fadeOut();
+        atSelectionScreen = true;
+    }
+
+    private void onSettingsClicked() {
+        settingsDialog.show();
+    }
+
+    private void onTimeTrialClicked() {
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GEN_FRAC, difficulty.getCheckedRadioButtonId() == R.id.fractions);
+        intent.putExtra(TIME_TRIAL, true);
+        startActivity(intent);
+    }
+
+    private void onFreePlayClicked() {
+        Intent intent = new Intent(this, GameActivity.class);
+        intent.putExtra(GEN_FRAC, difficulty.getCheckedRadioButtonId() == R.id.fractions);
+        intent.putExtra(TIME_TRIAL, false);
+        startActivity(intent);
     }
 
     public void back() {
         start.fadeIn();
+        settings.fadeIn();
         timeTrial.fadeOut();
         freePlay.fadeOut();
         difficulty.fadeOut();
