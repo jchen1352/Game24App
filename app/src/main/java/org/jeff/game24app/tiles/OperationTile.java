@@ -17,7 +17,8 @@ public class OperationTile extends BaseTile {
 
     private Operation.ArithmeticOp op;
 
-    private static final int PAD = 50;
+    /** Padding from tile border as percentage of side length **/
+    private static final float PAD = .18f;
 
     public OperationTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -53,7 +54,8 @@ public class OperationTile extends BaseTile {
             default:
                 pic = getResources().getDrawable(R.drawable.ic_op_add, null);
         }
-        pic.setBounds(PAD, PAD, getWidth() - PAD, getHeight() - PAD);
+        int pad = (int) (getWidth() * PAD);
+        pic.setBounds(pad, pad, getWidth() - pad, getHeight() - pad);
         pic.draw(canvas);
     }
 }

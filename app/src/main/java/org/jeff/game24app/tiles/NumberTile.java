@@ -3,9 +3,11 @@ package org.jeff.game24app.tiles;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import org.jeff.game24app.R;
@@ -18,8 +20,13 @@ public class NumberTile extends BaseTile {
 
     private Rational value;
     private boolean exists;
-    private static final int PAD = 100, FRAC_HEIGHT = 20, FRAC_PAD = 15;
-    /** Width to height ratio **/
+    /** Padding from tile border as percentage of side length **/
+    private static final float PAD = .18f;
+    /** Height of fraction bar as percentage of tile side length **/
+    private static final float FRAC_HEIGHT = .03f;
+    /** Padding from fraction bar as percentage of tile side length **/
+    private static final float FRAC_PAD = .05f;
+    /** Width to height ratio of a single digit **/
     private static final float WH_RATIO = 195.5f/335;
     /** Gap between two digits as a percentage of width **/
     private static final float GAP = .1f;
@@ -28,6 +35,8 @@ public class NumberTile extends BaseTile {
     private Rect[] numeratorBounds;
     private Rect[] denominatorBounds;
     private boolean boundsValid;
+
+    private static Paint digitColor;
 
     public NumberTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -40,6 +49,11 @@ public class NumberTile extends BaseTile {
         value = new Rational(numerator, denominator);
         dims = new Rect();
         boundsValid = false;
+
+        if (digitColor == null) {
+            digitColor = new Paint();
+            digitColor.setColor(ContextCompat.getColor(getContext(), R.color.number_color));
+        }
     }
 
     public Rational getValue() {
@@ -68,22 +82,25 @@ public class NumberTile extends BaseTile {
             int numerator = value.getNumerator();
             int denominator = value.getDenominator();
             if (!boundsValid) {
+                //Tile should be a square
+                int sideLength = getWidth();
+                int pad = (int) (sideLength * PAD);
                 if (denominator == 1) {
-                    dims.left = PAD;
-                    dims.top = PAD;
-                    dims.right = getWidth() - PAD;
-                    dims.bottom = getHeight() - PAD;
+                    dims.left = pad;
+                    dims.top = pad;
+                    dims.right = sideLength - pad;
+                    dims.bottom = sideLength - pad;
                     numeratorBounds = getPicBounds(dims, numerator);
                 } else {
-                    dims.left = PAD;
-                    dims.top = PAD;
-                    dims.right = getWidth() - PAD;
-                    dims.bottom = getHeight()/2 - FRAC_PAD;
+                    dims.left = pad;
+                    dims.top = pad;
+                    dims.right = sideLength - pad;
+                    dims.bottom = sideLength/2 - (int) (sideLength * FRAC_PAD);
                     numeratorBounds = getPicBounds(dims, numerator);
-                    dims.left = PAD;
-                    dims.top = getHeight()/2 + FRAC_PAD;
-                    dims.right = getWidth() - PAD;
-                    dims.bottom = getHeight() - PAD;
+                    dims.left = pad;
+                    dims.top = sideLength/2 + (int) (sideLength * FRAC_PAD);
+                    dims.right = sideLength - pad;
+                    dims.bottom = sideLength - pad;
                     denominatorBounds = getPicBounds(dims, denominator);
                 }
                 boundsValid = true;
@@ -100,16 +117,21 @@ public class NumberTile extends BaseTile {
 
             //Draw denominator if necessary
             if (denominator != 1) {
-                pic = getResources().getDrawable(R.drawable.ic_fraction_bar, null);
-                pic.setBounds(PAD, getHeight()/2 - FRAC_HEIGHT/2,
-                        getWidth() - PAD, getHeight()/2 + FRAC_HEIGHT/2);
-                pic.draw(canvas);
                 for (int i = 0; i < denominatorBounds.length; i++) {
                     pic = getResources().getDrawable(getDigitID(denominator % 10), null);
                     pic.setBounds(denominatorBounds[denominatorBounds.length-i-1]);
                     pic.draw(canvas);
                     denominator /= 10;
                 }
+                //Get farthest left and right bounds for numerator/denominator
+                //to determine how long fraction bar should be
+                int left = Math.min(numeratorBounds[0].left, denominatorBounds[0].left);
+                int right = Math.max(numeratorBounds[numeratorBounds.length-1].right,
+                        denominatorBounds[denominatorBounds.length-1].right);
+                float heightOffset = getHeight() * FRAC_HEIGHT / 2;
+                canvas.drawRect(left, getHeight()/2 - heightOffset,
+                        right, getHeight()/2 + heightOffset, digitColor);
+
             }
         }
     }
@@ -124,7 +146,7 @@ public class NumberTile extends BaseTile {
     private Rect[] getPicBounds(Rect constraints, int number) {
         int height = constraints.height();
         int widthDigit = (int)(height * WH_RATIO);
-        int numDigits = getNumDigits(number);
+        int numDigits = number <= 0 ? 1 : (int)(Math.log10(number) + 1);
         int gap = (int)(widthDigit * GAP);
         int width = numDigits * (widthDigit + gap) - gap;
         if (width > constraints.width()) {
@@ -174,10 +196,5 @@ public class NumberTile extends BaseTile {
             default:
                 return R.drawable.ic_digit_0;
         }
-    }
-
-    private int getNumDigits(int number) {
-        //number should not be negative
-        return number <= 0 ? 1 : (int)(Math.log10(number) + 1);
     }
 }
