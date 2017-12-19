@@ -23,11 +23,20 @@
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/game_over_score" />
 
+    <TextView
+        android:id="@+id/hi_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/score"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:text="@string/game_over_hi_score"/>
+
     <Button
         android:id="@+id/restart_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@+id/score"
+        app:layout_constraintTop_toBottomOf="@+id/hi_score"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/return_button"
         android:text="@string/game_over_replay" />
@@ -36,7 +45,7 @@
         android:id="@+id/return_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/score"
+        app:layout_constraintTop_toBottomOf="@id/hi_score"
         app:layout_constraintLeft_toRightOf="@id/restart_button"
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/game_over_end" />

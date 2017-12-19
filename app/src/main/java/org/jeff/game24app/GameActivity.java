@@ -1,6 +1,7 @@
 package org.jeff.game24app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
@@ -31,10 +32,10 @@ public class GameActivity extends BaseActivity {
     private ImageButton settingsButton, restartButton, hintButton;
     private Button replayButton, returnButton;
     private boolean timeTrialMode;
-    private TextView scoreView, finalScoreView;
+    private TextView scoreView, finalScoreView, finalHiScoreView;
     private int score;
     private TextView time;
-    private static final long TIME_LIMIT = 1000 * 60 * 5; // 5 minutes
+    private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes
     private static final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
     private CountDownTimer timer;
     private AlertDialog gameOverDialog;
@@ -73,7 +74,6 @@ public class GameActivity extends BaseActivity {
             time.setVisibility(View.GONE);
         } else {
             setupTimer();
-            setupGameOverDialog();
             setupTimeTrial();
         }
         newPuzzle();
@@ -96,6 +96,7 @@ public class GameActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 time.setText(sdf.format(new Date(0)));
+                setupGameOverDialog();
                 gameOverDialog.show();
             }
         };
@@ -123,6 +124,18 @@ public class GameActivity extends BaseActivity {
             }
         });
         finalScoreView = (TextView) layout.findViewById(R.id.score);
+        finalScoreView.setText(getString(R.string.game_over_score, score));
+        finalHiScoreView = (TextView) layout.findViewById(R.id.hi_score);
+        if (score > hiScore) {
+            hiScore = score;
+            finalHiScoreView.setText(getString(R.string.new_hi_score));
+            SharedPreferences preferences = getSharedPreferences(PREFS, 0);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putInt(SCORE_PREF, hiScore);
+            editor.apply();
+        } else {
+            finalHiScoreView.setText(getString(R.string.game_over_hi_score, hiScore));
+        }
         builder.setView(layout);
         builder.setCancelable(false);
         gameOverDialog = builder.create();
@@ -170,7 +183,6 @@ public class GameActivity extends BaseActivity {
         if (timeTrialMode) {
             score++;
             scoreView.setText(getResources().getString(R.string.score, score));
-            finalScoreView.setText(getResources().getString(R.string.game_over_score, score));
         }
     }
 

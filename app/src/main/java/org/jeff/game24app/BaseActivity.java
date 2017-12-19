@@ -11,8 +11,10 @@ public class BaseActivity extends AppCompatActivity {
     private static int sessionDepth = 0;
     protected Intent musicIntent;
     protected boolean playMusic;
+    protected int hiScore;
     protected static final String PREFS = "prefs";
     protected static final String MUSIC_PREF = "music_pref";
+    protected static final String SCORE_PREF = "score_pref";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -20,6 +22,7 @@ public class BaseActivity extends AppCompatActivity {
         musicIntent = new Intent(this, MusicService.class);
         SharedPreferences preferences = getSharedPreferences(PREFS, 0);
         playMusic = preferences.getBoolean(MUSIC_PREF, true);
+        hiScore = preferences.getInt(SCORE_PREF, -1);
     }
 
     @Override
