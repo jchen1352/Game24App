@@ -9,16 +9,20 @@ public class Solution {
     /** Contains the numbers remaining after doing ops **/
     private Rational[] numbers;
 
-    public Solution(List<Operation> ops, Rational[] numbers) {
+    Solution(List<Operation> ops, Rational[] numbers) {
         this.ops = ops;
         this.numbers = numbers;
     }
 
-    public Rational[] getNumbers() {
+    Rational[] getNumbers() {
         return numbers;
     }
 
-    public List<Operation> getOpsCopy() {
+    List<Operation> getOps() {
+        return ops;
+    }
+
+    List<Operation> getOpsCopy() {
         List<Operation> opsCopy = new ArrayList<Operation>();
         for (Operation op : ops) {
             opsCopy.add(op);

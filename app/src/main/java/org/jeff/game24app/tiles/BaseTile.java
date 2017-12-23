@@ -18,35 +18,39 @@ import org.jeff.game24app.animations.ViewAnimatorFactory;
 public abstract class BaseTile extends View {
 
     private Rect boundingRect;
-    protected boolean isSelected;
+    private boolean isActive;
     private Animator animator;
 
     public BaseTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         boundingRect = new Rect();
-        isSelected = false;
+        isActive = false;
         animator = new ViewAnimatorFactory(this).getBobbleAnimator();
     }
 
+    public boolean isActive() {
+        return isActive;
+    }
+
     /**
-     * Change isSelected and adjust drawing appropriately
+     * Change isActive and adjust drawing appropriately
      */
     public void toggle() {
-        if (isSelected) {
-            isSelected = false;
+        if (isActive) {
+            isActive = false;
             animator.end();
             //Starting and canceling necessary to reset view
             animator.start();
             animator.cancel();
         } else {
-            isSelected = true;
+            isActive = true;
             animator.start();
         }
         invalidate();
     }
 
     public void unselect() {
-        if (isSelected) {
+        if (isActive) {
             toggle();
         }
     }

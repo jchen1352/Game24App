@@ -33,7 +33,7 @@ public class TileManager {
                 NumberTile numTile = (NumberTile)v;
                 if (!numTile.exists()) return;
                 int selected = numsSelectedLen;
-                if (numTile.isSelected) {
+                if (numTile.isActive()) {
                     selected--;
                 } else {
                     selected++;
@@ -65,7 +65,7 @@ public class TileManager {
             public void onClick(View v) {
                 OperationTile opTile = (OperationTile)v;
                 opTile.toggle();
-                if (opTile.isSelected) {
+                if (opTile.isActive()) {
                     if (opSelected != null) {
                         opSelected.toggle();
                     }

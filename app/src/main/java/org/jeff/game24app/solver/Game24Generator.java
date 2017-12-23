@@ -1,5 +1,7 @@
 package org.jeff.game24app.solver;
 
+import java.util.List;
+
 /**
  * A class that handles random generation of 24 puzzles.
  */
@@ -79,4 +81,32 @@ public class Game24Generator {
         return puzzle;
     }
 
+    /**
+     * Returns a hint containing the next step in a solution for a puzzle.
+     * The puzzle may be partially completed and thus unsolvable.
+     * @param puzzle the puzzle to give a hint for
+     * @return the hint as an Operation, or null if unsolvable
+     */
+    public static Operation getHint(Rational[] puzzle) {
+        Game24Solver solver = new Game24Solver(puzzle);
+        List<Solution> solutions = solver.getSolutions();
+        if (solutions.isEmpty()) {
+            return null;
+        }
+        //If possible, try to pick a solution that doesn't involve fractions
+        Solution hintSolution = solutions.get(0);
+        for (Solution s : solutions) {
+            hintSolution = s;
+            boolean onlyInts = true;
+            for (Operation op : s.getOps()) {
+                if (op.evaluate().getDenominator() != 1) {
+                    onlyInts = false;
+                }
+            }
+            if (onlyInts) {
+                break;
+            }
+        }
+        return hintSolution.getOps().get(0);
+    }
 }

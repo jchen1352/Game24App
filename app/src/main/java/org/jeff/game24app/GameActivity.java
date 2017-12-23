@@ -2,40 +2,54 @@ package org.jeff.game24app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Layout;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.Chronometer;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.jeff.game24app.solver.Game24Generator;
+import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
 import org.jeff.game24app.tiles.NumberTile;
 import org.jeff.game24app.tiles.OperationTile;
 import org.jeff.game24app.tiles.TileManager;
+import org.jeff.game24app.views.DarkView;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class GameActivity extends BaseActivity {
 
-    private NumberTile tile0, tile1, tile2, tile3;
     private NumberTile[] numTiles;
-    private OperationTile tileAdd, tileSub, tileMul, tileDiv;
     private OperationTile[] opTiles;
     private TileManager tileManager;
-    private ImageButton settingsButton, restartButton, hintButton;
-    private Button replayButton, returnButton;
+    private DarkView darkView;
     private boolean timeTrialMode;
     private TextView scoreView, finalScoreView, finalHiScoreView;
     private int score;
     private TextView time;
-    private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes
+    private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes, shorter when testing
     private static final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
     private CountDownTimer timer;
     private AlertDialog gameOverDialog;
@@ -47,9 +61,9 @@ public class GameActivity extends BaseActivity {
         setContentView(R.layout.activity_game);
         setupTiles();
 
-        settingsButton = (ImageButton) findViewById(R.id.settings_button);
-        restartButton = (ImageButton) findViewById(R.id.restart_button);
-        hintButton = (ImageButton) findViewById(R.id.hint_button);
+        ImageButton settingsButton = (ImageButton) findViewById(R.id.settings_button);
+        ImageButton restartButton = (ImageButton) findViewById(R.id.restart_button);
+        ImageButton hintButton = (ImageButton) findViewById(R.id.hint_button);
 
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,6 +77,13 @@ public class GameActivity extends BaseActivity {
                 restartPuzzle();
             }
         });
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHint();
+            }
+        });
+        darkView = (DarkView) findViewById(R.id.dark_view);
 
         Intent intent = getIntent();
         generator = new Game24Generator(intent.getBooleanExtra(HomeActivity.GEN_FRAC, false));
@@ -106,7 +127,7 @@ public class GameActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_gameover, null);
-        replayButton = (Button) layout.findViewById(R.id.restart_button);
+        Button replayButton = (Button) layout.findViewById(R.id.restart_button);
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -115,7 +136,7 @@ public class GameActivity extends BaseActivity {
                 gameOverDialog.dismiss();
             }
         });
-        returnButton = (Button) layout.findViewById(R.id.return_button);
+        Button returnButton = (Button) layout.findViewById(R.id.return_button);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,15 +163,15 @@ public class GameActivity extends BaseActivity {
     }
 
     private void setupTiles() {
-        tile0 = (NumberTile) findViewById(R.id.tile0);
-        tile1 = (NumberTile) findViewById(R.id.tile1);
-        tile2 = (NumberTile) findViewById(R.id.tile2);
-        tile3 = (NumberTile) findViewById(R.id.tile3);
+        NumberTile tile0 = (NumberTile) findViewById(R.id.tile0);
+        NumberTile tile1 = (NumberTile) findViewById(R.id.tile1);
+        NumberTile tile2 = (NumberTile) findViewById(R.id.tile2);
+        NumberTile tile3 = (NumberTile) findViewById(R.id.tile3);
         numTiles = new NumberTile[] {tile0, tile1, tile2, tile3};
-        tileAdd = (OperationTile) findViewById(R.id.tile_add);
-        tileSub = (OperationTile) findViewById(R.id.tile_subtract);
-        tileMul = (OperationTile) findViewById(R.id.tile_multiply);
-        tileDiv = (OperationTile) findViewById(R.id.tile_divide);
+        OperationTile tileAdd = (OperationTile) findViewById(R.id.tile_add);
+        OperationTile tileSub = (OperationTile) findViewById(R.id.tile_subtract);
+        OperationTile tileMul = (OperationTile) findViewById(R.id.tile_multiply);
+        OperationTile tileDiv = (OperationTile) findViewById(R.id.tile_divide);
         opTiles = new OperationTile[] {tileAdd, tileSub, tileMul, tileDiv};
         tileManager = new TileManager(this);
         for (NumberTile tile : numTiles) {
@@ -188,6 +209,52 @@ public class GameActivity extends BaseActivity {
 
     public void restartPuzzle() {
         setupPuzzle(generator.restartPuzzle());
+    }
+
+    /**
+     * Displays a hint for the current numbers, called when clicking the hint button.
+     * Currently will make the tiles involved bobble. Also unselects everything.
+     */
+    public void showHint() {
+        List<Rational> puzzleList = new ArrayList<Rational>(4);
+        for (NumberTile tile : numTiles) {
+            if (tile.exists()) {
+                if (tile.isActive()) {
+                    tile.performClick();
+                }
+                puzzleList.add(tile.getValue());
+            }
+        }
+        Rational[] puzzle = puzzleList.toArray(new Rational[puzzleList.size()]);
+        Operation hint = Game24Generator.getHint(puzzle);
+        if (hint == null) {
+            return;
+        }
+        NumberTile hintNum0 = numTiles[0], hintNum1 = numTiles[0];
+        OperationTile hintOp = opTiles[0];
+        for (NumberTile tile : numTiles) {
+            if (tile.exists() && tile.getValue().equals(hint.getNum0())) {
+                hintNum0 = tile;
+            }
+        }
+        for (NumberTile tile : numTiles) {
+            if (tile.exists() && tile.getValue().equals(hint.getNum1()) && tile != hintNum0) {
+                hintNum1 = tile;
+            }
+        }
+        for (OperationTile tile : opTiles) {
+            if (tile.isActive()) {
+                tile.performClick();
+            }
+            if (tile.getOp() == hint.getOp()) {
+                hintOp = tile;
+            }
+        }
+        darkView.setVisibility(View.VISIBLE);
+        View numTileGroup = findViewById(R.id.num_tile_group);
+        View opTileGroup = findViewById(R.id.op_tile_group);
+        darkView.setViews(hintNum0, hintOp, hintNum1, numTileGroup, opTileGroup);
+        darkView.startHint();
     }
 
     @Override

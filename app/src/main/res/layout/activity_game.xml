@@ -181,4 +181,11 @@
         app:layout_constraintRight_toRightOf="parent"
         android:text="@string/credits" />
 
+    <org.jeff.game24app.views.DarkView
+        android:id="@+id/dark_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:clickable="true"/>
+
 </android.support.constraint.ConstraintLayout>
