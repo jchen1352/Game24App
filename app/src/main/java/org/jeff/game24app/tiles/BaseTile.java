@@ -10,7 +10,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.jeff.game24app.R;
-import org.jeff.game24app.animations.ViewAnimatorFactory;
+import org.jeff.game24app.animations.ViewAnimatorGen;
 
 /**
  * The base View that encompasses the tiles in the game.
@@ -19,13 +19,13 @@ public abstract class BaseTile extends View {
 
     private Rect boundingRect;
     private boolean isActive;
-    private Animator animator;
+    private Animator bobbleAnimator;
 
     public BaseTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         boundingRect = new Rect();
         isActive = false;
-        animator = new ViewAnimatorFactory(this).getBobbleAnimator();
+        bobbleAnimator = new ViewAnimatorGen(this).getBobbleAnimator();
     }
 
     public boolean isActive() {
@@ -38,13 +38,13 @@ public abstract class BaseTile extends View {
     public void toggle() {
         if (isActive) {
             isActive = false;
-            animator.end();
+            bobbleAnimator.end();
             //Starting and canceling necessary to reset view
-            animator.start();
-            animator.cancel();
+            bobbleAnimator.start();
+            bobbleAnimator.cancel();
         } else {
             isActive = true;
-            animator.start();
+            bobbleAnimator.start();
         }
         invalidate();
     }

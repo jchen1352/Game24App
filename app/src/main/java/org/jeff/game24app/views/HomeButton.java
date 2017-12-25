@@ -5,9 +5,8 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
-import android.widget.Button;
 
-import org.jeff.game24app.animations.ViewAnimatorFactory;
+import org.jeff.game24app.animations.ViewAnimatorGen;
 
 /**
  * A button that appears on the home screen.
@@ -22,9 +21,9 @@ public class HomeButton extends AppCompatButton {
         super(context, attrs);
         Typeface font = Typeface.createFromAsset(context.getAssets(), FONT_PATH);
         setTypeface(font);
-        ViewAnimatorFactory factory = new ViewAnimatorFactory(this);
-        fadeInAnimator = factory.getFadeInAnimator();
-        fadeOutAnimator = factory.getFadeOutAnimator();
+        ViewAnimatorGen generator = new ViewAnimatorGen(this);
+        fadeInAnimator = generator.getFadeInAnimator();
+        fadeOutAnimator = generator.getFadeOutAnimator();
     }
 
     /**

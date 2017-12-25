@@ -1,5 +1,6 @@
 package org.jeff.game24app.tiles;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
@@ -11,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import org.jeff.game24app.R;
+import org.jeff.game24app.animations.ViewAnimatorGen;
 import org.jeff.game24app.solver.Rational;
 
 /**
@@ -37,6 +39,8 @@ public class NumberTile extends BaseTile {
     private boolean boundsValid;
 
     private static Paint digitColor;
+
+    private Animator shrinkAnimator, growAnimator;
 
     public NumberTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -196,5 +200,22 @@ public class NumberTile extends BaseTile {
             default:
                 return R.drawable.ic_digit_0;
         }
+    }
+
+    public void setShrinkAnimator(Animator a) {
+        shrinkAnimator = a;
+    }
+
+    public void setGrowAnimator(Animator a) {
+        growAnimator = a;
+    }
+
+    public void shrink() {
+        shrinkAnimator.start();
+    }
+
+    public void grow() {
+        setVisibility(VISIBLE);
+        growAnimator.start();
     }
 }

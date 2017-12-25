@@ -5,7 +5,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.widget.RadioGroup;
 
-import org.jeff.game24app.animations.ViewAnimatorFactory;
+import org.jeff.game24app.animations.ViewAnimatorGen;
 
 /**
  * A radio group that appears on the home screen.
@@ -17,9 +17,9 @@ public class HomeRadioGroup extends RadioGroup {
 
     public HomeRadioGroup(Context context, AttributeSet attrs) {
         super(context, attrs);
-        ViewAnimatorFactory factory = new ViewAnimatorFactory(this);
-        fadeInAnimator = factory.getFadeInAnimator();
-        fadeOutAnimator = factory.getFadeOutAnimator();
+        ViewAnimatorGen generator = new ViewAnimatorGen(this);
+        fadeInAnimator = generator.getFadeInAnimator();
+        fadeOutAnimator = generator.getFadeOutAnimator();
     }
 
     /**
