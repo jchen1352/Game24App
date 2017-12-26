@@ -139,4 +139,7 @@ public class TileManager {
         opSelected = null;
     }
 
+    public void removeActivity() {
+        activity = null;
+    }
 }

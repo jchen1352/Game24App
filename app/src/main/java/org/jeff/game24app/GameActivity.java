@@ -1,5 +1,6 @@
 package org.jeff.game24app;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,6 +32,9 @@ public class GameActivity extends BaseActivity
     private NumberTile[] numTiles;
     private OperationTile[] opTiles;
     private TileManager tileManager;
+    private View numTileGroup, opTileGroup;
+    private ViewAnimatorGen numAnimatorGen;
+    private Animator numShrinkAnimator, numGrowAnimator;
     private DarkView darkView;
     private boolean timeTrialMode;
     private TextView scoreView, finalScoreView, finalHiScoreView;
@@ -42,7 +46,6 @@ public class GameActivity extends BaseActivity
     private AlertDialog gameOverDialog;
     private Game24Generator generator;
     private Rational[] nextPuzzle;
-    private boolean waitingForPuzzle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +90,6 @@ public class GameActivity extends BaseActivity
             setupTimeTrial();
         }
         nextPuzzle = generator.generatePuzzle();
-        waitingForPuzzle = true;
         onShrinkFinish();
     }
 
@@ -102,12 +104,12 @@ public class GameActivity extends BaseActivity
         OperationTile tileMul = (OperationTile) findViewById(R.id.tile_multiply);
         OperationTile tileDiv = (OperationTile) findViewById(R.id.tile_divide);
         opTiles = new OperationTile[] {tileAdd, tileSub, tileMul, tileDiv};
-        for (NumberTile tile : numTiles) {
-            ViewAnimatorGen animatorGen = new ViewAnimatorGen(tile);
-            animatorGen.setShrinkFinishListener(this);
-            tile.setShrinkAnimator(animatorGen.getShrinkAnimator());
-            tile.setGrowAnimator(animatorGen.getGrowAnimator());
-        }
+        numTileGroup = findViewById(R.id.num_tile_group);
+        opTileGroup = findViewById(R.id.op_tile_group);
+        numAnimatorGen = new ViewAnimatorGen(numTileGroup);
+        numAnimatorGen.setShrinkFinishListener(this);
+        numShrinkAnimator = numAnimatorGen.getGroupShrinkAnimator();
+        numGrowAnimator = numAnimatorGen.getGroupGrowAnimator();
         tileManager = new TileManager(this);
         for (NumberTile tile : numTiles) {
             tile.setOnClickListener(tileManager.getNumListener());
@@ -123,8 +125,8 @@ public class GameActivity extends BaseActivity
             numTiles[i].setExists(true);
             numTiles[i].unselect();
             numTiles[i].setValue(nextPuzzle[i]);
-            numTiles[i].grow();
         }
+        numGrowAnimator.start();
         for (OperationTile tile : opTiles) {
             tile.unselect();
         }
@@ -132,7 +134,6 @@ public class GameActivity extends BaseActivity
     }
 
     public void newPuzzle() {
-        waitingForPuzzle = true;
         nextPuzzle = generator.generatePuzzle();
         shrinkNumTiles();
         if (timeTrialMode) {
@@ -142,16 +143,11 @@ public class GameActivity extends BaseActivity
     }
 
     public void restartPuzzle() {
-        waitingForPuzzle = true;
         shrinkNumTiles();
     }
 
     private void shrinkNumTiles() {
-        for (NumberTile tile : numTiles) {
-            if (tile.exists()) {
-                tile.shrink();
-            }
-        }
+        numShrinkAnimator.start();
     }
 
     /**
@@ -159,10 +155,7 @@ public class GameActivity extends BaseActivity
      */
     @Override
     public void onShrinkFinish() {
-        if (waitingForPuzzle) {
-            setupPuzzle();
-            waitingForPuzzle = false;
-        }
+        setupPuzzle();
     }
 
     /**
@@ -205,8 +198,6 @@ public class GameActivity extends BaseActivity
             }
         }
         darkView.setVisibility(View.VISIBLE);
-        View numTileGroup = findViewById(R.id.num_tile_group);
-        View opTileGroup = findViewById(R.id.op_tile_group);
         darkView.setViews(hintNum0, hintOp, hintNum1, numTileGroup, opTileGroup);
         darkView.startHint();
     }
@@ -279,6 +270,11 @@ public class GameActivity extends BaseActivity
         if (timeTrialMode) {
             timer.cancel();
         }
+        tileManager.removeActivity();
+        numAnimatorGen.removeShrinkFinishListener();
+        numAnimatorGen = null;
+        numShrinkAnimator = null;
+        numGrowAnimator = null;
     }
 
     public void showSettings() {
