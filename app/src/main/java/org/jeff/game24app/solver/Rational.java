@@ -33,8 +33,8 @@ public class Rational implements Comparable<Rational>{
         return denominator;
     }
 
-    public double getDoubleValue() {
-        return (double) numerator/denominator;
+    public float getFloatValue() {
+        return (float) numerator/denominator;
     }
 
     public static Rational add(Rational a, Rational b) {
@@ -112,6 +112,6 @@ public class Rational implements Comparable<Rational>{
 
     @Override
     public int compareTo(Rational o) {
-        return Double.compare(getDoubleValue(), o.getDoubleValue());
+        return Float.compare(getFloatValue(), o.getFloatValue());
     }
 }

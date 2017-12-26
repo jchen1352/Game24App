@@ -107,7 +107,7 @@ public class TileManager {
             Operation operation = new Operation(num0, num1, op);
             Rational result = operation.evaluate();
             //Take absolute value because negatives aren't necessary
-            if (result.getDoubleValue() < 0) {
+            if (result.getFloatValue() < 0) {
                 result = new Rational(-result.getNumerator(), result.getDenominator());
             }
             numTile1.setValue(result);

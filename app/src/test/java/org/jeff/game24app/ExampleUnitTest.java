@@ -1,8 +1,12 @@
 package org.jeff.game24app;
 
 import org.jeff.game24app.solver.Game24Solver;
+import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
 import org.junit.Test;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.Assert.*;
 
@@ -19,11 +23,33 @@ public class ExampleUnitTest {
 
     @Test
     public void testSolver() throws Exception {
-        Game24Solver solver = new Game24Solver(new Rational[] {
-                new Rational(1), new Rational(4), new Rational(6), new Rational(1)});
-        assertTrue(solver.isSolvable());
-        solver = new Game24Solver(new Rational[] {
-                new Rational(3), new Rational(3), new Rational(8), new Rational(8)});
-        assertTrue(solver.isSolvable());
+        //Check hard puzzle
+        Rational[] puzzle = new Rational[4];
+        puzzle[0] = new Rational(3);
+        puzzle[1] = new Rational(3);
+        puzzle[2] = new Rational(8);
+        puzzle[3] = new Rational(8);
+        List<Operation[]> solutions = Game24Solver.solve(puzzle);
+        assertTrue(!solutions.isEmpty());
+        System.out.println(Arrays.toString(solutions.get(0)));
+
+        //There are 1362 solvable puzzles using numbers from 1 to 13
+        int numSolvable = 0;
+        for (int n0 = 1; n0 <= 13; n0++) {
+            for (int n1 = n0; n1 <= 13; n1++) {
+                for (int n2 = n1; n2 <= 13; n2++) {
+                    for (int n3 = n2; n3 <= 13; n3++) {
+                        puzzle[0] = new Rational(n0);
+                        puzzle[1] = new Rational(n1);
+                        puzzle[2] = new Rational(n2);
+                        puzzle[3] = new Rational(n3);
+                        if (!Game24Solver.solve(puzzle).isEmpty()) {
+                            numSolvable++;
+                        }
+                    }
+                }
+            }
+        }
+        assertEquals(numSolvable, 1362);
     }
 }

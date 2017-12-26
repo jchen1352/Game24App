@@ -3,6 +3,7 @@ package org.jeff.game24app.solver;
 public class Operation {
 
     private Rational num0, num1;
+    //public static int ADD = 0, SUBTRACT = 1, MULTIPLY = 2, DIVIDE = 3;
     public enum ArithmeticOp {
         ADD,
         SUBTRACT,
@@ -49,5 +50,10 @@ public class Operation {
             }
             return null;
         }
+    }
+
+    @Override
+    public String toString() {
+        return num0.toString() + "+-*/".substring(op.ordinal(), op.ordinal()+1) + num1.toString();
     }
 }

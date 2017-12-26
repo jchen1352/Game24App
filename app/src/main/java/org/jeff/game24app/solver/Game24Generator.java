@@ -7,7 +7,6 @@ import java.util.List;
  */
 public class Game24Generator {
 
-    private Game24Solver solver;
     private boolean validPuzzle;
     private Rational[] puzzle;
     private boolean fractional;
@@ -45,8 +44,7 @@ public class Game24Generator {
                 int random = ((int) (Math.random() * 10)) + 1;
                 puzzle[i] = new Rational(random);
             }
-            solver = new Game24Solver(puzzle);
-            validPuzzle = solver.isSolvable();
+            validPuzzle = Game24Solver.isSolvable(puzzle);
         }
         this.puzzle = puzzle;
         return puzzle;
@@ -66,8 +64,7 @@ public class Game24Generator {
                 int denominator = ((int) (Math.random() * 10)) + 1;
                 puzzle[i] = new Rational(numerator, denominator);
             }
-            solver = new Game24Solver(puzzle);
-            validPuzzle = solver.isSolvable();
+            validPuzzle = Game24Solver.isSolvable(puzzle);
         }
         this.puzzle = puzzle;
         return puzzle;
@@ -88,25 +85,31 @@ public class Game24Generator {
      * @return the hint as an Operation, or null if unsolvable
      */
     public static Operation getHint(Rational[] puzzle) {
-        Game24Solver solver = new Game24Solver(puzzle);
-        List<Solution> solutions = solver.getSolutions();
+        List<Operation[]> solutions = Game24Solver.solve(puzzle);
         if (solutions.isEmpty()) {
             return null;
         }
         //If possible, try to pick a solution that doesn't involve fractions
-        Solution hintSolution = solutions.get(0);
-        for (Solution s : solutions) {
+        //and doesn't have big numbers.
+        Operation[] hintSolution = solutions.get(0);
+        for (Operation[] s : solutions) {
             hintSolution = s;
-            boolean onlyInts = true;
-            for (Operation op : s.getOps()) {
-                if (op.evaluate().getDenominator() != 1) {
-                    onlyInts = false;
+            boolean nice = true;
+            for (Operation op : s) {
+                Rational eval = op.evaluate();
+                //Solution involves fractions
+                if (eval.getDenominator() != 1) {
+                    nice = false;
+                }
+                //Solution involves big numbers
+                if (eval.getFloatValue() > 50) {
+                    nice = false;
                 }
             }
-            if (onlyInts) {
+            if (nice) {
                 break;
             }
         }
-        return hintSolution.getOps().get(0);
+        return hintSolution[0];
     }
 }

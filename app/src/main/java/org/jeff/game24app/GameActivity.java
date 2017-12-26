@@ -2,29 +2,13 @@ package org.jeff.game24app;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.Rect;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
-import android.text.Layout;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import org.jeff.game24app.animations.ViewAnimatorGen;
@@ -102,7 +86,9 @@ public class GameActivity extends BaseActivity
             setupTimer();
             setupTimeTrial();
         }
-        newPuzzle();
+        nextPuzzle = generator.generatePuzzle();
+        waitingForPuzzle = true;
+        onShrinkFinish();
     }
 
     private void setupTiles() {
@@ -184,7 +170,7 @@ public class GameActivity extends BaseActivity
      * Currently will make the tiles involved bobble. Also unselects everything.
      */
     public void showHint() {
-        List<Rational> puzzleList = new ArrayList<Rational>(4);
+        List<Rational> puzzleList = new ArrayList<>(4);
         for (NumberTile tile : numTiles) {
             if (tile.exists()) {
                 if (tile.isActive()) {
