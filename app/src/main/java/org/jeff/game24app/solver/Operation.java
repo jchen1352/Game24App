@@ -1,18 +1,24 @@
 package org.jeff.game24app.solver;
 
+import android.support.annotation.IntDef;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 public class Operation {
 
-    private Rational num0, num1;
-    //public static int ADD = 0, SUBTRACT = 1, MULTIPLY = 2, DIVIDE = 3;
-    public enum ArithmeticOp {
-        ADD,
-        SUBTRACT,
-        MULTIPLY,
-        DIVIDE
-    };
-    private ArithmeticOp op;
+    @IntDef({ADD, SUBTRACT, MULTIPLY, DIVIDE})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface Ops{}
+    public static final int ADD = 0;
+    public static final int SUBTRACT = 1;
+    public static final int MULTIPLY = 2;
+    public static final int DIVIDE = 3;
+    private @Ops int op;
 
-    public Operation(Rational num0, Rational num1, ArithmeticOp op) {
+    private Rational num0, num1;
+
+    public Operation(Rational num0, Rational num1, @Ops int op) {
         this.num0 = num0;
         this.num1 = num1;
         this.op = op;
@@ -26,7 +32,7 @@ public class Operation {
         return num1;
     }
 
-    public ArithmeticOp getOp() {
+    public @Ops int getOp() {
         return op;
     }
 
@@ -35,25 +41,23 @@ public class Operation {
     }
 
     public Rational evaluate() {
-        if (op == ArithmeticOp.ADD) {
-            return Rational.add(num0, num1);
+        switch (op) {
+            case ADD:
+                return Rational.add(num0, num1);
+            case SUBTRACT:
+                return Rational.subtract(num0, num1);
+            case MULTIPLY:
+                return Rational.multiply(num0, num1);
+            case DIVIDE:
+                if (canDivide()) {
+                    return Rational.divide(num0, num1);
+                }
         }
-        else if (op == ArithmeticOp.SUBTRACT) {
-            return Rational.subtract(num0, num1);
-        }
-        else if (op == ArithmeticOp.MULTIPLY) {
-            return Rational.multiply(num0, num1);
-        }
-        else {
-            if (canDivide()) {
-                return Rational.divide(num0, num1);
-            }
-            return null;
-        }
+        return null;
     }
 
     @Override
     public String toString() {
-        return num0.toString() + "+-*/".substring(op.ordinal(), op.ordinal()+1) + num1.toString();
+        return num0.toString() + "+-*/".substring(op, op+1) + num1.toString();
     }
 }

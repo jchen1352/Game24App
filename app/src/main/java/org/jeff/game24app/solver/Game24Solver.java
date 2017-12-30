@@ -37,25 +37,25 @@ public class Game24Solver {
                     num1 = numbers[i];
                 }
                 Operation op;
-                op = new Operation(num0, num1, Operation.ArithmeticOp.ADD);
+                op = new Operation(num0, num1, Operation.ADD);
                 next[next.length - 1] = op;
                 newNums[newI] = op.evaluate();
                 solve(newNums, next, solutions);
-                op = new Operation(num0, num1, Operation.ArithmeticOp.SUBTRACT);
+                op = new Operation(num0, num1, Operation.SUBTRACT);
                 next[next.length - 1] = op;
                 newNums[newI] = op.evaluate();
                 solve(newNums, next, solutions);
-                op = new Operation(num0, num1, Operation.ArithmeticOp.MULTIPLY);
+                op = new Operation(num0, num1, Operation.MULTIPLY);
                 next[next.length - 1] = op;
                 newNums[newI] = op.evaluate();
                 solve(newNums, next, solutions);
-                op = new Operation(num0, num1, Operation.ArithmeticOp.DIVIDE);
+                op = new Operation(num0, num1, Operation.DIVIDE);
                 if (op.canDivide()) {
                     next[next.length - 1] = op;
                     newNums[newI] = op.evaluate();
                     solve(newNums, next, solutions);
                 }
-                op = new Operation(num1, num0, Operation.ArithmeticOp.DIVIDE);
+                op = new Operation(num1, num0, Operation.DIVIDE);
                 if (op.canDivide()) {
                     next[next.length - 1] = op;
                     newNums[newI] = op.evaluate();

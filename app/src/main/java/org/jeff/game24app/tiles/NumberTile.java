@@ -2,6 +2,7 @@ package org.jeff.game24app.tiles;
 
 import android.animation.Animator;
 import android.content.Context;
+import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Paint;
@@ -35,12 +36,12 @@ public class NumberTile extends BaseTile {
 
     private Rect dims;
     private Rect[] numeratorBounds;
+    private int numeratorDigits;
     private Rect[] denominatorBounds;
+    private int denominatorDigits;
     private boolean boundsValid;
-
+    private static Drawable[] digitPics;
     private static Paint digitColor;
-
-    private Animator shrinkAnimator, growAnimator;
 
     public NumberTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -52,7 +53,31 @@ public class NumberTile extends BaseTile {
         a.recycle();
         value = new Rational(numerator, denominator);
         dims = new Rect();
+        //Maximum number size should be 5 digits
+        numeratorBounds = new Rect[5];
+        denominatorBounds = new Rect[5];
+        for (int i = 0; i < 5; i++) {
+            numeratorBounds[i] = new Rect();
+            denominatorBounds[i] = new Rect();
+        }
+        numeratorDigits = 0;
+        denominatorDigits = 0;
         boundsValid = false;
+
+        if (digitPics == null) {
+            digitPics = new Drawable[10];
+            Resources res = getResources();
+            digitPics[0] = res.getDrawable(R.drawable.ic_digit_0, null);
+            digitPics[1] = res.getDrawable(R.drawable.ic_digit_1, null);
+            digitPics[2] = res.getDrawable(R.drawable.ic_digit_2, null);
+            digitPics[3] = res.getDrawable(R.drawable.ic_digit_3, null);
+            digitPics[4] = res.getDrawable(R.drawable.ic_digit_4, null);
+            digitPics[5] = res.getDrawable(R.drawable.ic_digit_5, null);
+            digitPics[6] = res.getDrawable(R.drawable.ic_digit_6, null);
+            digitPics[7] = res.getDrawable(R.drawable.ic_digit_7, null);
+            digitPics[8] = res.getDrawable(R.drawable.ic_digit_8, null);
+            digitPics[9] = res.getDrawable(R.drawable.ic_digit_9, null);
+        }
 
         if (digitColor == null) {
             digitColor = new Paint();
@@ -94,44 +119,47 @@ public class NumberTile extends BaseTile {
                     dims.top = pad;
                     dims.right = sideLength - pad;
                     dims.bottom = sideLength - pad;
-                    numeratorBounds = getPicBounds(dims, numerator);
+                    getPicBounds(dims, numerator, numeratorBounds);
+                    numeratorDigits = getNumDigits(numerator);
                 } else {
                     dims.left = pad;
                     dims.top = pad;
                     dims.right = sideLength - pad;
                     dims.bottom = sideLength/2 - (int) (sideLength * FRAC_PAD);
-                    numeratorBounds = getPicBounds(dims, numerator);
+                    getPicBounds(dims, numerator, numeratorBounds);
+                    numeratorDigits = getNumDigits(numerator);
                     dims.left = pad;
                     dims.top = sideLength/2 + (int) (sideLength * FRAC_PAD);
                     dims.right = sideLength - pad;
                     dims.bottom = sideLength - pad;
-                    denominatorBounds = getPicBounds(dims, denominator);
+                    getPicBounds(dims, denominator, denominatorBounds);
+                    denominatorDigits = getNumDigits(denominator);
                 }
                 boundsValid = true;
             }
 
             Drawable pic;
             //Draw numerator
-            for (int i = 0; i < numeratorBounds.length; i++) {
-                pic = getResources().getDrawable(getDigitID(numerator % 10), null);
-                pic.setBounds(numeratorBounds[numeratorBounds.length-i-1]);
+            for (int i = 0; i < numeratorDigits; i++) {
+                pic = digitPics[numerator % 10];
+                pic.setBounds(numeratorBounds[numeratorDigits-i-1]);
                 pic.draw(canvas);
                 numerator /= 10;
             }
 
             //Draw denominator if necessary
             if (denominator != 1) {
-                for (int i = 0; i < denominatorBounds.length; i++) {
-                    pic = getResources().getDrawable(getDigitID(denominator % 10), null);
-                    pic.setBounds(denominatorBounds[denominatorBounds.length-i-1]);
+                for (int i = 0; i < denominatorDigits; i++) {
+                    pic = digitPics[denominator % 10];
+                    pic.setBounds(denominatorBounds[denominatorDigits-i-1]);
                     pic.draw(canvas);
                     denominator /= 10;
                 }
                 //Get farthest left and right bounds for numerator/denominator
                 //to determine how long fraction bar should be
                 int left = Math.min(numeratorBounds[0].left, denominatorBounds[0].left);
-                int right = Math.max(numeratorBounds[numeratorBounds.length-1].right,
-                        denominatorBounds[denominatorBounds.length-1].right);
+                int right = Math.max(numeratorBounds[numeratorDigits-1].right,
+                        denominatorBounds[denominatorDigits-1].right);
                 float heightOffset = getHeight() * FRAC_HEIGHT / 2;
                 canvas.drawRect(left, getHeight()/2 - heightOffset,
                         right, getHeight()/2 + heightOffset, digitColor);
@@ -141,16 +169,15 @@ public class NumberTile extends BaseTile {
     }
 
     /**
-     * Helper function that returns an array of Rects that contain
-     * bounds for the number pics within constraints
+     * Helper function that calculates bounds for the number pics within constraints
      * @param constraints Where the number must fit
      * @param number The number to display, must be positive
-     * @return The bounds for each digit pic in number
+     * @param outBounds Changed to contain the calculated bounds
      */
-    private Rect[] getPicBounds(Rect constraints, int number) {
+    private void getPicBounds(Rect constraints, int number, Rect[] outBounds) {
         int height = constraints.height();
         int widthDigit = (int)(height * WH_RATIO);
-        int numDigits = number <= 0 ? 1 : (int)(Math.log10(number) + 1);
+        int numDigits = getNumDigits(number);
         int gap = (int)(widthDigit * GAP);
         int width = numDigits * (widthDigit + gap) - gap;
         if (width > constraints.width()) {
@@ -161,61 +188,21 @@ public class NumberTile extends BaseTile {
         }
         int startLeft = (constraints.right + constraints.left)/2 - width/2;
         int top = (constraints.top + constraints.bottom)/2 - height/2;
-        Rect[] bounds = new Rect[numDigits];
+        int bottom = top + height;
         for (int i = 0; i < numDigits; i++) {
-            int left = startLeft + i * (widthDigit + gap);
-            int right = left + widthDigit;
-            int bottom = top + height;
-            bounds[i] = new Rect(left, top, right, bottom);
-        }
-        return bounds;
-    }
-
-    /**
-     * Helper function that returns the resource id for the digit.
-     * @param digit Must be a digit between 0 and 9
-     * @return The drawable resource id associated with the digit
-     */
-    private int getDigitID(int digit) {
-        switch (digit) {
-            case 1:
-                return R.drawable.ic_digit_1;
-            case 2:
-                return R.drawable.ic_digit_2;
-            case 3:
-                return R.drawable.ic_digit_3;
-            case 4:
-                return R.drawable.ic_digit_4;
-            case 5:
-                return R.drawable.ic_digit_5;
-            case 6:
-                return R.drawable.ic_digit_6;
-            case 7:
-                return R.drawable.ic_digit_7;
-            case 8:
-                return R.drawable.ic_digit_8;
-            case 9:
-                return R.drawable.ic_digit_9;
-            case 0:
-            default:
-                return R.drawable.ic_digit_0;
+            //Check length just in case
+            if (i < outBounds.length) {
+                int left = startLeft + i * (widthDigit + gap);
+                int right = left + widthDigit;
+                outBounds[i].left = left;
+                outBounds[i].top = top;
+                outBounds[i].right = right;
+                outBounds[i].bottom = bottom;
+            }
         }
     }
 
-    public void setShrinkAnimator(Animator a) {
-        shrinkAnimator = a;
-    }
-
-    public void setGrowAnimator(Animator a) {
-        growAnimator = a;
-    }
-
-    public void shrink() {
-        shrinkAnimator.start();
-    }
-
-    public void grow() {
-        setVisibility(VISIBLE);
-        growAnimator.start();
+    private int getNumDigits(int n) {
+        return n <= 0 ? 1 : (int)(Math.log10(n) + 1);
     }
 }

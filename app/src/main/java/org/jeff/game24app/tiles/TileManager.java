@@ -100,10 +100,10 @@ public class TileManager {
         //delete the first tile and update the second
         Rational num0 = numTile0.getValue();
         Rational num1 = numTile1.getValue();
-        Operation.ArithmeticOp op = opSelected.getOp();
+        @Operation.Ops int op = opSelected.getOp();
         boolean complete = false;
         //don't divide by 0
-        if (!(op == Operation.ArithmeticOp.DIVIDE && num1.getNumerator() == 0)) {
+        if (!(op == Operation.DIVIDE && num1.getNumerator() == 0)) {
             Operation operation = new Operation(num0, num1, op);
             Rational result = operation.evaluate();
             //Take absolute value because negatives aren't necessary

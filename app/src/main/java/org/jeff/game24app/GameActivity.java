@@ -114,7 +114,6 @@ public class GameActivity extends BaseActivity
         for (NumberTile tile : numTiles) {
             tile.setOnClickListener(tileManager.getNumListener());
         }
-
         for (OperationTile tile : opTiles) {
             tile.setOnClickListener(tileManager.getOpListener());
         }
@@ -160,7 +159,7 @@ public class GameActivity extends BaseActivity
 
     /**
      * Displays a hint for the current numbers, called when clicking the hint button.
-     * Currently will make the tiles involved bobble. Also unselects everything.
+     * Also unselects everything.
      */
     public void showHint() {
         List<Rational> puzzleList = new ArrayList<>(4);

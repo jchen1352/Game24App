@@ -54,8 +54,8 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toLeftOf="@+id/tile1"
             app:layout_constraintBottom_toTopOf="@+id/tile2"
-            app:numerator="10"
-            app:denominator="1"/>
+            app:numerator="111"
+            app:denominator="2"/>
 
         <org.jeff.game24app.tiles.NumberTile
             android:id="@+id/tile1"

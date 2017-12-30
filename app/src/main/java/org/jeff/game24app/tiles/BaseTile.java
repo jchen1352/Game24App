@@ -20,12 +20,14 @@ public abstract class BaseTile extends View {
     private Rect boundingRect;
     private boolean isActive;
     private Animator bobbleAnimator;
+    private Drawable tile;
 
     public BaseTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         boundingRect = new Rect();
         isActive = false;
         bobbleAnimator = new ViewAnimatorGen(this).getBobbleAnimator();
+        tile = getResources().getDrawable(R.drawable.ic_tile, null);
     }
 
     public boolean isActive() {
@@ -58,9 +60,7 @@ public abstract class BaseTile extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Drawable tile = getResources().getDrawable(R.drawable.ic_tile, null);
         tile.setBounds(0, 0, getWidth(), getHeight());
         tile.draw(canvas);
     }
-
 }
