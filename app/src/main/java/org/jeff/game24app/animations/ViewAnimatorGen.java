@@ -134,7 +134,6 @@ public class ViewAnimatorGen {
                 num2.setScaleY(value);
                 num3.setScaleX(value);
                 num3.setScaleY(value);
-
             }
         });
         animator.addListener(new AnimatorListenerAdapter() {
@@ -173,7 +172,6 @@ public class ViewAnimatorGen {
                 num2.setScaleY(value);
                 num3.setScaleX(value);
                 num3.setScaleY(value);
-
             }
         });
         animator.setDuration(GROW_SHRINK_DURATION);

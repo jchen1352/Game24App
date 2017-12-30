@@ -37,7 +37,7 @@ public class GameActivity extends BaseActivity
     private Animator numShrinkAnimator, numGrowAnimator;
     private DarkView darkView;
     private boolean timeTrialMode;
-    private TextView scoreView, finalScoreView, finalHiScoreView;
+    private TextView scoreView;
     private int score;
     private TextView time;
     private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes, shorter when testing
@@ -90,6 +90,16 @@ public class GameActivity extends BaseActivity
             setupTimeTrial();
         }
         nextPuzzle = generator.generatePuzzle();
+        score = 0;
+        scoreView.setText(getResources().getString(R.string.score, score));
+    }
+
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        for (NumberTile tile : numTiles) {
+            tile.setVisibility(View.VISIBLE);
+        }
         onShrinkFinish();
     }
 
@@ -113,6 +123,7 @@ public class GameActivity extends BaseActivity
         tileManager = new TileManager(this);
         for (NumberTile tile : numTiles) {
             tile.setOnClickListener(tileManager.getNumListener());
+            tile.setVisibility(View.GONE);
         }
         for (OperationTile tile : opTiles) {
             tile.setOnClickListener(tileManager.getOpListener());
@@ -232,6 +243,7 @@ public class GameActivity extends BaseActivity
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                darkView.setVisibility(View.GONE);
                 setupTimeTrial();
                 newPuzzle();
                 gameOverDialog.dismiss();
@@ -245,9 +257,9 @@ public class GameActivity extends BaseActivity
                 finish();
             }
         });
-        finalScoreView = (TextView) layout.findViewById(R.id.score);
+        TextView finalScoreView = (TextView) layout.findViewById(R.id.score);
         finalScoreView.setText(getString(R.string.game_over_score, score));
-        finalHiScoreView = (TextView) layout.findViewById(R.id.hi_score);
+        TextView finalHiScoreView = (TextView) layout.findViewById(R.id.hi_score);
         if (score > hiScore) {
             hiScore = score;
             finalHiScoreView.setText(getString(R.string.new_hi_score));
