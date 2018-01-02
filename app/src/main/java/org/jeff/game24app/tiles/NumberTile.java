@@ -30,9 +30,9 @@ public class NumberTile extends BaseTile {
     /** Padding from fraction bar as percentage of tile side length **/
     private static final float FRAC_PAD = .05f;
     /** Width to height ratio of a single digit **/
-    private static final float WH_RATIO = 195.5f/335;
+    private static final float WH_RATIO = .75f;
     /** Gap between two digits as a percentage of width **/
-    private static final float GAP = .1f;
+    private static final float GAP = .05f;
 
     private Rect dims;
     private Rect[] numeratorBounds;
