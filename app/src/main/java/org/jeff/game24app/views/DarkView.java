@@ -1,7 +1,6 @@
 package org.jeff.game24app.views;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,11 +10,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
-import org.jeff.game24app.R;
 
 /**
  * A view that is dark and translucent with a rectangular area

@@ -1,6 +1,7 @@
 package org.jeff.game24app.tiles;
 
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
@@ -10,7 +11,6 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import org.jeff.game24app.R;
-import org.jeff.game24app.animations.ViewAnimatorGen;
 
 /**
  * The base View that encompasses the tiles in the game.
@@ -26,7 +26,8 @@ public abstract class BaseTile extends View {
         super(context, attrs);
         boundingRect = new Rect();
         isActive = false;
-        bobbleAnimator = new ViewAnimatorGen(this).getBobbleAnimator();
+        bobbleAnimator = AnimatorInflater.loadAnimator(context, R.animator.bobble);
+        bobbleAnimator.setTarget(this);
         tile = getResources().getDrawable(R.drawable.ic_tile, null);
     }
 

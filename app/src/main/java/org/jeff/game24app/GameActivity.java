@@ -1,6 +1,9 @@
 package org.jeff.game24app;
 
 import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.jeff.game24app.animations.ViewAnimatorGen;
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
@@ -26,16 +29,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class GameActivity extends BaseActivity
-        implements ViewAnimatorGen.ShrinkFinishListener{
+public class GameActivity extends BaseActivity {
 
     private NumberTile[] numTiles;
     private OperationTile[] opTiles;
     private TileManager tileManager;
     private View numTileGroup, opTileGroup;
-    private ViewAnimatorGen numAnimatorGen;
     private Animator numShrinkAnimator, numGrowAnimator;
     private DarkView darkView;
+    private ImageView star1, star2;
     private boolean timeTrialMode;
     private TextView scoreView;
     private int score;
@@ -76,6 +78,8 @@ public class GameActivity extends BaseActivity
             }
         });
         darkView = (DarkView) findViewById(R.id.dark_view);
+        star1 = (ImageView) findViewById(R.id.star1);
+        star2 = (ImageView) findViewById(R.id.star2);
 
         Intent intent = getIntent();
         generator = new Game24Generator(intent.getBooleanExtra(HomeActivity.GEN_FRAC, false));
@@ -100,7 +104,7 @@ public class GameActivity extends BaseActivity
         for (NumberTile tile : numTiles) {
             tile.setVisibility(View.VISIBLE);
         }
-        onShrinkFinish();
+        setupPuzzle();
     }
 
     private void setupTiles() {
@@ -116,10 +120,17 @@ public class GameActivity extends BaseActivity
         opTiles = new OperationTile[] {tileAdd, tileSub, tileMul, tileDiv};
         numTileGroup = findViewById(R.id.num_tile_group);
         opTileGroup = findViewById(R.id.op_tile_group);
-        numAnimatorGen = new ViewAnimatorGen(numTileGroup);
-        numAnimatorGen.setShrinkFinishListener(this);
-        numShrinkAnimator = numAnimatorGen.getGroupShrinkAnimator();
-        numGrowAnimator = numAnimatorGen.getGroupGrowAnimator();
+        numShrinkAnimator = AnimatorInflater.loadAnimator(this, R.animator.shrink);
+        numShrinkAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                setupPuzzle();
+            }
+        });
+        numShrinkAnimator.setTarget(numTileGroup);
+        numGrowAnimator = AnimatorInflater.loadAnimator(this, R.animator.grow);
+        numGrowAnimator.setTarget(numTileGroup);
         tileManager = new TileManager(this);
         for (NumberTile tile : numTiles) {
             tile.setOnClickListener(tileManager.getNumListener());
@@ -158,14 +169,6 @@ public class GameActivity extends BaseActivity
 
     private void shrinkNumTiles() {
         numShrinkAnimator.start();
-    }
-
-    /**
-     * When shrinking is finished for all number tiles, setup puzzle.
-     */
-    @Override
-    public void onShrinkFinish() {
-        setupPuzzle();
     }
 
     /**
@@ -210,6 +213,42 @@ public class GameActivity extends BaseActivity
         darkView.setVisibility(View.VISIBLE);
         darkView.setViews(hintNum0, hintOp, hintNum1, numTileGroup, opTileGroup);
         darkView.startHint();
+    }
+
+    /**
+     * Displays a victory animation when the puzzle is complete.
+     * @param tile the tile to animate around
+     */
+    public void victoryAnim(NumberTile tile) {
+        star1.setVisibility(View.VISIBLE);
+        star2.setVisibility(View.VISIBLE);
+        final int x = tile.getLeft()+numTileGroup.getLeft()+tile.getWidth()/2-star1.getWidth()/2;
+        final int y = tile.getTop() + numTileGroup.getTop();
+        final int width = tile.getWidth();
+        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                float value = (float) animation.getAnimatedValue();
+                star1.setX(x - value * width/2);
+                star1.setY(y + width/2 * (value * (value - 1.3f))); //quadratic curve
+                star1.setRotation(-value * 180);
+                star2.setX(x + value * width/2);
+                star2.setY(y + width/2 * (value * (value - 1.3f))); //quadratic curve
+                star2.setRotation(value * 180);
+            }
+        });
+        animator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                star1.setVisibility(View.GONE);
+                star2.setVisibility(View.GONE);
+                newPuzzle();
+            }
+        });
+        animator.setDuration(500);
+        animator.start();
     }
 
     private void setupTimeTrial() {
@@ -282,10 +321,6 @@ public class GameActivity extends BaseActivity
             timer.cancel();
         }
         tileManager.removeActivity();
-        numAnimatorGen.removeShrinkFinishListener();
-        numAnimatorGen = null;
-        numShrinkAnimator = null;
-        numGrowAnimator = null;
     }
 
     public void showSettings() {

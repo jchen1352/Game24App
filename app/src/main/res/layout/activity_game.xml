@@ -174,19 +174,25 @@
 
     </android.support.constraint.ConstraintLayout>
 
-    <TextView
-        android:id="@+id/credits"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/credits" />
-
     <org.jeff.game24app.views.DarkView
         android:id="@+id/dark_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
         android:clickable="true"/>
+
+    <ImageView
+        android:id="@+id/star1"
+        android:layout_width="@dimen/star_dimen"
+        android:layout_height="@dimen/star_dimen"
+        android:src="@drawable/ic_star"
+        android:visibility="invisible"/>
+
+    <ImageView
+        android:id="@+id/star2"
+        android:layout_width="@dimen/star_dimen"
+        android:layout_height="@dimen/star_dimen"
+        android:src="@drawable/ic_star"
+        android:visibility="invisible"/>
 
 </android.support.constraint.ConstraintLayout>

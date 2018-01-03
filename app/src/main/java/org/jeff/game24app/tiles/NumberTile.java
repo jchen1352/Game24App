@@ -1,6 +1,5 @@
 package org.jeff.game24app.tiles;
 
-import android.animation.Animator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -13,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 
 import org.jeff.game24app.R;
-import org.jeff.game24app.animations.ViewAnimatorGen;
 import org.jeff.game24app.solver.Rational;
 
 /**
@@ -202,7 +200,7 @@ public class NumberTile extends BaseTile {
         }
     }
 
-    private int getNumDigits(int n) {
+    private static int getNumDigits(int n) {
         return n <= 0 ? 1 : (int)(Math.log10(n) + 1);
     }
 }
