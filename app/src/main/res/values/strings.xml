@@ -6,6 +6,7 @@
     <string name="free_play">Free Play</string>
     <string name="classic">Classic</string>
     <string name="fractions">Fractions</string>
+    <string name="difficulty">Mode: %1$s</string>
     <string name="back">Back</string>
     <string name="settings_title">Settings</string>
     <string name="score">Score: %1$d</string>

@@ -13,4 +13,8 @@
             <enum name="divide" value="3"/>
         </attr>
     </declare-styleable>
+    
+    <declare-styleable name="CustomFont">
+        <attr name="font" format="string"/>
+    </declare-styleable>
 </resources>

@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="org.jeff.game24app.GameActivity"
-    android:background="#d3d3d3">
+    android:background="@color/background_gray">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/header"
