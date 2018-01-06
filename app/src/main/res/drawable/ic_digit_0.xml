@@ -1,15 +1,15 @@
 <vector android:height="24dp" android:viewportHeight="169.33334"
     android:viewportWidth="127.0" android:width="24dp" xmlns:android="http://schemas.android.com/apk/res/android">
-    <path android:fillAlpha="1" android:fillColor="@color/number_shadow"
+    <path android:fillAlpha="1" android:fillColor="?attr/numberShadow"
         android:pathData="m92.53,158.56c16.88,-12.05 27.53,-39.87 27.53,-75.69 0,-51.35 -12.4,-80.42 -53.21,-80.42 -15.39,0 -25.34,3.91 -37.7,14l71.72,24.41z"
-        android:strokeAlpha="1" android:strokeColor="#000000"
+        android:strokeAlpha="0" android:strokeColor="#000000"
         android:strokeLineCap="butt" android:strokeLineJoin="miter" android:strokeWidth="0.26458333"/>
-    <path android:fillAlpha="1" android:fillColor="@color/number_color"
+    <path android:fillAlpha="1" android:fillColor="?attr/numberColor"
         android:pathData="m60.57,7.48c-40.81,0 -53.21,29.06 -53.21,80.42 0,51.35 12.86,80.42 53.21,80.42 40.35,0 53.21,-29.06 53.21,-80.42 0,-51.35 -12.4,-80.42 -53.21,-80.42zM60.57,54.7c16.85,0 21.96,15.06 21.96,33.2 0,18.14 -5.31,33.2 -21.96,33.2 -16.66,0 -21.96,-15.28 -21.96,-33.2 0,-17.92 5.12,-33.2 21.96,-33.2z"
-        android:strokeAlpha="1" android:strokeColor="#000000"
+        android:strokeAlpha="0" android:strokeColor="#000000"
         android:strokeLineCap="butt" android:strokeLineJoin="miter" android:strokeWidth="0.26458333"/>
-    <path android:fillAlpha="1" android:fillColor="@color/number_shadow"
+    <path android:fillAlpha="1" android:fillColor="?attr/numberShadow"
         android:pathData="m48.33,58.54c-7.23,5.64 -9.72,16.85 -9.72,29.36 0,17.92 5.31,33.2 21.96,33.2 11.18,0 17.25,-6.79 20.03,-16.74l-0.13,0.32c-2.05,6.84 -9.42,10.52 -16.61,10.52 -16.66,0 -21.96,-15.27 -21.96,-33.19 0,-7.67 0.61,-17.47 6.4,-23.4z"
-        android:strokeAlpha="1" android:strokeColor="#000000"
+        android:strokeAlpha="0" android:strokeColor="#000000"
         android:strokeLineCap="butt" android:strokeLineJoin="miter" android:strokeWidth="0.26458333"/>
 </vector>

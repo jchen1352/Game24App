@@ -35,10 +35,12 @@ public class OperationTile extends BaseTile {
         if (opPics == null) {
             opPics = new Drawable[4];
             Resources res = getResources();
-            opPics[0] = res.getDrawable(R.drawable.ic_op_add, null);
-            opPics[1] = res.getDrawable(R.drawable.ic_op_sub, null);
-            opPics[2] = res.getDrawable(R.drawable.ic_op_mul, null);
-            opPics[3] = res.getDrawable(R.drawable.ic_op_div, null);
+            Resources.Theme theme = res.newTheme();
+            theme.applyStyle(R.style.OpNormal, true);
+            opPics[0] = res.getDrawable(R.drawable.ic_op_add, theme);
+            opPics[1] = res.getDrawable(R.drawable.ic_op_sub, theme);
+            opPics[2] = res.getDrawable(R.drawable.ic_op_mul, theme);
+            opPics[3] = res.getDrawable(R.drawable.ic_op_div, theme);
         }
     }
 

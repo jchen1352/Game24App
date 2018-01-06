@@ -17,4 +17,14 @@
     <declare-styleable name="CustomFont">
         <attr name="font" format="string"/>
     </declare-styleable>
+
+    <declare-styleable name="NumberColor">
+        <attr name="numberColor" format="color"/>
+        <attr name="numberShadow" format="color"/>
+    </declare-styleable>
+
+    <declare-styleable name="OpColor">
+        <attr name="opColor" format="color"/>
+        <attr name="opShadow" format="color"/>
+    </declare-styleable>
 </resources>

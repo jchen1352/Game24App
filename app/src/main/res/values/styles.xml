@@ -19,16 +19,58 @@
     </style>
     
     <style name="HomeButton">
-        <item name="android:width">120dp</item>
         <item name="org.jeff.game24app:font">fonts/JosefinSans-Regular.ttf</item>
         <item name="android:textAllCaps">false</item>
-        <item name="android:background">@drawable/round_rect</item>
-        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:background">@drawable/button_rect_inset</item>
     </style>
 
     <style name="HomeTextView">
-        <item name="org.jeff.game24app:font">fonts/JosefinSans-Regular.ttf</item>
-        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
+        <item name="android:textSize">30sp</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="NumberNormal" parent="Theme.AppCompat">
+        <item name="org.jeff.game24app:numberColor">@color/number_color</item>
+        <item name="org.jeff.game24app:numberShadow">@color/number_shadow</item>
+    </style>
+
+    <style name="NumberPale" parent="Theme.AppCompat">
+        <item name="org.jeff.game24app:numberColor">@color/home_color</item>
+        <item name="org.jeff.game24app:numberShadow">@color/home_shadow</item>
+    </style>
+
+    <style name="OpNormal" parent="Theme.AppCompat">
+        <item name="org.jeff.game24app:opColor">@color/op_color</item>
+        <item name="org.jeff.game24app:opShadow">@color/op_shadow</item>
+    </style>
+
+    <style name="OpPale" parent="Theme.AppCompat">
+        <item name="org.jeff.game24app:opColor">@color/home_color</item>
+        <item name="org.jeff.game24app:opShadow">@color/home_shadow</item>
+    </style>
+
+    <style name="BackgroundRect">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:padding">@dimen/background_rect_pad</item>
+        <item name="android:src">@drawable/background_rect</item>
+    </style>
+
+    <style name="BackgroundNumber">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleX">.4</item>
+        <item name="android:scaleY">.6</item>
+        <item name="android:theme">@style/NumberPale</item>
+    </style>
+
+    <style name="BackgroundOp">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:scaleX">.8</item>
+        <item name="android:scaleY">.8</item>
+        <item name="android:theme">@style/OpPale</item>
     </style>
 
 </resources>

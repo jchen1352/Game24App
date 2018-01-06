@@ -4,12 +4,22 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class HomeActivity extends BaseActivity {
@@ -19,10 +29,9 @@ public class HomeActivity extends BaseActivity {
     /** Intent key that determines time trial mode for game **/
     public static final String TIME_TRIAL = "time_trial";
     private ImageButton start, settings, help;
-    private Button timeTrial, freePlay, difficulty, back;
+    private Button timeTrial, freePlay, difficulty;
     /** False is classic, true is fractional **/
     private boolean difficultyMode;
-    private boolean atSelectionScreen;
     private ToggleButton musicButton, soundButton;
     private AlertDialog settingsDialog;
     private Animator fadeIn, fadeOut;
@@ -32,6 +41,7 @@ public class HomeActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         start = (ImageButton) findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,19 +93,37 @@ public class HomeActivity extends BaseActivity {
                 onDifficultyClicked();
             }
         });
+
+        difficultyMode = false;
         setDifficultyText();
 
-        back = (Button) findViewById(R.id.back);
-        back.setVisibility(View.GONE);
-        back.setOnClickListener(new View.OnClickListener() {
+        final ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.layout);
+        layout.getViewTreeObserver().addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
-            public void onClick(View v) {
-                back();
+            public void onGlobalLayout() {
+                layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                //Make the title spread out across the view (at least mostly)
+                TextView titleTop = (TextView) findViewById(R.id.title_top);
+                Rect bounds = new Rect();
+                Paint paint = titleTop.getPaint();
+                String text = titleTop.getText().toString();
+                paint.getTextBounds(text, 0, text.length(), bounds);
+                int textWidth = bounds.width();
+                int viewWidth = titleTop.getWidth();
+                float ems = (viewWidth - textWidth) / titleTop.getTextSize();
+                titleTop.setLetterSpacing(ems / text.length());
+                TextView titleBottom = (TextView) findViewById(R.id.title_bottom);
+                paint = titleBottom.getPaint();
+                text = titleBottom.getText().toString();
+                paint.getTextBounds(text, 0, text.length(), bounds);
+                textWidth = bounds.width();
+                viewWidth = titleBottom.getWidth();
+                ems = (viewWidth - textWidth) / titleBottom.getTextSize();
+                titleBottom.setLetterSpacing(ems / text.length());
             }
         });
-
-        atSelectionScreen = false;
-        difficultyMode = false;
     }
 
     private void setupSettingsDialog() {
@@ -123,9 +151,6 @@ public class HomeActivity extends BaseActivity {
 
     private void onStartClicked() {
         fadeOut(start);
-        fadeOut(settings);
-        fadeOut(help);
-        atSelectionScreen = true;
     }
 
     private void onSettingsClicked() {
@@ -161,25 +186,10 @@ public class HomeActivity extends BaseActivity {
         difficulty.setText(getString(R.string.difficulty, difficultyMode ? fractional : classic));
     }
 
-    public void back() {
-        fadeOut(timeTrial);
-        fadeOut(freePlay);
-        fadeOut(difficulty);
-        fadeOut(back);
-        atSelectionScreen = false;
-    }
-
     private void fadeTransition() {
-        if (atSelectionScreen) {
-            fadeIn(timeTrial);
-            fadeIn(freePlay);
-            fadeIn(difficulty);
-            fadeIn(back);
-        } else {
-            fadeIn(start);
-            fadeIn(settings);
-            fadeIn(help);
-        }
+        fadeIn(timeTrial);
+        fadeIn(freePlay);
+        fadeIn(difficulty);
         fadingOut = false;
     }
 
@@ -221,15 +231,5 @@ public class HomeActivity extends BaseActivity {
             }
         });
         a.start();
-    }
-
-    @Override
-    public void onBackPressed() {
-        if (atSelectionScreen) {
-            back();
-        }
-        else {
-            super.onBackPressed();
-        }
     }
 }

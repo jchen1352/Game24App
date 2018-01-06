@@ -65,16 +65,18 @@ public class NumberTile extends BaseTile {
         if (digitPics == null) {
             digitPics = new Drawable[10];
             Resources res = getResources();
-            digitPics[0] = res.getDrawable(R.drawable.ic_digit_0, null);
-            digitPics[1] = res.getDrawable(R.drawable.ic_digit_1, null);
-            digitPics[2] = res.getDrawable(R.drawable.ic_digit_2, null);
-            digitPics[3] = res.getDrawable(R.drawable.ic_digit_3, null);
-            digitPics[4] = res.getDrawable(R.drawable.ic_digit_4, null);
-            digitPics[5] = res.getDrawable(R.drawable.ic_digit_5, null);
-            digitPics[6] = res.getDrawable(R.drawable.ic_digit_6, null);
-            digitPics[7] = res.getDrawable(R.drawable.ic_digit_7, null);
-            digitPics[8] = res.getDrawable(R.drawable.ic_digit_8, null);
-            digitPics[9] = res.getDrawable(R.drawable.ic_digit_9, null);
+            Resources.Theme theme = res.newTheme();
+            theme.applyStyle(R.style.NumberNormal, true);
+            digitPics[0] = res.getDrawable(R.drawable.ic_digit_0, theme);
+            digitPics[1] = res.getDrawable(R.drawable.ic_digit_1, theme);
+            digitPics[2] = res.getDrawable(R.drawable.ic_digit_2, theme);
+            digitPics[3] = res.getDrawable(R.drawable.ic_digit_3, theme);
+            digitPics[4] = res.getDrawable(R.drawable.ic_digit_4, theme);
+            digitPics[5] = res.getDrawable(R.drawable.ic_digit_5, theme);
+            digitPics[6] = res.getDrawable(R.drawable.ic_digit_6, theme);
+            digitPics[7] = res.getDrawable(R.drawable.ic_digit_7, theme);
+            digitPics[8] = res.getDrawable(R.drawable.ic_digit_8, theme);
+            digitPics[9] = res.getDrawable(R.drawable.ic_digit_9, theme);
         }
 
         if (digitColor == null) {
