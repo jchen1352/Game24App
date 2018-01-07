@@ -50,6 +50,7 @@ public class TileManager {
                     selected++;
                 }
                 if (selected <= 2) {
+                    activity.playTapSound();
                     numTile.toggle();
                     if (selected < numsSelectedLen) {
                         for (int i = 0; i < numsSelectedLen; i++) {
@@ -75,6 +76,7 @@ public class TileManager {
             @Override
             public void onClick(View v) {
                 if (animating) return;
+                activity.playTapSound();
                 OperationTile opTile = (OperationTile)v;
                 opTile.toggle();
                 if (opTile.isActive()) {

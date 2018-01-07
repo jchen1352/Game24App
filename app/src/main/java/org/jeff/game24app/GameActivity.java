@@ -220,6 +220,7 @@ public class GameActivity extends BaseActivity {
      * @param tile the tile to animate around
      */
     public void victoryAnim(NumberTile tile) {
+        playSuccessSound();
         star1.setVisibility(View.VISIBLE);
         star2.setVisibility(View.VISIBLE);
         final int x = tile.getLeft()+numTileGroup.getLeft()+tile.getWidth()/2-star1.getWidth()/2;

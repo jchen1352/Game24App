@@ -4,21 +4,16 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.LayerDrawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -141,27 +136,40 @@ public class HomeActivity extends BaseActivity {
                 } else {
                     stopService(musicIntent);
                 }
-                updatePreferences(playMusic);
+                updateMusicPrefs(playMusic);
+                playTapSound();
             }
         });
         soundButton = (ToggleButton) layout.findViewById(R.id.sound);
+        soundButton.setChecked(playSound);
+        soundButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playSound = ((ToggleButton)v).isChecked();
+                updateSoundPrefs(playSound);
+                playTapSound();
+            }
+        });
         builder.setView(layout);
         settingsDialog = builder.create();
     }
 
     private void onStartClicked() {
+        playTapSound();
         fadeOut(start);
     }
 
     private void onSettingsClicked() {
+        playTapSound();
         settingsDialog.show();
     }
 
     private void onHelpClicked() {
-
+        playTapSound();
     }
 
     private void onTimeTrialClicked() {
+        playTapSound();
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, true);
@@ -169,6 +177,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void onFreePlayClicked() {
+        playTapSound();
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, false);
@@ -176,6 +185,7 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void onDifficultyClicked() {
+        playTapSound();
         difficultyMode = !difficultyMode;
         setDifficultyText();
     }

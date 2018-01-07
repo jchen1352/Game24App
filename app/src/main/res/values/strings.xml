@@ -9,6 +9,9 @@
     <string name="difficulty">Mode: %1$s</string>
     <string name="back">Back</string>
     <string name="settings_title">Settings</string>
+    <string name="music_credits">Music: "Rainbows" Kevin MacLeod (incompetech.com)\n
+Licensed under Creative Commons: By Attribution 3.0 License\n
+http://creativecommons.org/licenses/by/3.0/</string>
     <string name="score">Score: %1$d</string>
     <string name="game_over">Time\'s Up!</string>
     <string name="game_over_score">Your Score Was: %1$d</string>

@@ -20,7 +20,7 @@ public class MusicService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("MusicService", "music start");
-        musicPlayer = MediaPlayer.create(this, R.raw.bensound_littleidea);
+        musicPlayer = MediaPlayer.create(this, R.raw.rainbows);
         musicPlayer.setLooping(true);
         musicPlayer.start();
         return START_NOT_STICKY;
