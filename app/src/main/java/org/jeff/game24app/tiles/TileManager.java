@@ -11,7 +11,9 @@ import org.jeff.game24app.solver.Rational;
 
 public class TileManager {
 
-    /** The number of NumberTiles selected **/
+    /**
+     * The number of NumberTiles selected
+     **/
     private int numsSelectedLen;
     private NumberTile[] numsSelected;
     private int numExists;
@@ -40,7 +42,7 @@ public class TileManager {
             @Override
             public void onClick(View v) {
                 if (animating) return;
-                NumberTile numTile = (NumberTile)v;
+                NumberTile numTile = (NumberTile) v;
                 if (!numTile.exists()) return;
                 int selected = numsSelectedLen;
                 if (numTile.isActive()) {
@@ -76,7 +78,7 @@ public class TileManager {
             public void onClick(View v) {
                 if (animating) return;
                 activity.playTapSound();
-                OperationTile opTile = (OperationTile)v;
+                OperationTile opTile = (OperationTile) v;
                 opTile.toggle();
                 if (opTile.isActive()) {
                     if (opSelected != null) {

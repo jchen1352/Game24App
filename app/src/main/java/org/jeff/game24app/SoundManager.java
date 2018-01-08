@@ -14,9 +14,12 @@ public class SoundManager {
 
     private Context context;
     private MediaPlayer tapPlayer, successPlayer;
+
     @IntDef({TAP, SUCCESS})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Sounds{}
+    public @interface Sounds {
+    }
+
     public static final int TAP = 0;
     public static final int SUCCESS = 1;
 
@@ -39,6 +42,7 @@ public class SoundManager {
 
     /**
      * Plays the MediaPlayer corresponding to the provided sound
+     *
      * @param sound
      */
     public void playSound(@Sounds int sound) {
@@ -54,6 +58,7 @@ public class SoundManager {
 
     /**
      * Plays a given MediaPlayer
+     *
      * @param mp
      */
     private void playSound(MediaPlayer mp) {

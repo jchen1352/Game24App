@@ -112,12 +112,12 @@ public class GameActivity extends BaseActivity {
         NumberTile tile1 = (NumberTile) findViewById(R.id.tile1);
         NumberTile tile2 = (NumberTile) findViewById(R.id.tile2);
         NumberTile tile3 = (NumberTile) findViewById(R.id.tile3);
-        numTiles = new NumberTile[] {tile0, tile1, tile2, tile3};
+        numTiles = new NumberTile[]{tile0, tile1, tile2, tile3};
         OperationTile tileAdd = (OperationTile) findViewById(R.id.tile_add);
         OperationTile tileSub = (OperationTile) findViewById(R.id.tile_subtract);
         OperationTile tileMul = (OperationTile) findViewById(R.id.tile_multiply);
         OperationTile tileDiv = (OperationTile) findViewById(R.id.tile_divide);
-        opTiles = new OperationTile[] {tileAdd, tileSub, tileMul, tileDiv};
+        opTiles = new OperationTile[]{tileAdd, tileSub, tileMul, tileDiv};
         numTileGroup = findViewById(R.id.num_tile_group);
         opTileGroup = findViewById(R.id.op_tile_group);
         numShrinkAnimator = AnimatorInflater.loadAnimator(this, R.animator.shrink);
@@ -215,13 +215,15 @@ public class GameActivity extends BaseActivity {
 
     /**
      * Displays a victory animation when the puzzle is complete.
+     *
      * @param tile the tile to animate around
      */
     public void victoryAnim(NumberTile tile) {
         playSuccessSound();
         star1.setVisibility(View.VISIBLE);
         star2.setVisibility(View.VISIBLE);
-        final int x = tile.getLeft()+numTileGroup.getLeft()+tile.getWidth()/2-star1.getWidth()/2;
+        final int x = tile.getLeft() + numTileGroup.getLeft() +
+                tile.getWidth() / 2 - star1.getWidth() / 2;
         final int y = tile.getTop() + numTileGroup.getTop();
         final int width = tile.getWidth();
         ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
@@ -229,11 +231,11 @@ public class GameActivity extends BaseActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
                 float value = (float) animation.getAnimatedValue();
-                star1.setX(x - value * width/2);
-                star1.setY(y + width/2 * (value * (value - 1.3f))); //quadratic curve
+                star1.setX(x - value * width / 2);
+                star1.setY(y + width / 2 * (value * (value - 1.3f))); //quadratic curve
                 star1.setRotation(-value * 180);
-                star2.setX(x + value * width/2);
-                star2.setY(y + width/2 * (value * (value - 1.3f))); //quadratic curve
+                star2.setX(x + value * width / 2);
+                star2.setY(y + width / 2 * (value * (value - 1.3f))); //quadratic curve
                 star2.setRotation(value * 180);
             }
         });

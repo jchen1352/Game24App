@@ -16,11 +16,14 @@ import org.jeff.game24app.solver.Operation;
  */
 public class OperationTile extends BaseTile {
 
-    private @Operation.Ops int op;
+    private @Operation.Ops
+    int op;
 
     private static Drawable[] opPics;
 
-    /** Padding from tile border as percentage of side length **/
+    /**
+     * Padding from tile border as percentage of side length
+     **/
     private static final float PAD = .18f;
 
     public OperationTile(Context context, @Nullable AttributeSet attrs) {
@@ -44,7 +47,8 @@ public class OperationTile extends BaseTile {
         }
     }
 
-    public @Operation.Ops int getOp() {
+    public @Operation.Ops
+    int getOp() {
         return op;
     }
 

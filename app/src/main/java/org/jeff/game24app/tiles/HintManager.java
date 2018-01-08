@@ -13,12 +13,15 @@ public class HintManager {
 
     @IntDef({NUM0, OP, NUM1, INACTIVE})
     @Retention(RetentionPolicy.SOURCE)
-    private  @interface State{}
+    private @interface State {
+    }
+
     private static final int NUM0 = 0;
     private static final int OP = 1;
     private static final int NUM1 = 2;
     private static final int INACTIVE = 3;
-    private @State int state;
+    private @State
+    int state;
 
     private GameActivity activity;
     private NumberTile numDummy;

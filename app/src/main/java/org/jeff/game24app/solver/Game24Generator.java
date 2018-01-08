@@ -13,6 +13,7 @@ public class Game24Generator {
 
     /**
      * Constructor for puzzle generator
+     *
      * @param fractional whether to generate fractional puzzles
      */
     public Game24Generator(boolean fractional) {
@@ -21,6 +22,7 @@ public class Game24Generator {
 
     /**
      * Generates a puzzle depending on fractional.
+     *
      * @return an array of 4 Rationals that forms a puzzle
      */
     public Rational[] generatePuzzle() {
@@ -33,6 +35,7 @@ public class Game24Generator {
     /**
      * Generates a puzzle with only integers.
      * (But the solution may require fractions)
+     *
      * @return an array of 4 Rationals that forms a puzzle
      */
     private Rational[] generateIntPuzzle() {
@@ -52,6 +55,7 @@ public class Game24Generator {
 
     /**
      * Generates a puzzle that includes fractions.
+     *
      * @return an array of 4 Rationals that forms a puzzle
      */
     private Rational[] generateFracPuzzle() {
@@ -72,6 +76,7 @@ public class Game24Generator {
 
     /**
      * Returns the current puzzle.
+     *
      * @return the puzzle
      */
     public Rational[] restartPuzzle() {
@@ -81,6 +86,7 @@ public class Game24Generator {
     /**
      * Returns a hint containing the next step in a solution for a puzzle.
      * The puzzle may be partially completed and thus unsolvable.
+     *
      * @param puzzle the puzzle to give a hint for
      * @return the hint as an Operation, or null if unsolvable
      */

@@ -1,6 +1,6 @@
 package org.jeff.game24app.solver;
 
-public class Rational implements Comparable<Rational>{
+public class Rational implements Comparable<Rational> {
 
     private int numerator, denominator;
     public static final Rational CONST_24 = new Rational(24);
@@ -14,8 +14,8 @@ public class Rational implements Comparable<Rational>{
             den = -den;
             num = -num;
         }
-        numerator = num/gcd;
-        denominator = den/gcd;
+        numerator = num / gcd;
+        denominator = den / gcd;
         if (numerator == 0) {
             denominator = 1;
         }
@@ -34,33 +34,33 @@ public class Rational implements Comparable<Rational>{
     }
 
     public float getFloatValue() {
-        return (float) numerator/denominator;
+        return (float) numerator / denominator;
     }
 
     public static Rational add(Rational a, Rational b) {
         int numA = a.numerator, denA = a.denominator, numB = b.numerator, denB = b.denominator;
         int lcmDen = lcm(denA, denB);
-        numA *= lcmDen/denA;
-        numB *= lcmDen/denB;
-        return new Rational(numA+numB, lcmDen);
+        numA *= lcmDen / denA;
+        numB *= lcmDen / denB;
+        return new Rational(numA + numB, lcmDen);
     }
 
     public static Rational subtract(Rational a, Rational b) {
         int numA = a.numerator, denA = a.denominator, numB = b.numerator, denB = b.denominator;
         int lcmDen = lcm(denA, denB);
-        numA *= lcmDen/denA;
-        numB *= lcmDen/denB;
-        return new Rational(numA-numB, lcmDen);
+        numA *= lcmDen / denA;
+        numB *= lcmDen / denB;
+        return new Rational(numA - numB, lcmDen);
     }
 
     public static Rational multiply(Rational a, Rational b) {
         int numA = a.numerator, denA = a.denominator, numB = b.numerator, denB = b.denominator;
-        return new Rational(numA*numB, denA*denB);
+        return new Rational(numA * numB, denA * denB);
     }
 
     public static Rational divide(Rational a, Rational b) {
         int numA = a.numerator, denA = a.denominator, numB = b.numerator, denB = b.denominator;
-        return new Rational(numA*denB, denA*numB);
+        return new Rational(numA * denB, denA * numB);
     }
 
     @Override
@@ -90,7 +90,7 @@ public class Rational implements Comparable<Rational>{
 
     @Override
     public String toString() {
-        String s = ""+numerator;
+        String s = "" + numerator;
         if (denominator != 1) {
             s += "/" + denominator;
         }
@@ -107,7 +107,7 @@ public class Rational implements Comparable<Rational>{
     }
 
     private static int lcm(int a, int b) {
-        return a * (b / gcd(a,b));
+        return a * (b / gcd(a, b));
     }
 
     @Override

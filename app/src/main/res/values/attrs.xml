@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="NumberTile">
-        <attr name="numerator" format="integer"/>
-        <attr name="denominator" format="integer"/>
+        <attr name="numerator" format="integer" />
+        <attr name="denominator" format="integer" />
     </declare-styleable>
 
     <declare-styleable name="OperationTile">
         <attr name="operation" format="enum">
-            <enum name="add" value="0"/>
-            <enum name="subtract" value="1"/>
-            <enum name="multiply" value="2"/>
-            <enum name="divide" value="3"/>
+            <enum name="add" value="0" />
+            <enum name="subtract" value="1" />
+            <enum name="multiply" value="2" />
+            <enum name="divide" value="3" />
         </attr>
     </declare-styleable>
-    
+
     <declare-styleable name="CustomFont">
-        <attr name="font" format="string"/>
+        <attr name="font" format="string" />
     </declare-styleable>
 
     <declare-styleable name="NumberColor">
-        <attr name="numberColor" format="color"/>
-        <attr name="numberShadow" format="color"/>
+        <attr name="numberColor" format="color" />
+        <attr name="numberShadow" format="color" />
     </declare-styleable>
 
     <declare-styleable name="OpColor">
-        <attr name="opColor" format="color"/>
-        <attr name="opShadow" format="color"/>
+        <attr name="opColor" format="color" />
+        <attr name="opShadow" format="color" />
     </declare-styleable>
 </resources>

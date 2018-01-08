@@ -24,7 +24,7 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg1"
@@ -32,7 +32,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg0"
             app:layout_constraintLeft_toLeftOf="@id/bg0"
             app:layout_constraintRight_toLeftOf="@+id/bg2"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg2"
@@ -40,7 +40,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg0"
             app:layout_constraintLeft_toRightOf="@id/bg1"
             app:layout_constraintRight_toLeftOf="@+id/bg3"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg3"
@@ -48,7 +48,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg0"
             app:layout_constraintLeft_toRightOf="@id/bg2"
             app:layout_constraintRight_toRightOf="@id/bg0"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg4"
@@ -56,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg1"
             app:layout_constraintLeft_toLeftOf="@id/bg0"
             app:layout_constraintRight_toLeftOf="@+id/bg5"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg5"
@@ -64,7 +64,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg1"
             app:layout_constraintLeft_toRightOf="@id/bg4"
             app:layout_constraintRight_toLeftOf="@+id/bg6"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg6"
@@ -72,7 +72,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg1"
             app:layout_constraintLeft_toRightOf="@id/bg5"
             app:layout_constraintRight_toLeftOf="@+id/bg7"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg7"
@@ -80,7 +80,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg1"
             app:layout_constraintLeft_toRightOf="@id/bg6"
             app:layout_constraintRight_toRightOf="@id/bg0"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageButton
             android:id="@+id/settings"
@@ -101,7 +101,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg4"
             app:layout_constraintLeft_toRightOf="@id/settings"
             app:layout_constraintRight_toLeftOf="@+id/bg10"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg10"
@@ -109,7 +109,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg4"
             app:layout_constraintLeft_toRightOf="@id/bg9"
             app:layout_constraintRight_toLeftOf="@+id/bg11"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg11"
@@ -117,7 +117,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg4"
             app:layout_constraintLeft_toRightOf="@id/bg10"
             app:layout_constraintRight_toLeftOf="@+id/bg12"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageView
             android:id="@+id/bg12"
@@ -125,7 +125,7 @@
             app:layout_constraintTop_toBottomOf="@id/bg4"
             app:layout_constraintLeft_toRightOf="@id/bg11"
             app:layout_constraintRight_toRightOf="@+id/help"
-            app:layout_constraintDimensionRatio="1:1"/>
+            app:layout_constraintDimensionRatio="1:1" />
 
         <ImageButton
             android:id="@+id/help"
@@ -145,28 +145,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".27"/>
+            app:layout_constraintGuide_percent=".27" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_constraintGuide_percent=".73"/>
+            app:layout_constraintGuide_percent=".73" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".14"/>
+            app:layout_constraintGuide_percent=".14" />
 
         <android.support.constraint.Guideline
             android:id="@+id/guide3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintGuide_percent=".403"/>
+            app:layout_constraintGuide_percent=".403" />
 
         <org.jeff.game24app.tiles.NumberTile
             android:layout_width="0dp"
@@ -175,7 +175,7 @@
             app:layout_constraintRight_toRightOf="@id/guide1"
             app:layout_constraintTop_toTopOf="@id/guide2"
             app:layout_constraintBottom_toBottomOf="@id/guide3"
-            app:numerator="24"/>
+            app:numerator="24" />
 
         <org.jeff.game24app.views.HomeTextView
             android:id="@+id/title_top"
@@ -197,7 +197,7 @@
             app:layout_constraintTop_toBottomOf="@id/guide3"
             android:text="GAME"
             android:gravity="center"
-            style="@style/HomeTextView"/>
+            style="@style/HomeTextView" />
 
         <ImageButton
             android:id="@+id/start"
@@ -251,7 +251,7 @@
             app:layout_constraintRight_toRightOf="@id/bg9"
             app:layout_constraintTop_toTopOf="@id/bg9"
             app:layout_constraintBottom_toBottomOf="@id/bg9"
-            android:src="@drawable/ic_op_add"/>
+            android:src="@drawable/ic_op_add" />
 
         <ImageView
             style="@style/BackgroundOp"
@@ -259,7 +259,7 @@
             app:layout_constraintRight_toRightOf="@id/bg10"
             app:layout_constraintTop_toTopOf="@id/bg10"
             app:layout_constraintBottom_toBottomOf="@id/bg10"
-            android:src="@drawable/ic_op_sub"/>
+            android:src="@drawable/ic_op_sub" />
 
         <ImageView
             style="@style/BackgroundOp"
@@ -267,7 +267,7 @@
             app:layout_constraintRight_toRightOf="@id/bg11"
             app:layout_constraintTop_toTopOf="@id/bg11"
             app:layout_constraintBottom_toBottomOf="@id/bg11"
-            android:src="@drawable/ic_op_mul"/>
+            android:src="@drawable/ic_op_mul" />
 
         <ImageView
             style="@style/BackgroundOp"
@@ -275,7 +275,7 @@
             app:layout_constraintRight_toRightOf="@id/bg12"
             app:layout_constraintTop_toTopOf="@id/bg12"
             app:layout_constraintBottom_toBottomOf="@id/bg12"
-            android:src="@drawable/ic_op_div"/>
+            android:src="@drawable/ic_op_div" />
 
         <org.jeff.game24app.views.HomeButton
             android:id="@+id/time_trial"

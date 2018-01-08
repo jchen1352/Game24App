@@ -19,13 +19,19 @@ import android.widget.ToggleButton;
 
 public class HomeActivity extends BaseActivity {
 
-    /** Intent key that determines generating fraction puzzles **/
+    /**
+     * Intent key that determines generating fraction puzzles
+     **/
     public static final String GEN_FRAC = "gen_frac";
-    /** Intent key that determines time trial mode for game **/
+    /**
+     * Intent key that determines time trial mode for game
+     **/
     public static final String TIME_TRIAL = "time_trial";
     private ImageButton start, settings, help;
     private Button timeTrial, freePlay, difficulty;
-    /** False is classic, true is fractional **/
+    /**
+     * False is classic, true is fractional
+     **/
     private boolean difficultyMode;
     private ToggleButton musicButton, soundButton;
     private AlertDialog settingsDialog;
@@ -95,30 +101,30 @@ public class HomeActivity extends BaseActivity {
         final ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.layout);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    @Override
+                    public void onGlobalLayout() {
+                        layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                //Make the title spread out across the view (at least mostly)
-                TextView titleTop = (TextView) findViewById(R.id.title_top);
-                Rect bounds = new Rect();
-                Paint paint = titleTop.getPaint();
-                String text = titleTop.getText().toString();
-                paint.getTextBounds(text, 0, text.length(), bounds);
-                int textWidth = bounds.width();
-                int viewWidth = titleTop.getWidth();
-                float ems = (viewWidth - textWidth) / titleTop.getTextSize();
-                titleTop.setLetterSpacing(ems / text.length());
-                TextView titleBottom = (TextView) findViewById(R.id.title_bottom);
-                paint = titleBottom.getPaint();
-                text = titleBottom.getText().toString();
-                paint.getTextBounds(text, 0, text.length(), bounds);
-                textWidth = bounds.width();
-                viewWidth = titleBottom.getWidth();
-                ems = (viewWidth - textWidth) / titleBottom.getTextSize();
-                titleBottom.setLetterSpacing(ems / text.length());
-            }
-        });
+                        //Make the title spread out across the view (at least mostly)
+                        TextView titleTop = (TextView) findViewById(R.id.title_top);
+                        Rect bounds = new Rect();
+                        Paint paint = titleTop.getPaint();
+                        String text = titleTop.getText().toString();
+                        paint.getTextBounds(text, 0, text.length(), bounds);
+                        int textWidth = bounds.width();
+                        int viewWidth = titleTop.getWidth();
+                        float ems = (viewWidth - textWidth) / titleTop.getTextSize();
+                        titleTop.setLetterSpacing(ems / text.length());
+                        TextView titleBottom = (TextView) findViewById(R.id.title_bottom);
+                        paint = titleBottom.getPaint();
+                        text = titleBottom.getText().toString();
+                        paint.getTextBounds(text, 0, text.length(), bounds);
+                        textWidth = bounds.width();
+                        viewWidth = titleBottom.getWidth();
+                        ems = (viewWidth - textWidth) / titleBottom.getTextSize();
+                        titleBottom.setLetterSpacing(ems / text.length());
+                    }
+                });
     }
 
     private void setupSettingsDialog() {
@@ -130,7 +136,7 @@ public class HomeActivity extends BaseActivity {
         musicButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playMusic = ((ToggleButton)v).isChecked();
+                playMusic = ((ToggleButton) v).isChecked();
                 if (playMusic) {
                     startService(musicIntent);
                 } else {
@@ -145,7 +151,7 @@ public class HomeActivity extends BaseActivity {
         soundButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                playSound = ((ToggleButton)v).isChecked();
+                playSound = ((ToggleButton) v).isChecked();
                 updateSoundPrefs(playSound);
                 playTapSound();
             }

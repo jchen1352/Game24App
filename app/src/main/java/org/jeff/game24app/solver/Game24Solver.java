@@ -14,12 +14,12 @@ public class Game24Solver {
     }
 
     private static void solve(Rational[] numbers, Operation[] current,
-                             List<Operation[]> solutions) {
+                              List<Operation[]> solutions) {
         if (numbers.length == 1 && numbers[0].equals(Rational.CONST_24)) {
             solutions.add(current.clone());
         }
         for (int i = 0; i < numbers.length; i++) {
-            for (int j = i+1; j < numbers.length; j++) {
+            for (int j = i + 1; j < numbers.length; j++) {
                 Operation[] next = Arrays.copyOf(current, current.length + 1);
                 Rational[] newNums = new Rational[numbers.length - 1];
                 int newI = 0;
