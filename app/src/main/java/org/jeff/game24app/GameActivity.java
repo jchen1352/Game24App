@@ -52,7 +52,16 @@ public class GameActivity extends BaseActivity {
     private CountDownTimer timer;
     private AlertDialog gameOverDialog;
     private Game24Generator generator;
+    private boolean fracMode;
     private Rational[] nextPuzzle;
+    /**
+     * Shared preference key for saved classic puzzle
+     */
+    private static final String CLASSIC_PREF = "puzzle_classic_pref";
+    /**
+     * Shared preference key for saved fractional puzzle
+     */
+    private static final String FRAC_PREF = "puzzle_frac_pref";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,21 +92,23 @@ public class GameActivity extends BaseActivity {
         star2 = (ImageView) findViewById(R.id.star2);
 
         Intent intent = getIntent();
-        generator = new Game24Generator(intent.getBooleanExtra(HomeActivity.GEN_FRAC, false));
+        fracMode = intent.getBooleanExtra(HomeActivity.GEN_FRAC, false);
+        generator = new Game24Generator(fracMode);
         timeTrialMode = intent.getBooleanExtra(HomeActivity.TIME_TRIAL, false);
         scoreView = (TextView) findViewById(R.id.score);
         time = (TextView) findViewById(R.id.time);
         if (!timeTrialMode) {
             scoreView.setVisibility(View.GONE);
             time.setVisibility(View.GONE);
+            getSavedPuzzle();
         } else {
             setupTimer();
             setupTimeTrial();
+            //Manually set score to 0 because not calling newPuzzle and score starts at -1
+            score = 0;
+            scoreView.setText(getResources().getString(R.string.score, score));
+            nextPuzzle = generator.generatePuzzle();
         }
-        nextPuzzle = generator.generatePuzzle();
-        //Manually set score to 0 because not calling newPuzzle and score starts at -1
-        score = 0;
-        scoreView.setText(getResources().getString(R.string.score, score));
     }
 
     @Override
@@ -107,6 +118,49 @@ public class GameActivity extends BaseActivity {
             tile.setVisibility(View.VISIBLE);
         }
         setupPuzzle();
+    }
+
+    private void getSavedPuzzle() {
+        SharedPreferences preferences = getSharedPreferences(PREFS, 0);
+        /*
+         * Since a puzzle consists of 4 rationals with numerator and denominator at most 10,
+         * the puzzle can be encoded in a single integer. The first 4 bits are the 1st
+         * numerator, the second 4 bits are the 1st denominator, and so on.
+         */
+        int puzzleEncoded = preferences.getInt(fracMode ? FRAC_PREF : CLASSIC_PREF, 0);
+        if (puzzleEncoded != 0) {
+            nextPuzzle = new Rational[4];
+            for (int i = 0; i < 4; i++) {
+                int numerator = puzzleEncoded >> (28 - (i * 8)) & 0xF;
+                int denominator = puzzleEncoded >> (24 - (i * 8)) & 0xF;
+                nextPuzzle[i] = new Rational(numerator, denominator);
+            }
+        } else {
+            nextPuzzle = generator.generatePuzzle();
+        }
+    }
+
+    private void savePuzzle() {
+        //See getSavedPuzzle for how a puzzle is encoded
+        int puzzleEncoded = 0;
+        for (int i = 0; i < 4; i++) {
+            puzzleEncoded <<= 4;
+            puzzleEncoded |= nextPuzzle[i].getNumerator();
+            puzzleEncoded <<= 4;
+            puzzleEncoded |= nextPuzzle[i].getDenominator();
+        }
+        SharedPreferences preferences = getSharedPreferences(PREFS, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(fracMode ? FRAC_PREF : CLASSIC_PREF, puzzleEncoded);
+        editor.apply();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (!timeTrialMode) {
+            savePuzzle();
+        }
     }
 
     private void setupTiles() {
