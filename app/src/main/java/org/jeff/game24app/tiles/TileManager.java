@@ -2,7 +2,6 @@ package org.jeff.game24app.tiles;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
@@ -180,9 +179,5 @@ public class TileManager {
         numsSelected[1] = null;
         numExists = 4;
         opSelected = null;
-    }
-
-    public void removeActivity() {
-        activity = null;
     }
 }

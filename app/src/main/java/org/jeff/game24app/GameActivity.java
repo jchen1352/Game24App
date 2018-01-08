@@ -19,10 +19,10 @@ import android.widget.TextView;
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
+import org.jeff.game24app.tiles.HintManager;
 import org.jeff.game24app.tiles.NumberTile;
 import org.jeff.game24app.tiles.OperationTile;
 import org.jeff.game24app.tiles.TileManager;
-import org.jeff.game24app.views.DarkView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -34,9 +34,9 @@ public class GameActivity extends BaseActivity {
     private NumberTile[] numTiles;
     private OperationTile[] opTiles;
     private TileManager tileManager;
+    private HintManager hintManager;
     private View numTileGroup, opTileGroup;
     private Animator numShrinkAnimator, numGrowAnimator;
-    private DarkView darkView;
     private ImageView star1, star2;
     private boolean timeTrialMode;
     private TextView scoreView;
@@ -54,6 +54,7 @@ public class GameActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setupTiles();
+        hintManager = new HintManager(this);
 
         ImageButton settingsButton = (ImageButton) findViewById(R.id.settings_button);
         ImageButton restartButton = (ImageButton) findViewById(R.id.restart_button);
@@ -77,7 +78,6 @@ public class GameActivity extends BaseActivity {
                 showHint();
             }
         });
-        darkView = (DarkView) findViewById(R.id.dark_view);
         star1 = (ImageView) findViewById(R.id.star1);
         star2 = (ImageView) findViewById(R.id.star2);
 
@@ -210,9 +210,7 @@ public class GameActivity extends BaseActivity {
                 hintOp = tile;
             }
         }
-        darkView.setVisibility(View.VISIBLE);
-        darkView.setViews(hintNum0, hintOp, hintNum1, numTileGroup, opTileGroup);
-        darkView.startHint();
+        hintManager.startHint(hintNum0, hintOp, hintNum1);
     }
 
     /**
@@ -283,7 +281,7 @@ public class GameActivity extends BaseActivity {
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                darkView.setVisibility(View.GONE);
+                hintManager.reset();
                 setupTimeTrial();
                 newPuzzle();
                 gameOverDialog.dismiss();
@@ -321,7 +319,6 @@ public class GameActivity extends BaseActivity {
         if (timeTrialMode) {
             timer.cancel();
         }
-        tileManager.removeActivity();
     }
 
     public void showSettings() {

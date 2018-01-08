@@ -48,6 +48,11 @@ public class OperationTile extends BaseTile {
         return op;
     }
 
+    public void setOp(@Operation.Ops int op) {
+        this.op = op;
+        invalidate();
+    }
+
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
