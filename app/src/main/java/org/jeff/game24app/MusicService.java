@@ -19,18 +19,18 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("MusicService", "music start");
-        musicPlayer = MediaPlayer.create(this, R.raw.bensound_littleidea);
+        /*Log.d("MusicService", "music start");
+        musicPlayer = MediaPlayer.create(this, R.raw.bensound_littleidea.mp3);
         musicPlayer.setLooping(true);
-        musicPlayer.start();
+        musicPlayer.start();*/
         return START_NOT_STICKY;
     }
 
     @Override
     public void onDestroy() {
-        Log.d("MusicService", "music stop");
+        /*Log.d("MusicService", "music stop");
         musicPlayer.stop();
         musicPlayer.release();
-        musicPlayer = null;
+        musicPlayer = null;*/
     }
 }

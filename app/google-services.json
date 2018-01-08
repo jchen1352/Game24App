@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "407744213640",
+    "firebase_url": "https://game24app-90262.firebaseio.com",
+    "project_id": "game24app-90262",
+    "storage_bucket": "game24app-90262.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:407744213640:android:7a3e069426d32d74",
+        "android_client_info": {
+          "package_name": "org.jeff.game24app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "407744213640-tounvike8jic7bb0pm2pnlhjkd5dvfsq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "org.jeff.game24app",
+            "certificate_hash": "e53b52c61bfe06fca7a995bf698f08b947f14c79"
+          }
+        },
+        {
+          "client_id": "407744213640-mgeb9b4f49f62oc84crcmtmb2i24lked.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCaQJF6F9gd4gRNMlIlcsybyyGiCCcQ1sA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "407744213640-mgeb9b4f49f62oc84crcmtmb2i24lked.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

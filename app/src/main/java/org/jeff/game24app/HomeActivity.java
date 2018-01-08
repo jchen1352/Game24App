@@ -18,6 +18,12 @@ public class HomeActivity extends BaseActivity {
     public static final String GEN_FRAC = "gen_frac";
     /** Intent key that determines time trial mode for game **/
     public static final String TIME_TRIAL = "time_trial";
+
+    public static final String ONLINE = "online";
+
+    public static final String MAKE_GAME = "make_game";
+
+    public static final String IS_HOST = "is_host";
     private ImageButton start, settings, help;
     private Button timeTrial, freePlay, difficulty, back;
     /** False is classic, true is fractional **/
@@ -140,6 +146,8 @@ public class HomeActivity extends BaseActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, true);
+        intent.putExtra(ONLINE, false);
+        intent.putExtra(IS_HOST, false);
         startActivity(intent);
     }
 
@@ -147,6 +155,22 @@ public class HomeActivity extends BaseActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, false);
+        intent.putExtra(ONLINE, false);
+        intent.putExtra(IS_HOST, false);
+        startActivity(intent);
+    }
+
+    private void onMakeOnlineGameClicked() {
+        Intent intent = new Intent(this, OnlineActivity.class);
+        intent.putExtra(GEN_FRAC, difficultyMode);
+        intent.putExtra(MAKE_GAME, true);
+        startActivity(intent);
+    }
+
+    private void onJoinOnlineGameClicked() {
+        Intent intent = new Intent(this, OnlineActivity.class);
+        intent.putExtra(GEN_FRAC, difficultyMode);
+        intent.putExtra(MAKE_GAME, false);
         startActivity(intent);
     }
 

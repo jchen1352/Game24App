@@ -4,17 +4,26 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.Settings.Secure;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Operation;
@@ -26,8 +35,10 @@ import org.jeff.game24app.views.DarkView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class GameActivity extends BaseActivity {
 
@@ -48,6 +59,15 @@ public class GameActivity extends BaseActivity {
     private AlertDialog gameOverDialog;
     private Game24Generator generator;
     private Rational[] nextPuzzle;
+
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+    private boolean onlineMode;
+    private boolean isHost;
+    private String unique_id = Secure.getString(MyApp.getContext().getContentResolver(),
+            Secure.ANDROID_ID);
+    private int room_id;
+    private DatabaseReference winnerReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,8 +104,17 @@ public class GameActivity extends BaseActivity {
         Intent intent = getIntent();
         generator = new Game24Generator(intent.getBooleanExtra(HomeActivity.GEN_FRAC, false));
         timeTrialMode = intent.getBooleanExtra(HomeActivity.TIME_TRIAL, false);
+        onlineMode = intent.getBooleanExtra(HomeActivity.ONLINE, false);
+        isHost = intent.getBooleanExtra(HomeActivity.IS_HOST, false);
         scoreView = (TextView) findViewById(R.id.score);
         time = (TextView) findViewById(R.id.time);
+        if (onlineMode) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference().child("online");
+            room_id = intent.getIntExtra(OnlineActivity.ROOM_ID, -1);
+            winnerReference = reference.child(Integer.toString(room_id)).child("winner");
+            winnerListenerSetup();
+        }
         if (!timeTrialMode) {
             scoreView.setVisibility(View.GONE);
             time.setVisibility(View.GONE);
@@ -94,9 +123,64 @@ public class GameActivity extends BaseActivity {
             setupTimeTrial();
         }
         nextPuzzle = generator.generatePuzzle();
+
         score = 0;
         scoreView.setText(getResources().getString(R.string.score, score));
     }
+
+    public void onlineHostSetup () {
+        Long longPuzzle = Long.valueOf(generator.hashToInt(nextPuzzle));
+        reference.child(Integer.toString(room_id)).child("puzzle").setValue(longPuzzle);
+    }
+
+    public void onlineNonhostSetup () {
+        nextPuzzle = generator.reverseHash(getIntent().getIntExtra(OnlineActivity.PUZZLE, -1));
+    }
+
+    public void winnerListenerSetup () {
+        ValueEventListener winnerListener = new ValueEventListener() {
+            boolean winnerFound = false;
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    if (dataSnapshot.getValue() != unique_id) {
+                        isHost = false;
+                        winnerFound = true;
+                        // add a toast
+                    }
+                } else if (winnerFound) {
+                    winnerFound = false;
+                    findNewRound();
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("dbError: Find_Winner", databaseError.toException());
+            }
+        };
+        winnerReference.addValueEventListener(winnerListener);
+    }
+    private void findNewRound() {
+        DatabaseReference roomPuzzle = reference.child(Integer.toString(room_id)).child("puzzle");
+        ValueEventListener p2PuzzleListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    nextPuzzle = generator.reverseHash(((Long)(dataSnapshot.getValue())).intValue());
+                    shrinkNumTiles();
+                } else {
+                    //return an error
+                    //Log.w("dbError: Find_Puzzle2", );
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("dbError: Find_Puzzle2", databaseError.toException());
+            }
+        };
+        roomPuzzle.addListenerForSingleValueEvent(p2PuzzleListener);
+    }
+
 
     @Override
     public void onEnterAnimationComplete() {
@@ -142,6 +226,13 @@ public class GameActivity extends BaseActivity {
     }
 
     private void setupPuzzle() {
+        if (onlineMode) {
+            if (isHost) {
+                onlineHostSetup();
+            } else {
+                onlineNonhostSetup();
+            }
+        }
         for (int i = 0; i < numTiles.length; i++) {
             numTiles[i].setExists(true);
             numTiles[i].unselect();
@@ -155,12 +246,24 @@ public class GameActivity extends BaseActivity {
     }
 
     public void newPuzzle() {
-        nextPuzzle = generator.generatePuzzle();
+        if (onlineMode) {
+            onlineWinnerSetup();
+        } else {
+            nextPuzzle = generator.generatePuzzle();
+        }
         shrinkNumTiles();
         if (timeTrialMode) {
             score++;
             scoreView.setText(getResources().getString(R.string.score, score));
         }
+    }
+
+    private void onlineWinnerSetup () {
+        isHost = true;
+        winnerReference.setValue(unique_id);
+        nextPuzzle = generator.generatePuzzle();
+        onlineHostSetup();
+        winnerReference.setValue(null);
     }
 
     public void restartPuzzle() {
