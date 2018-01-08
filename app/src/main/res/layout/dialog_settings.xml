@@ -3,51 +3,58 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
 
-    <TextView
+    <org.jeff.game24app.views.FontTextView
         android:id="@+id/settings_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/settings_title" />
+        android:text="@string/settings_title"
+        android:textSize="@dimen/title_size"
+        style="@style/DialogTextView" />
 
     <ToggleButton
         android:id="@+id/sound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon"
+        android:layout_height="@dimen/icon"
         android:textOn=""
         android:textOff=""
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/music"
         app:layout_constraintTop_toBottomOf="@+id/settings_title"
-        android:background="@null"
-        android:button="@drawable/sound_button"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/sound_button"
         android:checked="true" />
 
     <ToggleButton
         android:id="@+id/music"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/icon"
+        android:layout_height="@dimen/icon"
         android:textOn=""
         android:textOff=""
         app:layout_constraintLeft_toRightOf="@+id/sound"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/settings_title"
-        android:background="@null"
-        android:button="@drawable/music_button"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/music_button"
         android:checked="true" />
 
-    <TextView
+    <org.jeff.game24app.views.FontTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/sound"
-        android:text="@string/music_credits" />
+        android:layout_marginTop="20dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="@string/music_credits"
+        style="@style/DialogTextView" />
 
 </android.support.constraint.ConstraintLayout>

@@ -4,9 +4,12 @@ import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 
-public class HomeTextView extends AppCompatTextView {
+/**
+ * A TextView with a certain font
+ */
+public class FontTextView extends AppCompatTextView {
 
-    public HomeTextView(Context context, AttributeSet attrs) {
+    public FontTextView(Context context, AttributeSet attrs) {
         super(context, attrs);
         FontHelper.setCustomFont(this, context, attrs);
     }

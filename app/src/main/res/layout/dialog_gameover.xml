@@ -3,50 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background_gray">
 
-    <TextView
+    <org.jeff.game24app.views.FontTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/game_over" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="10dp"
+        android:text="@string/game_over"
+        android:textSize="@dimen/title_size"
+        style="@style/DialogTextView" />
 
-    <TextView
+    <org.jeff.game24app.views.FontTextView
         android:id="@+id/score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/title"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/game_over_score" />
+        android:layout_marginTop="10dp"
+        android:text="@string/game_over_score"
+        style="@style/DialogTextView" />
 
-    <TextView
+    <org.jeff.game24app.views.FontTextView
         android:id="@+id/hi_score"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/score"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/game_over_hi_score" />
+        android:text="@string/game_over_hi_score"
+        style="@style/DialogTextView" />
 
-    <Button
+    <org.jeff.game24app.views.FontButton
         android:id="@+id/restart_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@+id/hi_score"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toLeftOf="@+id/return_button"
-        android:text="@string/game_over_replay" />
+        android:layout_marginTop="10dp"
+        android:text="@string/game_over_replay"
+        style="@style/HomeButton" />
 
-    <Button
+    <org.jeff.game24app.views.FontButton
         android:id="@+id/return_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/hi_score"
         app:layout_constraintLeft_toRightOf="@id/restart_button"
         app:layout_constraintRight_toRightOf="parent"
-        android:text="@string/game_over_end" />
+        android:layout_marginTop="10dp"
+        android:text="@string/game_over_end"
+        style="@style/HomeButton" />
 
 </android.support.constraint.ConstraintLayout>

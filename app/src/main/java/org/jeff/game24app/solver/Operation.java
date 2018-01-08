@@ -9,12 +9,15 @@ public class Operation {
 
     @IntDef({ADD, SUBTRACT, MULTIPLY, DIVIDE})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface Ops{}
+    public @interface Ops {
+    }
+
     public static final int ADD = 0;
     public static final int SUBTRACT = 1;
     public static final int MULTIPLY = 2;
     public static final int DIVIDE = 3;
-    private @Ops int op;
+    private @Ops
+    int op;
 
     private Rational num0, num1;
 
@@ -32,7 +35,8 @@ public class Operation {
         return num1;
     }
 
-    public @Ops int getOp() {
+    public @Ops
+    int getOp() {
         return op;
     }
 
@@ -58,6 +62,6 @@ public class Operation {
 
     @Override
     public String toString() {
-        return num0.toString() + "+-*/".substring(op, op+1) + num1.toString();
+        return num0.toString() + "+-*/".substring(op, op + 1) + num1.toString();
     }
 }

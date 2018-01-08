@@ -177,7 +177,7 @@
             app:layout_constraintBottom_toBottomOf="@id/guide3"
             app:numerator="24" />
 
-        <org.jeff.game24app.views.HomeTextView
+        <org.jeff.game24app.views.FontTextView
             android:id="@+id/title_top"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -188,7 +188,7 @@
             android:gravity="center"
             style="@style/HomeTextView" />
 
-        <org.jeff.game24app.views.HomeTextView
+        <org.jeff.game24app.views.FontTextView
             android:id="@+id/title_bottom"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -277,7 +277,7 @@
             app:layout_constraintBottom_toBottomOf="@id/bg12"
             android:src="@drawable/ic_op_div" />
 
-        <org.jeff.game24app.views.HomeButton
+        <org.jeff.game24app.views.FontButton
             android:id="@+id/time_trial"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -289,7 +289,7 @@
             style="@style/HomeButton"
             android:visibility="visible" />
 
-        <org.jeff.game24app.views.HomeButton
+        <org.jeff.game24app.views.FontButton
             android:id="@+id/free_play"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -300,7 +300,7 @@
             android:text="@string/free_play"
             style="@style/HomeButton" />
 
-        <org.jeff.game24app.views.HomeButton
+        <org.jeff.game24app.views.FontButton
             android:id="@+id/difficulty"
             android:layout_width="0dp"
             android:layout_height="0dp"

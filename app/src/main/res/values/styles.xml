@@ -9,17 +9,19 @@
     </style>
 
     <style name="NumTile">
-        <item name="android:layout_width">@dimen/num_tile_width</item>
-        <item name="android:layout_height">@dimen/num_tile_height</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_margin">25dp</item>
     </style>
 
     <style name="OpTile">
-        <item name="android:layout_width">@dimen/op_tile_width</item>
-        <item name="android:layout_height">@dimen/op_tile_height</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_margin">10dp</item>
     </style>
 
     <style name="HomeButton">
-        <item name="org.jeff.game24app:font">fonts/JosefinSans-Regular.ttf</item>
+        <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/button_rect_inset</item>
     </style>
@@ -28,6 +30,11 @@
         <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="DialogTextView">
+        <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="NumberNormal" parent="Theme.AppCompat">

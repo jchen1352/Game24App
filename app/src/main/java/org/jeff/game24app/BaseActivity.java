@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+/**
+ * An Activity that other activities extend. Provides mainly support for audio.
+ */
 public abstract class BaseActivity extends AppCompatActivity {
 
     private static int sessionDepth = 0;
@@ -31,6 +34,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onRestart() {
+        super.onRestart();
+        soundManager.initialize(this);
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         sessionDepth++;
@@ -48,6 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (sessionDepth == 0) {
             onSentToBackground();
         }
+        soundManager.destroy();
     }
 
     protected void onEnterForeground() {
@@ -58,13 +68,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void onSentToBackground() {
         stopService(musicIntent);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        soundManager.destroy();
-        soundManager = null;
     }
 
     protected void updateMusicPrefs(boolean musicSetting) {

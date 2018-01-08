@@ -24,14 +24,14 @@ public class SoundManager {
     public static final int SUCCESS = 1;
 
     public SoundManager(Context c) {
-        context = c;
-        initialize();
+        initialize(c);
     }
 
     /**
      * Initialize every MediaPlayer
      */
-    public void initialize() {
+    public void initialize(Context c) {
+        context = c;
         if (tapPlayer == null) {
             tapPlayer = MediaPlayer.create(context, R.raw.tap_sound);
         }

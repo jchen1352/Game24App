@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.media.MediaPlayer;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
-import android.util.Log;
 
 public class MusicService extends Service {
 
@@ -19,7 +18,6 @@ public class MusicService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d("MusicService", "music start");
         musicPlayer = MediaPlayer.create(this, R.raw.rainbows);
         musicPlayer.setLooping(true);
         musicPlayer.start();
@@ -28,7 +26,6 @@ public class MusicService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d("MusicService", "music stop");
         musicPlayer.stop();
         musicPlayer.release();
         musicPlayer = null;

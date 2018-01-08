@@ -5,11 +5,11 @@ import android.support.v7.widget.AppCompatButton;
 import android.util.AttributeSet;
 
 /**
- * A button that appears on the home screen.
+ * A button with a certain font.
  */
-public class HomeButton extends AppCompatButton {
+public class FontButton extends AppCompatButton {
 
-    public HomeButton(Context context, AttributeSet attrs) {
+    public FontButton(Context context, AttributeSet attrs) {
         super(context, attrs);
         FontHelper.setCustomFont(this, context, attrs);
     }

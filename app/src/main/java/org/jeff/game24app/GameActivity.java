@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ValueAnimator;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -29,13 +30,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * The main activity responsible for the game. Handles both time trial
+ * and free play mode.
+ */
 public class GameActivity extends BaseActivity {
 
     private NumberTile[] numTiles;
     private OperationTile[] opTiles;
     private TileManager tileManager;
     private HintManager hintManager;
-    private View numTileGroup, opTileGroup;
+    private View numTileGroup;
     private Animator numShrinkAnimator, numGrowAnimator;
     private ImageView star1, star2;
     private boolean timeTrialMode;
@@ -56,28 +61,24 @@ public class GameActivity extends BaseActivity {
         setupTiles();
         hintManager = new HintManager(this);
 
-        ImageButton settingsButton = (ImageButton) findViewById(R.id.settings_button);
         ImageButton restartButton = (ImageButton) findViewById(R.id.restart_button);
         ImageButton hintButton = (ImageButton) findViewById(R.id.hint_button);
 
-        settingsButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showSettings();
-            }
-        });
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playTapSound();
                 restartPuzzle();
             }
         });
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playTapSound();
                 showHint();
             }
         });
+
         star1 = (ImageView) findViewById(R.id.star1);
         star2 = (ImageView) findViewById(R.id.star2);
 
@@ -94,6 +95,7 @@ public class GameActivity extends BaseActivity {
             setupTimeTrial();
         }
         nextPuzzle = generator.generatePuzzle();
+        //Manually set score to 0 because not calling newPuzzle and score starts at -1
         score = 0;
         scoreView.setText(getResources().getString(R.string.score, score));
     }
@@ -119,7 +121,6 @@ public class GameActivity extends BaseActivity {
         OperationTile tileDiv = (OperationTile) findViewById(R.id.tile_divide);
         opTiles = new OperationTile[]{tileAdd, tileSub, tileMul, tileDiv};
         numTileGroup = findViewById(R.id.num_tile_group);
-        opTileGroup = findViewById(R.id.op_tile_group);
         numShrinkAnimator = AnimatorInflater.loadAnimator(this, R.animator.shrink);
         numShrinkAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -141,6 +142,9 @@ public class GameActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Sets up the stored puzzle by setting the tiles to the right values.
+     */
     private void setupPuzzle() {
         for (int i = 0; i < numTiles.length; i++) {
             numTiles[i].setExists(true);
@@ -154,6 +158,9 @@ public class GameActivity extends BaseActivity {
         tileManager.reset();
     }
 
+    /**
+     * Generates and stores a new puzzle, then sets up the puzzle.
+     */
     public void newPuzzle() {
         nextPuzzle = generator.generatePuzzle();
         shrinkNumTiles();
@@ -163,6 +170,9 @@ public class GameActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Restarts by setting up the current puzzle.
+     */
     public void restartPuzzle() {
         shrinkNumTiles();
     }
@@ -283,6 +293,7 @@ public class GameActivity extends BaseActivity {
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playTapSound();
                 hintManager.reset();
                 setupTimeTrial();
                 newPuzzle();
@@ -293,6 +304,7 @@ public class GameActivity extends BaseActivity {
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                playTapSound();
                 gameOverDialog.dismiss();
                 finish();
             }
@@ -311,8 +323,14 @@ public class GameActivity extends BaseActivity {
             finalHiScoreView.setText(getString(R.string.game_over_hi_score, hiScore));
         }
         builder.setView(layout);
-        builder.setCancelable(false);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        });
         gameOverDialog = builder.create();
+        gameOverDialog.setCanceledOnTouchOutside(false);
     }
 
     @Override
@@ -321,9 +339,5 @@ public class GameActivity extends BaseActivity {
         if (timeTrialMode) {
             timer.cancel();
         }
-    }
-
-    public void showSettings() {
-
     }
 }
