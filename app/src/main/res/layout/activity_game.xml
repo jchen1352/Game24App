@@ -7,6 +7,13 @@
     tools:context="org.jeff.game24app.GameActivity"
     android:background="@color/background_gray">
 
+    <ImageView
+        android:id="@+id/shiny"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:src="@drawable/shiny" />
+
     <android.support.constraint.Guideline
         android:id="@+id/guide0"
         android:layout_width="wrap_content"
@@ -200,19 +207,5 @@
         android:layout_width="@dimen/op_tile_width"
         android:layout_height="@dimen/op_tile_height"
         android:visibility="gone" />
-
-    <ImageView
-        android:id="@+id/star1"
-        android:layout_width="@dimen/star_dimen"
-        android:layout_height="@dimen/star_dimen"
-        android:src="@drawable/ic_star"
-        android:visibility="invisible" />
-
-    <ImageView
-        android:id="@+id/star2"
-        android:layout_width="@dimen/star_dimen"
-        android:layout_height="@dimen/star_dimen"
-        android:src="@drawable/ic_star"
-        android:visibility="invisible" />
 
 </android.support.constraint.ConstraintLayout>

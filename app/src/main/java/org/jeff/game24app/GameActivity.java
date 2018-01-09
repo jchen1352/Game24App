@@ -3,7 +3,6 @@ package org.jeff.game24app;
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
-import android.animation.ValueAnimator;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -41,8 +40,8 @@ public class GameActivity extends BaseActivity {
     private TileManager tileManager;
     private HintManager hintManager;
     private View numTileGroup;
-    private Animator numShrinkAnimator, numGrowAnimator;
-    private ImageView star1, star2;
+    private Animator numShrinkAnimator, numGrowAnimator, victoryAnimator, shinyAnimator;
+    private ImageView shiny;
     private boolean timeTrialMode;
     private TextView scoreView;
     private int score;
@@ -88,8 +87,19 @@ public class GameActivity extends BaseActivity {
             }
         });
 
-        star1 = (ImageView) findViewById(R.id.star1);
-        star2 = (ImageView) findViewById(R.id.star2);
+        shiny = (ImageView) findViewById(R.id.shiny);
+        shinyAnimator = AnimatorInflater.loadAnimator(this, R.animator.shiny);
+        shinyAnimator.setTarget(shiny);
+        victoryAnimator = AnimatorInflater.loadAnimator(this, R.animator.victory);
+        victoryAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                //Make shiny shrink with tile
+                shiny.setVisibility(View.GONE);
+                newPuzzle();
+            }
+        });
 
         Intent intent = getIntent();
         fracMode = intent.getBooleanExtra(HomeActivity.GEN_FRAC, false);
@@ -282,38 +292,21 @@ public class GameActivity extends BaseActivity {
      *
      * @param tile the tile to animate around
      */
-    public void victoryAnim(NumberTile tile) {
+    public void victory(NumberTile tile) {
         playSuccessSound();
-        star1.setVisibility(View.VISIBLE);
-        star2.setVisibility(View.VISIBLE);
-        final int x = tile.getLeft() + numTileGroup.getLeft() +
-                tile.getWidth() / 2 - star1.getWidth() / 2;
-        final int y = tile.getTop() + numTileGroup.getTop();
-        final int width = tile.getWidth();
-        ValueAnimator animator = ValueAnimator.ofFloat(0, 1);
-        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = (float) animation.getAnimatedValue();
-                star1.setX(x - value * width / 2);
-                star1.setY(y + width / 2 * (value * (value - 1.3f))); //quadratic curve
-                star1.setRotation(-value * 180);
-                star2.setX(x + value * width / 2);
-                star2.setY(y + width / 2 * (value * (value - 1.3f))); //quadratic curve
-                star2.setRotation(value * 180);
-            }
-        });
-        animator.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                star1.setVisibility(View.GONE);
-                star2.setVisibility(View.GONE);
-                newPuzzle();
-            }
-        });
-        animator.setDuration(500);
-        animator.start();
+        float tileWidth = tile.getWidth();
+        float x = tile.getLeft() + numTileGroup.getLeft() - tileWidth * .25f;
+        float y = tile.getTop() + numTileGroup.getTop() - tileWidth * .25f;
+        float width = tileWidth * 1.5f;
+        shiny.setVisibility(View.VISIBLE);
+        shiny.setX(x);
+        shiny.setY(y);
+        shiny.getLayoutParams().width = (int) width;
+        shiny.getLayoutParams().height = (int) width;
+        shiny.requestLayout();
+        shinyAnimator.start();
+        victoryAnimator.setTarget(tile);
+        victoryAnimator.start();
     }
 
     private void setupTimeTrial() {

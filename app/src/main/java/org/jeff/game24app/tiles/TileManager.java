@@ -147,7 +147,7 @@ public class TileManager {
                             numTile0.setExists(false);
                             numExists--;
                             if (r.equals(Rational.CONST_24) && numExists == 1) {
-                                activity.victoryAnim(numTile1);
+                                activity.victory(numTile1);
                             }
                             animating = false;
                         }
