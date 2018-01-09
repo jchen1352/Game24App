@@ -1,5 +1,7 @@
 package org.jeff.game24app.tiles;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
 import android.support.annotation.IntDef;
 import android.view.View;
 
@@ -29,6 +31,7 @@ public class HintManager {
     private NumberTile hintNum0, hintNum1;
     private OperationTile hintOp;
     private View darkView, numGroup, opGroup;
+    private Animator blinkAnimator;
 
     public HintManager(GameActivity a) {
         activity = a;
@@ -49,6 +52,7 @@ public class HintManager {
         darkView = a.findViewById(R.id.dark_view);
         numGroup = a.findViewById(R.id.num_tile_group);
         opGroup = a.findViewById(R.id.op_tile_group);
+        blinkAnimator = AnimatorInflater.loadAnimator(a, R.animator.fade);
         state = INACTIVE;
     }
 
@@ -72,6 +76,8 @@ public class HintManager {
                 numDummy.getLayoutParams().height = hintNum0.getHeight();
                 numDummy.setValue(hintNum0.getValue());
                 numDummy.requestLayout();
+                blinkAnimator.setTarget(numDummy);
+                blinkAnimator.start();
                 break;
             case NUM0:
                 hintNum0.performClick();
@@ -84,6 +90,9 @@ public class HintManager {
                 opDummy.getLayoutParams().height = hintOp.getHeight();
                 opDummy.setOp(hintOp.getOp());
                 opDummy.requestLayout();
+                blinkAnimator.end();
+                blinkAnimator.setTarget(opDummy);
+                blinkAnimator.start();
                 break;
             case OP:
                 hintOp.performClick();
@@ -95,6 +104,9 @@ public class HintManager {
                 numDummy.getLayoutParams().width = hintNum1.getWidth();
                 numDummy.getLayoutParams().height = hintNum1.getHeight();
                 numDummy.setValue(hintNum1.getValue());
+                blinkAnimator.end();
+                blinkAnimator.setTarget(numDummy);
+                blinkAnimator.start();
                 break;
             case NUM1:
                 hintNum1.performClick();
@@ -111,5 +123,6 @@ public class HintManager {
         numDummy.setVisibility(View.GONE);
         opDummy.setVisibility(View.GONE);
         darkView.setVisibility(View.GONE);
+        blinkAnimator.end();
     }
 }
