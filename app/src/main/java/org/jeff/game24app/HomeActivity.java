@@ -21,17 +21,17 @@ public class HomeActivity extends BaseActivity {
 
     /**
      * Intent key that determines generating fraction puzzles
-     **/
+     */
     public static final String GEN_FRAC = "gen_frac";
     /**
      * Intent key that determines time trial mode for game
-     **/
+     */
     public static final String TIME_TRIAL = "time_trial";
     private ImageButton start, settings, help;
     private Button timeTrial, freePlay, difficulty;
     /**
      * False is classic, true is fractional
-     **/
+     */
     private boolean difficultyMode;
     private ToggleButton musicButton, soundButton;
     private AlertDialog settingsDialog;
@@ -172,6 +172,8 @@ public class HomeActivity extends BaseActivity {
 
     private void onHelpClicked() {
         playTapSound();
+        Intent intent = new Intent(this, HelpActivity.class);
+        startActivity(intent);
     }
 
     private void onTimeTrialClicked() {

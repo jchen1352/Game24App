@@ -7,9 +7,11 @@
     <string name="classic">Classic</string>
     <string name="fractions">Fractions</string>
     <string name="difficulty">Mode: %1$s</string>
-    <string name="back">Back</string>
     <string name="settings_title">Settings</string>
     <string name="music_credits">Music: "Rainbows" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 3.0 License\nhttp://creativecommons.org/licenses/by/3.0/</string>
+    <string name="help">The goal of the game is to make 24 using 4 numbers and the 4 arithmetic operations.
+        Combine numbers by tapping two numbers and an operation.
+        The order you tap the tiles does not matter except for division, where the first number tapped is divided by the second.</string>
     <string name="score">Score: %1$d</string>
     <string name="game_over">Time\'s Up!</string>
     <string name="game_over_score">Your Score Was: %1$d</string>
