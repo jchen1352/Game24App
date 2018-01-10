@@ -140,6 +140,7 @@ public class HomeActivity extends BaseActivity {
             public void onClick(View v) {
                 playMusic = ((ToggleButton) v).isChecked();
                 if (playMusic) {
+                    MusicService.musicTime = 0;
                     startService(musicIntent);
                 } else {
                     stopService(musicIntent);

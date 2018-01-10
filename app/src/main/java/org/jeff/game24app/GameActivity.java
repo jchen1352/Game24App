@@ -50,7 +50,7 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
     private Animator numShrinkAnimator, numGrowAnimator, victoryAnimator, shinyAnimator;
     private ImageView shiny;
     private boolean timeTrialMode;
-    private TextView scoreView;
+    private TextView scoreView, finalScoreView, finalHiScoreView;
     private int score;
     private TextView time;
     private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes, shorter when testing
@@ -100,7 +100,7 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
             public void onClick(View v) {
                 playTapSound();
                 if (!HAX_MODE) {
-                    showHintDialog();
+                    hintDialog.show();
                 } else {
                     numHints++;
                     showHint();
@@ -108,9 +108,11 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
             }
         });
 
+        setupGameOverDialog();
+
         numHintsView = (TextView) findViewById(R.id.num_hints);
         numHints = getSharedPreferences(PREFS, 0).getInt(HINT_PREF, MAX_HINTS);
-        onNumHintsChanged();
+        setupHintDialog();
 
         shiny = (ImageView) findViewById(R.id.shiny);
         shinyAnimator = AnimatorInflater.loadAnimator(this, R.animator.shiny);
@@ -273,7 +275,7 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         numShrinkAnimator.start();
     }
 
-    public void showHintDialog() {
+    public void setupHintDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_hint, null);
@@ -305,7 +307,6 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         onNumHintsChanged();
         builder.setView(layout);
         hintDialog = builder.create();
-        hintDialog.show();
     }
 
     /**
@@ -353,17 +354,19 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
     }
 
     private void onNumHintsChanged() {
-        numHintsView.setText(getString(R.string.num_hints, numHints));
+        if (numHintsView != null) {
+            numHintsView.setText(getString(R.string.num_hints, numHints));
+        }
         if (hintMessage != null) {
             hintMessage.setText(getString(R.string.hint_message, numHints, MAX_HINTS));
         }
-        getSharedPreferences(PREFS, 0).edit().putInt(HINT_PREF, numHints).apply();
         if (hintButton != null) {
             hintButton.setEnabled(numHints > 0);
         }
         if (moreHints != null) {
             moreHints.setEnabled(numHints < MAX_HINTS);
         }
+        getSharedPreferences(PREFS, 0).edit().putInt(HINT_PREF, numHints).apply();
     }
 
     /**
@@ -406,15 +409,11 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
             public void onFinish() {
                 time.setText(sdf.format(new Date(0)));
                 showGameOverDialog();
-                gameOverDialog.show();
             }
         };
     }
 
-    private void showGameOverDialog() {
-        if (hintDialog.isShowing()) {
-            hintDialog.dismiss();
-        }
+    private void setupGameOverDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_gameover, null);
@@ -438,9 +437,25 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
                 finish();
             }
         });
-        TextView finalScoreView = (TextView) layout.findViewById(R.id.score);
+        finalScoreView = (TextView) layout.findViewById(R.id.score);
+        finalHiScoreView = (TextView) layout.findViewById(R.id.hi_score);
+
+        builder.setView(layout);
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        });
+        gameOverDialog = builder.create();
+        gameOverDialog.setCanceledOnTouchOutside(false);
+    }
+
+    private void showGameOverDialog() {
+        if (hintDialog.isShowing()) {
+            hintDialog.dismiss();
+        }
         finalScoreView.setText(getString(R.string.game_over_score, score));
-        TextView finalHiScoreView = (TextView) layout.findViewById(R.id.hi_score);
         if (score > hiScore) {
             hiScore = score;
             finalHiScoreView.setText(getString(R.string.new_hi_score));
@@ -451,15 +466,6 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         } else {
             finalHiScoreView.setText(getString(R.string.game_over_hi_score, hiScore));
         }
-        builder.setView(layout);
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
-            @Override
-            public void onCancel(DialogInterface dialog) {
-                finish();
-            }
-        });
-        gameOverDialog = builder.create();
-        gameOverDialog.setCanceledOnTouchOutside(false);
         gameOverDialog.show();
     }
 

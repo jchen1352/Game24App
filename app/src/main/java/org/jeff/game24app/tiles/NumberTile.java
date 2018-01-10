@@ -171,8 +171,8 @@ public class NumberTile extends BaseTile {
                 int right = Math.max(numeratorBounds[numeratorDigits - 1].right,
                         denominatorBounds[denominatorDigits - 1].right);
                 float heightOffset = getHeight() * FRAC_HEIGHT / 2;
-                canvas.drawRect(left, getHeight() / 2 - heightOffset,
-                        right, getHeight() / 2 + heightOffset, digitColor);
+                canvas.drawRoundRect(left, getHeight() / 2 - heightOffset,
+                        right, getHeight() / 2 + heightOffset, 5, 5, digitColor);
 
             }
         }
