@@ -39,7 +39,7 @@ public class FontHelper {
      */
     public static void setCustomFont(TextView textview, Context context, AttributeSet attrs) {
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.CustomFont);
-        String font = a.getString(R.styleable.CustomFont_font);
+        String font = a.getString(R.styleable.CustomFont_customFont);
         setCustomFont(textview, font, context);
         a.recycle();
     }

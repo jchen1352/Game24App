@@ -188,6 +188,17 @@
         android:background="@drawable/ic_lightbulb_outline_black_24dp"
         android:contentDescription="hint" />
 
+    <org.jeff.game24app.views.FontTextView
+        android:id="@+id/num_hints"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/num_hints"
+        app:layout_constraintLeft_toRightOf="@id/hint_button"
+        app:layout_constraintTop_toTopOf="@id/hint_button"
+        app:layout_constraintBottom_toBottomOf="@id/hint_button"
+        android:textSize="20sp"
+        style="@style/DialogTextView" />
+
     <View
         android:id="@+id/dark_view"
         android:layout_width="match_parent"

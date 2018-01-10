@@ -14,5 +14,6 @@
     <color name="icon_gray">#808080</color>
     <color name="button_color">#FFFFFF</color>
     <color name="button_color_pressed">#EEEEEE</color>
+    <color name="button_color_disabled">#DBDBDB</color>
     <color name="hint_color">#64000000</color>
 </resources>

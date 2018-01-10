@@ -37,6 +37,7 @@ public class HomeActivity extends BaseActivity {
     private AlertDialog settingsDialog;
     private Animator fadeIn, fadeOut;
     private boolean fadingOut;
+    private boolean atSelectionScreen;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,6 +98,7 @@ public class HomeActivity extends BaseActivity {
 
         difficultyMode = false;
         setDifficultyText();
+        atSelectionScreen = false;
 
         final ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.layout);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(
@@ -163,6 +165,7 @@ public class HomeActivity extends BaseActivity {
     private void onStartClicked() {
         playTapSound();
         fadeOut(start);
+        atSelectionScreen = true;
     }
 
     private void onSettingsClicked() {
@@ -205,10 +208,16 @@ public class HomeActivity extends BaseActivity {
     }
 
     private void fadeTransition() {
-        fadeIn(timeTrial);
-        fadeIn(freePlay);
-        fadeIn(difficulty);
-        fadingOut = false;
+        if (fadingOut) {
+            if (atSelectionScreen) {
+                fadeIn(timeTrial);
+                fadeIn(freePlay);
+                fadeIn(difficulty);
+            } else {
+                fadeIn(start);
+            }
+            fadingOut = false;
+        }
     }
 
     private void fadeIn(final View v) {
@@ -249,5 +258,17 @@ public class HomeActivity extends BaseActivity {
             }
         });
         a.start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (atSelectionScreen) {
+            fadeOut(timeTrial);
+            fadeOut(freePlay);
+            fadeOut(difficulty);
+            atSelectionScreen = false;
+        } else {
+            super.onBackPressed();
+        }
     }
 }

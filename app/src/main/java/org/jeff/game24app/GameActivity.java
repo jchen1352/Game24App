@@ -9,12 +9,19 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
 
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Operation;
@@ -33,7 +40,7 @@ import java.util.List;
  * The main activity responsible for the game. Handles both time trial
  * and free play mode.
  */
-public class GameActivity extends BaseActivity {
+public class GameActivity extends BaseActivity implements RewardedVideoAdListener {
 
     private NumberTile[] numTiles;
     private OperationTile[] opTiles;
@@ -49,7 +56,11 @@ public class GameActivity extends BaseActivity {
     private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes, shorter when testing
     private static final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
     private CountDownTimer timer;
-    private AlertDialog gameOverDialog;
+    private TextView numHintsView;
+    private int numHints;
+    private TextView hintMessage;
+    private Button hintButton, moreHints;
+    private AlertDialog hintDialog, gameOverDialog;
     private Game24Generator generator;
     private boolean fracMode;
     private Rational[] nextPuzzle;
@@ -61,6 +72,11 @@ public class GameActivity extends BaseActivity {
      * Shared preference key for saved fractional puzzle
      */
     private static final String FRAC_PREF = "puzzle_frac_pref";
+    private static final String HINT_PREF = "hint_pref";
+    private static final int MAX_HINTS = 5;
+    private static final boolean HAX_MODE = false; //hint button directly shows hint (for debug)
+
+    private RewardedVideoAd ad;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,9 +99,18 @@ public class GameActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 playTapSound();
-                showHint();
+                if (!HAX_MODE) {
+                    showHintDialog();
+                } else {
+                    numHints++;
+                    showHint();
+                }
             }
         });
+
+        numHintsView = (TextView) findViewById(R.id.num_hints);
+        numHints = getSharedPreferences(PREFS, 0).getInt(HINT_PREF, MAX_HINTS);
+        onNumHintsChanged();
 
         shiny = (ImageView) findViewById(R.id.shiny);
         shinyAnimator = AnimatorInflater.loadAnimator(this, R.animator.shiny);
@@ -95,7 +120,6 @@ public class GameActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
-                //Make shiny shrink with tile
                 shiny.setVisibility(View.GONE);
                 newPuzzle();
             }
@@ -119,6 +143,10 @@ public class GameActivity extends BaseActivity {
             scoreView.setText(getResources().getString(R.string.score, score));
             nextPuzzle = generator.generatePuzzle();
         }
+
+        ad = MobileAds.getRewardedVideoAdInstance(this);
+        ad.setRewardedVideoAdListener(this);
+        loadRewardedVideoAd();
     }
 
     @Override
@@ -245,11 +273,48 @@ public class GameActivity extends BaseActivity {
         numShrinkAnimator.start();
     }
 
+    public void showHintDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View layout = inflater.inflate(R.layout.dialog_hint, null);
+        hintMessage = (TextView) layout.findViewById(R.id.hint_message);
+        hintMessage.setText(getString(R.string.hint_message, numHints, MAX_HINTS));
+        hintButton = (Button) layout.findViewById(R.id.use_hint);
+        hintButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numHints > 0) {
+                    playTapSound();
+                    hintDialog.dismiss();
+                    showHint();
+                }
+            }
+        });
+        moreHints = (Button) layout.findViewById(R.id.more_hints);
+        moreHints.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (numHints < MAX_HINTS) {
+                    playTapSound();
+                    if (ad.isLoaded()) {
+                        ad.show();
+                    }
+                }
+            }
+        });
+        onNumHintsChanged();
+        builder.setView(layout);
+        hintDialog = builder.create();
+        hintDialog.show();
+    }
+
     /**
      * Displays a hint for the current numbers, called when clicking the hint button.
      * Also unselects everything.
      */
     public void showHint() {
+        numHints--;
+        onNumHintsChanged();
         List<Rational> puzzleList = new ArrayList<>(4);
         for (NumberTile tile : numTiles) {
             if (tile.exists()) {
@@ -285,6 +350,20 @@ public class GameActivity extends BaseActivity {
             }
         }
         hintManager.startHint(hintNum0, hintOp, hintNum1);
+    }
+
+    private void onNumHintsChanged() {
+        numHintsView.setText(getString(R.string.num_hints, numHints));
+        if (hintMessage != null) {
+            hintMessage.setText(getString(R.string.hint_message, numHints, MAX_HINTS));
+        }
+        getSharedPreferences(PREFS, 0).edit().putInt(HINT_PREF, numHints).apply();
+        if (hintButton != null) {
+            hintButton.setEnabled(numHints > 0);
+        }
+        if (moreHints != null) {
+            moreHints.setEnabled(numHints < MAX_HINTS);
+        }
     }
 
     /**
@@ -326,13 +405,16 @@ public class GameActivity extends BaseActivity {
             @Override
             public void onFinish() {
                 time.setText(sdf.format(new Date(0)));
-                setupGameOverDialog();
+                showGameOverDialog();
                 gameOverDialog.show();
             }
         };
     }
 
-    private void setupGameOverDialog() {
+    private void showGameOverDialog() {
+        if (hintDialog.isShowing()) {
+            hintDialog.dismiss();
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(GameActivity.this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_gameover, null);
@@ -378,6 +460,7 @@ public class GameActivity extends BaseActivity {
         });
         gameOverDialog = builder.create();
         gameOverDialog.setCanceledOnTouchOutside(false);
+        gameOverDialog.show();
     }
 
     @Override
@@ -386,5 +469,65 @@ public class GameActivity extends BaseActivity {
         if (timeTrialMode) {
             timer.cancel();
         }
+        //There is currently a bug where ad.destroy makes it not work when activity restarts
+        //ad.destroy(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        ad.pause(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ad.resume(this);
+    }
+
+    private void loadRewardedVideoAd() {
+        if (!ad.isLoaded()) {
+            ad.loadAd(BaseApplication.AD_UNIT_ID, new AdRequest.Builder().build());
+        }
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        Log.d("GameActivity", "ad loaded");
+    }
+
+    @Override
+    public void onRewardedVideoAdOpened() {
+        Log.d("GameActivity", "ad opened");
+    }
+
+    @Override
+    public void onRewardedVideoStarted() {
+        Log.d("GameActivity", "ad started");
+    }
+
+    @Override
+    public void onRewardedVideoAdClosed() {
+        Log.d("GameActivity", "ad closed");
+        //preload next ad
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        numHints++;
+        onNumHintsChanged();
+        Log.d("GameActivity", "ad rewarded");
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+        Log.d("GameActivity", "ad left app");
+    }
+
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        Log.d("GameActivity", "ad failed to load");
     }
 }

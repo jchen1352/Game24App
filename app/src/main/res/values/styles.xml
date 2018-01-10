@@ -26,20 +26,25 @@
     </style>
 
     <style name="HomeButton">
-        <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
+        <item name="org.jeff.game24app:customFont">fonts/GermanBeauty.ttf</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:background">@drawable/button_rect_inset</item>
     </style>
 
     <style name="HomeTextView">
-        <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
+        <item name="org.jeff.game24app:customFont">fonts/GermanBeauty.ttf</item>
         <item name="android:textSize">30sp</item>
         <item name="android:textColor">@android:color/white</item>
     </style>
 
     <style name="DialogTextView">
-        <item name="org.jeff.game24app:font">fonts/GermanBeauty.ttf</item>
+        <item name="org.jeff.game24app:customFont">fonts/GermanBeauty.ttf</item>
         <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="DialogTitle" parent="DialogTextView">
+        <item name="android:textSize">@dimen/title_size</item>
+        <item name="android:layout_marginTop">10dp</item>
     </style>
 
     <style name="NumberNormal" parent="Theme.AppCompat">

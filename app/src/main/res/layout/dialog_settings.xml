@@ -13,10 +13,8 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="10dp"
         android:text="@string/settings_title"
-        android:textSize="@dimen/title_size"
-        style="@style/DialogTextView" />
+        style="@style/DialogTitle" />
 
     <ToggleButton
         android:id="@+id/sound"

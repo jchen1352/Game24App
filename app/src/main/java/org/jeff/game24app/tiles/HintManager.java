@@ -25,7 +25,6 @@ public class HintManager {
     private @State
     int state;
 
-    private GameActivity activity;
     private NumberTile numDummy;
     private OperationTile opDummy;
     private NumberTile hintNum0, hintNum1;
@@ -34,7 +33,6 @@ public class HintManager {
     private Animator blinkAnimator;
 
     public HintManager(GameActivity a) {
-        activity = a;
         numDummy = (NumberTile) a.findViewById(R.id.num_dummy);
         numDummy.setOnClickListener(new View.OnClickListener() {
             @Override

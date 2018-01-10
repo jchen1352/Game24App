@@ -15,7 +15,7 @@
     </declare-styleable>
 
     <declare-styleable name="CustomFont">
-        <attr name="font" format="string" />
+        <attr name="customFont" format="string" />
     </declare-styleable>
 
     <declare-styleable name="NumberColor">

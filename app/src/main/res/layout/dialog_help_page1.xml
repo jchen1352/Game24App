@@ -13,9 +13,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:text="Credits"
-        android:textSize="@dimen/title_size"
-        android:layout_marginTop="10dp"
-        style="@style/DialogTextView" />
+        style="@style/DialogTitle" />
 
     <org.jeff.game24app.views.FontTextView
         android:layout_width="wrap_content"
@@ -23,7 +21,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/title"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
         android:text="@string/music_credits"
