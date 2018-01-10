@@ -22,6 +22,10 @@
             android:name=".GameActivity"
             android:screenOrientation="portrait">
         </activity>
+        <activity
+            android:name=".OnlineActivity"
+            android:screenOrientation="portrait">
+        </activity>
         <service android:name=".MusicService"/>
     </application>
 

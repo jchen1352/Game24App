@@ -68,6 +68,7 @@ public class GameActivity extends BaseActivity {
             Secure.ANDROID_ID);
     private int room_id;
     private DatabaseReference winnerReference;
+    private boolean firstGame;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,7 @@ public class GameActivity extends BaseActivity {
             setupTimeTrial();
         }
         nextPuzzle = generator.generatePuzzle();
+        firstGame = true;
 
         score = 0;
         scoreView.setText(getResources().getString(R.string.score, score));
@@ -134,7 +136,10 @@ public class GameActivity extends BaseActivity {
     }
 
     public void onlineNonhostSetup () {
-        nextPuzzle = generator.reverseHash(getIntent().getIntExtra(OnlineActivity.PUZZLE, -1));
+        if (firstGame) {
+            firstGame = false;
+            nextPuzzle = generator.reverseHash(getIntent().getIntExtra(OnlineActivity.PUZZLE, -1));
+        }
     }
 
     public void winnerListenerSetup () {
@@ -150,6 +155,7 @@ public class GameActivity extends BaseActivity {
                     }
                 } else if (winnerFound) {
                     winnerFound = false;
+                    firstGame = false;
                     findNewRound();
                 }
             }

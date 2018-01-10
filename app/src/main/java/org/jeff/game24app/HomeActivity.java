@@ -21,11 +21,9 @@ public class HomeActivity extends BaseActivity {
 
     public static final String ONLINE = "online";
 
-    public static final String MAKE_GAME = "make_game";
-
     public static final String IS_HOST = "is_host";
     private ImageButton start, settings, help;
-    private Button timeTrial, freePlay, difficulty, back;
+    private Button timeTrial, freePlay, onlinePlay, difficulty, back;
     /** False is classic, true is fractional **/
     private boolean difficultyMode;
     private boolean atSelectionScreen;
@@ -78,6 +76,15 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 onFreePlayClicked();
+            }
+        });
+
+        onlinePlay = (Button) findViewById(R.id.online_play);
+        onlinePlay.setVisibility(View.GONE);
+        onlinePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOnlinePlayClicked();
             }
         });
 
@@ -160,17 +167,13 @@ public class HomeActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void onMakeOnlineGameClicked() {
+    private void onOnlinePlayClicked() {
+        fadeOut(timeTrial);
+        fadeOut(freePlay);
+        fadeOut(difficulty);
+        fadeOut(back);
         Intent intent = new Intent(this, OnlineActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
-        intent.putExtra(MAKE_GAME, true);
-        startActivity(intent);
-    }
-
-    private void onJoinOnlineGameClicked() {
-        Intent intent = new Intent(this, OnlineActivity.class);
-        intent.putExtra(GEN_FRAC, difficultyMode);
-        intent.putExtra(MAKE_GAME, false);
         startActivity(intent);
     }
 
@@ -197,6 +200,7 @@ public class HomeActivity extends BaseActivity {
         if (atSelectionScreen) {
             fadeIn(timeTrial);
             fadeIn(freePlay);
+            fadeIn(onlinePlay);
             fadeIn(difficulty);
             fadeIn(back);
         } else {

@@ -13,24 +13,12 @@
         android:src="@drawable/ic_home_screen" />
 
     <ImageButton
-        android:id="@+id/start"
-        android:layout_width="@dimen/play_dimen"
-        android:layout_height="@dimen/play_dimen"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="@dimen/play_bottom_offset"
-        android:background="@drawable/ic_play_button"
-        android:contentDescription="Play"
-        android:visibility="visible" />
-
-    <ImageButton
         android:id="@+id/settings"
         android:layout_width="@dimen/smaller_button_dimen"
         android:layout_height="@dimen/smaller_button_dimen"
-        app:layout_constraintBottom_toBottomOf="@id/start"
-        app:layout_constraintTop_toTopOf="@id/start"
-        app:layout_constraintRight_toLeftOf="@+id/start"
+        app:layout_constraintBottom_toBottomOf="@id/back"
+        app:layout_constraintTop_toTopOf="@id/back"
+        app:layout_constraintRight_toLeftOf="@+id/back"
         android:layout_marginRight="@dimen/play_horizontal_margin"
         android:layout_marginTop="@dimen/play_vertical_margin"
         android:background="@drawable/ic_settings_button"
@@ -40,64 +28,79 @@
         android:id="@+id/help"
         android:layout_width="@dimen/smaller_button_dimen"
         android:layout_height="@dimen/smaller_button_dimen"
-        app:layout_constraintBottom_toBottomOf="@id/start"
-        app:layout_constraintTop_toTopOf="@id/start"
-        app:layout_constraintLeft_toRightOf="@id/start"
+        app:layout_constraintBottom_toBottomOf="@id/back"
+        app:layout_constraintTop_toTopOf="@id/back"
+        app:layout_constraintLeft_toRightOf="@id/back"
         android:layout_marginLeft="@dimen/play_horizontal_margin"
         android:layout_marginTop="@dimen/play_vertical_margin"
         android:background="@drawable/ic_help_button"
         android:contentDescription="Help" />
 
     <org.jeff.game24app.views.HomeButton
-        android:id="@+id/time_trial"
+        android:id="@+id/create_game"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="250dp"
-        android:text="@string/time_trial"
+        android:text="@string/create_game"
         style="@style/HomeButton"
         android:visibility="visible" />
 
     <org.jeff.game24app.views.HomeButton
-        android:id="@+id/free_play"
+        android:id="@+id/join_game"
         style="@style/HomeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/free_play"
+        android:text="@string/join_game"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/time_trial" />
+        app:layout_constraintTop_toBottomOf="@id/create_game" />
 
     <org.jeff.game24app.views.HomeButton
-        android:id="@+id/online_play"
-        style="@style/HomeButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/online_play"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/free_play" />
-
-    <org.jeff.game24app.views.HomeButton
-        android:id="@+id/difficulty"
+        android:id="@+id/submit_room"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/online_play"
-        android:text="Mode: Fractions"
+        app:layout_constraintTop_toBottomOf="@id/join_game"
+        android:text="@string/submit_room"
         style="@style/HomeButton" />
-
+    
     <org.jeff.game24app.views.HomeButton
         android:id="@+id/back"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/difficulty"
+        app:layout_constraintTop_toBottomOf="@id/submit_room"
         android:text="@string/back"
         style="@style/HomeButton" />
+
+    <TextView
+        android:id="@+id/room_text"
+        style="@style/HomeTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="16"
+        android:gravity="center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@id/create_game"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@id/create_game" />
+
+    <EditText
+        android:id="@+id/room_number"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="12"
+        android:gravity="center_horizontal"
+        android:maxLength="10"
+        android:inputType="number"
+        app:layout_constraintBottom_toBottomOf="@id/join_game"
+        app:layout_constraintLeft_toLeftOf="@id/join_game"
+        app:layout_constraintRight_toRightOf="@id/join_game"
+        app:layout_constraintTop_toTopOf="@id/join_game" />
 
 </android.support.constraint.ConstraintLayout>

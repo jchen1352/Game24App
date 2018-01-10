@@ -100,7 +100,7 @@ public class Game24Generator {
         if (hash % 11 == 0) {
             for (int i = 0; i < 4; i++) {
                 hash /= 11;
-                puzzle[4 - i] = new Rational(i / 11);
+                puzzle[3 - i] = new Rational(hash % 11);
             }
         } else {
             for (int i = 0; i < 4; i++) {
@@ -108,7 +108,7 @@ public class Game24Generator {
                 hash /= 11;
                 int numer = hash % 11;
                 hash /= 11;
-                puzzle[4 - i] = new Rational(numer, denom);
+                puzzle[3 - i] = new Rational(numer, denom);
             }
         }
         return puzzle;
