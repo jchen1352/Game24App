@@ -61,8 +61,8 @@ public class TimedGameActivity extends HintGameActivity {
                 playTapSound();
                 hintManager.reset();
                 setupTimeTrial();
-                score = -1; //Because setupNewPuzzle increments score
-                setupNewPuzzle();
+                score = -1; //Because startNewPuzzle increments score
+                startNewPuzzle();
                 gameOverDialog.dismiss();
             }
         });
@@ -92,8 +92,8 @@ public class TimedGameActivity extends HintGameActivity {
     }
 
     @Override
-    protected void setupNewPuzzle() {
-        super.setupNewPuzzle();
+    protected void startNewPuzzle() {
+        super.startNewPuzzle();
         score++;
         scoreView.setText(getResources().getString(R.string.score, score));
     }

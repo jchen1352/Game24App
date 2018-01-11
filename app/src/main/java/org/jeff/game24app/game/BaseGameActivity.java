@@ -28,7 +28,7 @@ public abstract class BaseGameActivity extends BaseActivity {
     protected OperationTile[] opTiles;
     private TileManager tileManager;
     private View numTileGroup;
-    protected Animator numShrinkAnimator, numGrowAnimator, victoryAnimator, shinyAnimator;
+    private Animator numShrinkAnimator, numGrowAnimator, victoryAnimator, shinyAnimator;
     private ImageView shiny;
     private boolean isAnimating;
     protected Game24Generator generator;
@@ -111,7 +111,7 @@ public abstract class BaseGameActivity extends BaseActivity {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 shiny.setVisibility(View.GONE);
-                setupNewPuzzle();
+                startNewPuzzle();
             }
         });
 
@@ -122,7 +122,6 @@ public abstract class BaseGameActivity extends BaseActivity {
         generator = new Game24Generator(fracMode);
 
         nextPuzzle = getInitialPuzzle();
-        numShrinkAnimator.start();
     }
 
     @Override
@@ -168,8 +167,12 @@ public abstract class BaseGameActivity extends BaseActivity {
         return getNewPuzzle();
     }
 
-    protected void setupNewPuzzle() {
+    protected void startNewPuzzle() {
         nextPuzzle = getNewPuzzle();
+        numShrinkAnimator.start();
+    }
+
+    protected void shrinkNumTiles() {
         numShrinkAnimator.start();
     }
 
