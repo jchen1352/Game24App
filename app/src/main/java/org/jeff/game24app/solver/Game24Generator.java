@@ -74,46 +74,39 @@ public class Game24Generator {
         return puzzle;
     }
 
-    public int hashToInt(Rational[] puzzle) {
-        int hash = 0;
-        boolean fractional = false;
+    /**
+     * Returns a unique int that represents a puzzle.
+     * Since a puzzle consists of 4 rationals with numerator and denominator at most 10,
+     * the puzzle can be encoded in a single integer. The first 4 bits are the 1st
+     * numerator, the second 4 bits are the 1st denominator, and so on.
+     *
+     * @param puzzle The puzzle to hash
+     * @return The unique hash
+     */
+    public static int hashToInt(Rational[] puzzle) {
+        int puzzleEncoded = 0;
         for (int i = 0; i < 4; i++) {
-            if (puzzle[i].getDenominator() != 1) {
-                fractional = true;
-                break;
-            }
+            puzzleEncoded <<= 4;
+            puzzleEncoded |= puzzle[i].getNumerator();
+            puzzleEncoded <<= 4;
+            puzzleEncoded |= puzzle[i].getDenominator();
         }
-        if (fractional) {
-            for (int i = 0; i < 4; i++) {
-                hash *= 11;
-                hash += puzzle[i].getNumerator();
-                hash *= 11;
-                hash += puzzle[i].getDenominator();
-            }
-        } else {
-            for (int i = 0; i < 4; i++) {
-                hash += puzzle[i].getNumerator();
-                hash *= 11;
-            }
-        }
-        return hash;
+        return puzzleEncoded;
     }
 
-    public Rational[] reverseHash(int hash) {
+    /**
+     * Reverses a hash encoding described by {@link #hashToInt(Rational[])}.
+     * If hash is zero, returns null.
+     *
+     * @param hash The hash to reverse
+     * @return The puzzle that has the hash
+     */
+    public static Rational[] reverseHash(int hash) {
         Rational[] puzzle = new Rational[4];
-        if (hash % 11 == 0) {
-            for (int i = 0; i < 4; i++) {
-                hash /= 11;
-                puzzle[3 - i] = new Rational(hash % 11);
-            }
-        } else {
-            for (int i = 0; i < 4; i++) {
-                int denom = hash % 11;
-                hash /= 11;
-                int numer = hash % 11;
-                hash /= 11;
-                puzzle[3 - i] = new Rational(numer, denom);
-            }
+        for (int i = 0; i < 4; i++) {
+            int numerator = hash >> (28 - (i * 8)) & 0xF;
+            int denominator = hash >> (24 - (i * 8)) & 0xF;
+            puzzle[i] = new Rational(numerator, denominator);
         }
         return puzzle;
     }
@@ -135,6 +128,7 @@ public class Game24Generator {
      * @return the hint as an Operation, or null if unsolvable
      */
     public static Operation getHint(Rational[] puzzle) {
+        if (puzzle.length <= 1) return null; //Already solved or unsolvable
         List<Operation[]> solutions = Game24Solver.solve(puzzle);
         if (solutions.isEmpty()) {
             return null;

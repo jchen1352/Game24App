@@ -5,8 +5,8 @@ import android.animation.AnimatorInflater;
 import android.support.annotation.IntDef;
 import android.view.View;
 
-import org.jeff.game24app.GameActivity;
 import org.jeff.game24app.R;
+import org.jeff.game24app.game.BaseGameActivity;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -32,7 +32,7 @@ public class HintManager {
     private View darkView, numGroup, opGroup;
     private Animator blinkAnimator;
 
-    public HintManager(GameActivity a) {
+    public HintManager(BaseGameActivity a) {
         numDummy = (NumberTile) a.findViewById(R.id.num_dummy);
         numDummy.setOnClickListener(new View.OnClickListener() {
             @Override

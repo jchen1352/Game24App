@@ -20,6 +20,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jeff.game24app.game.OnlineGameActivity;
+
 import java.util.Random;
 
 public class OnlineActivity extends BaseActivity {
@@ -205,7 +207,7 @@ public class OnlineActivity extends BaseActivity {
     }
 
     private void startGame(boolean isHost, int puzzle) {
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, OnlineGameActivity.class);
         if (!isHost) {
             intent.putExtra(PUZZLE, puzzle);
         }

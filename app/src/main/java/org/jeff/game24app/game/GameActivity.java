@@ -1,4 +1,4 @@
-package org.jeff.game24app;
+package org.jeff.game24app.game;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
@@ -29,6 +29,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jeff.game24app.BaseActivity;
+import org.jeff.game24app.BaseApplication;
+import org.jeff.game24app.HomeActivity;
+import org.jeff.game24app.OnlineActivity;
+import org.jeff.game24app.R;
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
@@ -99,7 +104,7 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
         setupTiles();
-        hintManager = new HintManager(this);
+        //hintManager = new HintManager(this);
 
         ImageButton restartButton = (ImageButton) findViewById(R.id.restart_button);
         ImageButton hintButton = (ImageButton) findViewById(R.id.hint_button);
@@ -189,7 +194,7 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
     public void onlineNonhostSetup() {
         if (firstGame) {
             firstGame = false;
-            nextPuzzle = generator.reverseHash(getIntent().getIntExtra(OnlineActivity.PUZZLE, -1));
+            nextPuzzle = Game24Generator.reverseHash(getIntent().getIntExtra(OnlineActivity.PUZZLE, -1));
         }
     }
 
@@ -318,7 +323,7 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         numShrinkAnimator.setTarget(numTileGroup);
         numGrowAnimator = AnimatorInflater.loadAnimator(this, R.animator.grow);
         numGrowAnimator.setTarget(numTileGroup);
-        tileManager = new TileManager(this);
+        //tileManager = new TileManager(this);
         for (NumberTile tile : numTiles) {
             tile.setOnClickListener(tileManager.getNumListener());
             tile.setVisibility(View.GONE);

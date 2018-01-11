@@ -5,7 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.view.View;
 import android.view.ViewPropertyAnimator;
 
-import org.jeff.game24app.GameActivity;
+import org.jeff.game24app.game.BaseGameActivity;
 import org.jeff.game24app.solver.Operation;
 import org.jeff.game24app.solver.Rational;
 
@@ -20,28 +20,26 @@ public class TileManager {
     private OperationTile opSelected;
     private View.OnClickListener numListener;
     private View.OnClickListener opListener;
-    private GameActivity activity;
+    private BaseGameActivity activity;
 
     //Refers to sliding animation when completing operation
     private ViewPropertyAnimator animator;
-    private boolean animating;
     private static final long ANIM_DURATION = 300;
 
-    public TileManager(GameActivity a) {
+    public TileManager(BaseGameActivity a) {
         numsSelectedLen = 0;
         numsSelected = new NumberTile[2];
         numExists = 4;
         opSelected = null;
         setupListeners();
         activity = a;
-        animating = false;
     }
 
     private void setupListeners() {
         numListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (animating) return;
+                if (activity.isAnimating()) return;
                 NumberTile numTile = (NumberTile) v;
                 if (!numTile.exists()) return;
                 int selected = numsSelectedLen;
@@ -76,7 +74,7 @@ public class TileManager {
         opListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (animating) return;
+                if (activity.isAnimating()) return;
                 activity.playTapSound();
                 OperationTile opTile = (OperationTile) v;
                 opTile.toggle();
@@ -135,7 +133,7 @@ public class TileManager {
                         @Override
                         public void onAnimationStart(Animator animation) {
                             super.onAnimationStart(animation);
-                            animating = true;
+                            activity.setIsAnimating(true);
                         }
 
                         @Override
@@ -148,8 +146,9 @@ public class TileManager {
                             numExists--;
                             if (r.equals(Rational.CONST_24) && numExists == 1) {
                                 activity.victory(numTile1);
+                            } else {
+                                activity.setIsAnimating(false);
                             }
-                            animating = false;
                         }
 
                         @Override
@@ -158,7 +157,6 @@ public class TileManager {
                             animation.removeAllListeners();
                             numTile0.setTranslationX(0);
                             numTile0.setTranslationY(0);
-                            animating = false;
                         }
                     });
         }

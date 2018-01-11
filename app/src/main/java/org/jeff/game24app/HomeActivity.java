@@ -17,6 +17,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import org.jeff.game24app.game.FreePlayGameActivity;
+import org.jeff.game24app.game.TimedGameActivity;
+
 public class HomeActivity extends BaseActivity {
 
     /**
@@ -196,7 +199,7 @@ public class HomeActivity extends BaseActivity {
 
     private void onTimeTrialClicked() {
         playTapSound();
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, TimedGameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, true);
         intent.putExtra(ONLINE, false);
@@ -206,7 +209,7 @@ public class HomeActivity extends BaseActivity {
 
     private void onFreePlayClicked() {
         playTapSound();
-        Intent intent = new Intent(this, GameActivity.class);
+        Intent intent = new Intent(this, FreePlayGameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, false);
         intent.putExtra(ONLINE, false);
@@ -295,6 +298,7 @@ public class HomeActivity extends BaseActivity {
             fadeOut(timeTrial);
             fadeOut(freePlay);
             fadeOut(difficulty);
+            fadeOut(onlinePlay);
             atSelectionScreen = false;
         } else {
             super.onBackPressed();
