@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="org.jeff.game24app">
 
+    <uses-permission android:name="android.permission.INTERNET" />
     <application
         android:name=".BaseApplication"
         android:allowBackup="true"
@@ -27,6 +28,10 @@
         <activity
             android:name=".HelpActivity"
             android:theme="@style/HelpTheme" />
+
+        <activity
+            android:name=".OnlineActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

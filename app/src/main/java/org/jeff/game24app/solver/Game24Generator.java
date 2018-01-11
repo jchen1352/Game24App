@@ -74,6 +74,50 @@ public class Game24Generator {
         return puzzle;
     }
 
+    public int hashToInt(Rational[] puzzle) {
+        int hash = 0;
+        boolean fractional = false;
+        for (int i = 0; i < 4; i++) {
+            if (puzzle[i].getDenominator() != 1) {
+                fractional = true;
+                break;
+            }
+        }
+        if (fractional) {
+            for (int i = 0; i < 4; i++) {
+                hash *= 11;
+                hash += puzzle[i].getNumerator();
+                hash *= 11;
+                hash += puzzle[i].getDenominator();
+            }
+        } else {
+            for (int i = 0; i < 4; i++) {
+                hash += puzzle[i].getNumerator();
+                hash *= 11;
+            }
+        }
+        return hash;
+    }
+
+    public Rational[] reverseHash(int hash) {
+        Rational[] puzzle = new Rational[4];
+        if (hash % 11 == 0) {
+            for (int i = 0; i < 4; i++) {
+                hash /= 11;
+                puzzle[3 - i] = new Rational(hash % 11);
+            }
+        } else {
+            for (int i = 0; i < 4; i++) {
+                int denom = hash % 11;
+                hash /= 11;
+                int numer = hash % 11;
+                hash /= 11;
+                puzzle[3 - i] = new Rational(numer, denom);
+            }
+        }
+        return puzzle;
+    }
+
     /**
      * Returns the current puzzle.
      *

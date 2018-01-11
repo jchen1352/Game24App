@@ -27,8 +27,13 @@ public class HomeActivity extends BaseActivity {
      * Intent key that determines time trial mode for game
      */
     public static final String TIME_TRIAL = "time_trial";
+
+    public static final String ONLINE = "online";
+
+    public static final String IS_HOST = "is_host";
     private ImageButton start, settings, help;
-    private Button timeTrial, freePlay, difficulty;
+
+    private Button timeTrial, freePlay, onlinePlay, difficulty;
     /**
      * False is classic, true is fractional
      */
@@ -84,6 +89,15 @@ public class HomeActivity extends BaseActivity {
             @Override
             public void onClick(View v) {
                 onFreePlayClicked();
+            }
+        });
+
+        onlinePlay = (Button) findViewById(R.id.online_play);
+        onlinePlay.setVisibility(View.GONE);
+        onlinePlay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOnlinePlayClicked();
             }
         });
 
@@ -185,6 +199,8 @@ public class HomeActivity extends BaseActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, true);
+        intent.putExtra(ONLINE, false);
+        intent.putExtra(IS_HOST, false);
         startActivity(intent);
     }
 
@@ -193,6 +209,17 @@ public class HomeActivity extends BaseActivity {
         Intent intent = new Intent(this, GameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         intent.putExtra(TIME_TRIAL, false);
+        intent.putExtra(ONLINE, false);
+        intent.putExtra(IS_HOST, false);
+        startActivity(intent);
+    }
+
+    private void onOnlinePlayClicked() {
+        fadeOut(timeTrial);
+        fadeOut(freePlay);
+        fadeOut(difficulty);
+        Intent intent = new Intent(this, OnlineActivity.class);
+        intent.putExtra(GEN_FRAC, difficultyMode);
         startActivity(intent);
     }
 
@@ -214,6 +241,7 @@ public class HomeActivity extends BaseActivity {
                 fadeIn(timeTrial);
                 fadeIn(freePlay);
                 fadeIn(difficulty);
+                fadeIn(onlinePlay);
             } else {
                 fadeIn(start);
             }

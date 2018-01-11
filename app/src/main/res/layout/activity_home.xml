@@ -309,6 +309,18 @@
             app:layout_constraintTop_toTopOf="@id/bg3"
             app:layout_constraintBottom_toBottomOf="@id/bg3"
             android:text="Mode: Fractions"
+            style="@style/HomeButton"
+            android:visibility="gone" />
+
+        <org.jeff.game24app.views.FontButton
+            android:id="@+id/online_play"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintLeft_toLeftOf="@id/bg3"
+            app:layout_constraintRight_toRightOf="@id/bg3"
+            app:layout_constraintTop_toTopOf="@id/bg3"
+            app:layout_constraintBottom_toBottomOf="@id/bg3"
+            android:text="@string/online_play"
             style="@style/HomeButton" />
 
     </android.support.constraint.ConstraintLayout>

@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.provider.Settings.Secure;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,6 +23,11 @@ import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.reward.RewardItem;
 import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Operation;
@@ -78,6 +84,16 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
 
     private RewardedVideoAd ad;
 
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
+    private boolean onlineMode;
+    private boolean isHost;
+    private String unique_id = Secure.getString(BaseApplication.getContext().getContentResolver(),
+            Secure.ANDROID_ID);
+    private int room_id;
+    private DatabaseReference winnerReference;
+    private boolean firstGame;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -131,8 +147,17 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         fracMode = intent.getBooleanExtra(HomeActivity.GEN_FRAC, false);
         generator = new Game24Generator(fracMode);
         timeTrialMode = intent.getBooleanExtra(HomeActivity.TIME_TRIAL, false);
+        onlineMode = intent.getBooleanExtra(HomeActivity.ONLINE, false);
+        isHost = intent.getBooleanExtra(HomeActivity.IS_HOST, false);
         scoreView = (TextView) findViewById(R.id.score);
         time = (TextView) findViewById(R.id.time);
+        if (onlineMode) {
+            database = FirebaseDatabase.getInstance();
+            reference = database.getReference().child("online");
+            room_id = intent.getIntExtra(OnlineActivity.ROOM_ID, -1);
+            winnerReference = reference.child(Integer.toString(room_id)).child("winner");
+            winnerListenerSetup();
+        }
         if (!timeTrialMode) {
             scoreView.setVisibility(View.GONE);
             time.setVisibility(View.GONE);
@@ -149,7 +174,74 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
         ad = MobileAds.getRewardedVideoAdInstance(this);
         ad.setRewardedVideoAdListener(this);
         loadRewardedVideoAd();
+        nextPuzzle = generator.generatePuzzle();
+        firstGame = true;
+
+        score = 0;
+        scoreView.setText(getResources().getString(R.string.score, score));
     }
+
+    public void onlineHostSetup() {
+        Long longPuzzle = Long.valueOf(generator.hashToInt(nextPuzzle));
+        reference.child(Integer.toString(room_id)).child("puzzle").setValue(longPuzzle);
+    }
+
+    public void onlineNonhostSetup() {
+        if (firstGame) {
+            firstGame = false;
+            nextPuzzle = generator.reverseHash(getIntent().getIntExtra(OnlineActivity.PUZZLE, -1));
+        }
+    }
+
+    public void winnerListenerSetup() {
+        ValueEventListener winnerListener = new ValueEventListener() {
+            boolean winnerFound = false;
+
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    if (dataSnapshot.getValue() != unique_id) {
+                        isHost = false;
+                        winnerFound = true;
+                        // add a toast
+                    }
+                } else if (winnerFound) {
+                    winnerFound = false;
+                    firstGame = false;
+                    findNewRound();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("dbError: Find_Winner", databaseError.toException());
+            }
+        };
+        winnerReference.addValueEventListener(winnerListener);
+    }
+
+    private void findNewRound() {
+        DatabaseReference roomPuzzle = reference.child(Integer.toString(room_id)).child("puzzle");
+        ValueEventListener p2PuzzleListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    nextPuzzle = generator.reverseHash(((Long) (dataSnapshot.getValue())).intValue());
+                    shrinkNumTiles();
+                } else {
+                    //return an error
+                    //Log.w("dbError: Find_Puzzle2", );
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("dbError: Find_Puzzle2", databaseError.toException());
+            }
+        };
+        roomPuzzle.addListenerForSingleValueEvent(p2PuzzleListener);
+    }
+
 
     @Override
     public void onEnterAnimationComplete() {
@@ -240,6 +332,13 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
      * Sets up the stored puzzle by setting the tiles to the right values.
      */
     private void setupPuzzle() {
+        if (onlineMode) {
+            if (isHost) {
+                onlineHostSetup();
+            } else {
+                onlineNonhostSetup();
+            }
+        }
         for (int i = 0; i < numTiles.length; i++) {
             numTiles[i].setExists(true);
             numTiles[i].unselect();
@@ -256,12 +355,24 @@ public class GameActivity extends BaseActivity implements RewardedVideoAdListene
      * Generates and stores a new puzzle, then sets up the puzzle.
      */
     public void newPuzzle() {
-        nextPuzzle = generator.generatePuzzle();
+        if (onlineMode) {
+            onlineWinnerSetup();
+        } else {
+            nextPuzzle = generator.generatePuzzle();
+        }
         shrinkNumTiles();
         if (timeTrialMode) {
             score++;
             scoreView.setText(getResources().getString(R.string.score, score));
         }
+    }
+
+    private void onlineWinnerSetup() {
+        isHost = true;
+        winnerReference.setValue(unique_id);
+        nextPuzzle = generator.generatePuzzle();
+        onlineHostSetup();
+        winnerReference.setValue(null);
     }
 
     /**
