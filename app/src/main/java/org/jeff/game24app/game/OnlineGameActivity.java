@@ -1,11 +1,16 @@
 package org.jeff.game24app.game;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -23,6 +28,9 @@ import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Rational;
 import org.jeff.game24app.tiles.NumberTile;
 
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+
 /**
  * The concrete activity that handles online mode.
  * Features of online mode: synced puzzles between two players, keeps score
@@ -34,15 +42,80 @@ public class OnlineGameActivity extends BaseGameActivity {
             Settings.Secure.ANDROID_ID);
     private String room_id;
     private DatabaseReference winnerReference, puzzleReference, readyReference;
+    private boolean restartReady;
+
+    @IntDef({READY, GAME_OVER, RESTART_WAIT, RESTART_FINISH})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface State {
+    }
+
+    public static final int READY = 0;
+    public static final int GAME_OVER = 1;
+    public static final int RESTART_WAIT = 2;
+    public static final int RESTART_FINISH = 3;
+
+    private int score;
+    private TextView scoreView;
+    private static final int MAX_SCORE = 2;
+    private AlertDialog gameOverDialog;
+    private TextView gameOverTitle, gameOverMessage;
+    private Button restartButton;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         findViewById(R.id.time).setVisibility(View.GONE);
-        findViewById(R.id.score).setVisibility(View.GONE);
         findViewById(R.id.hint_button).setVisibility(View.GONE);
         findViewById(R.id.num_hints).setVisibility(View.GONE);
+
+        scoreView = (TextView) findViewById(R.id.score);
+        score = 0;
+        scoreView.setText(getString(R.string.score, score));
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        //Reuse layout from TimedGameActivity
+        View layout = getLayoutInflater().inflate(R.layout.dialog_gameover, null);
+        gameOverTitle = (TextView) layout.findViewById(R.id.title);
+        gameOverMessage = layout.findViewById(R.id.score);
+        layout.findViewById(R.id.hi_score).setVisibility(View.GONE);
+        restartButton = (Button) layout.findViewById(R.id.restart_button);
+        restartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playTapSound();
+                if (restartReady) {
+                    restartReady = false;
+                    readyReference.setValue((long) RESTART_FINISH);
+                    isHost = false;
+                    restartGame();
+                } else {
+                    restartReady = true;
+                    waitForRestart();
+                }
+                gameOverMessage.setText(R.string.wait_room);
+                gameOverMessage.setVisibility(View.VISIBLE);
+                v.setEnabled(false);
+            }
+        });
+        Button returnButton = (Button) layout.findViewById(R.id.return_button);
+        returnButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                playTapSound();
+                gameOverDialog.dismiss();
+                finish();
+            }
+        });
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                finish();
+            }
+        });
+        builder.setView(layout);
+        gameOverDialog = builder.create();
+        gameOverDialog.setCanceledOnTouchOutside(false);
 
         Intent intent = getIntent();
         Log.d("OnlineGame", isHost ? "isHost" : "not isHost");
@@ -71,7 +144,7 @@ public class OnlineGameActivity extends BaseGameActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    if (dataSnapshot.getValue() != unique_id) {
+                    if (!dataSnapshot.getValue().equals(unique_id)) {
                         //Opponent is winner
                         isHost = false;
                         //To disable further clicks
@@ -91,8 +164,24 @@ public class OnlineGameActivity extends BaseGameActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    if ((boolean) dataSnapshot.getValue()) {
-                        shrinkNumTiles();
+                    @State int value = ((Long) dataSnapshot.getValue()).intValue();
+                    switch (value) {
+                        case READY:
+                            shrinkNumTiles();
+                            break;
+                        case GAME_OVER:
+                            showGameOverDialog();
+                            break;
+                        case RESTART_WAIT:
+                            if (!restartReady) {
+                                restartReady = true;
+                            }
+                            break;
+                        case RESTART_FINISH:
+                            if (restartReady) {
+                                restartGame();
+                                restartReady = false;
+                            }
                     }
                 }
             }
@@ -143,6 +232,9 @@ public class OnlineGameActivity extends BaseGameActivity {
 
             @Override
             public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    Log.w("victory", databaseError.toException());
+                }
                 String id = dataSnapshot.getValue(String.class);
                 if (id == null) {
                     Log.d("OnlineGameActivity", "Winner updated to null");
@@ -150,6 +242,7 @@ public class OnlineGameActivity extends BaseGameActivity {
                 }
                 if (id.equals(unique_id)) {
                     Log.d("OnlineGameActivity", "Winner updated to this");
+                    incrementScore();
                     return;
                 }
                 Log.d("OnlineGameActivity", "Winner updated to other");
@@ -177,7 +270,7 @@ public class OnlineGameActivity extends BaseGameActivity {
     @Override
     protected void startNewPuzzle() {
         super.startNewPuzzle();
-        readyReference.setValue(true);
+        readyReference.setValue(READY);
     }
 
     @Override
@@ -185,6 +278,89 @@ public class OnlineGameActivity extends BaseGameActivity {
         super.setupPuzzle();
         winnerReference.setValue(null);
         puzzleReference.setValue(null);
-        readyReference.setValue(false);
+        readyReference.setValue(null);
+    }
+
+    private void incrementScore() {
+        score++;
+        scoreView.setText(getString(R.string.score, score));
+        if (score >= MAX_SCORE) {
+            showGameOverDialog();
+        }
+    }
+
+    private void showGameOverDialog() {
+        readyReference.setValue(GAME_OVER);
+        boolean win = score >= MAX_SCORE;
+        gameOverTitle.setText(win ? getString(R.string.online_win) : getString(R.string.online_lose));
+        gameOverMessage.setVisibility(View.GONE);
+        restartButton.setEnabled(true);
+        gameOverDialog.show();
+    }
+
+    private void waitForRestart() {
+        readyReference.runTransaction(new Transaction.Handler() {
+            @Override
+            public Transaction.Result doTransaction(MutableData mutableData) {
+                if (mutableData.getValue() == null) {
+                    mutableData.setValue((long) RESTART_WAIT);
+                    Log.d("waitForRestart", "was null");
+                    return Transaction.success(mutableData);
+                }
+                int value = ((Long) mutableData.getValue()).intValue();
+                if (value == RESTART_WAIT) {
+                    mutableData.setValue((long) RESTART_FINISH);
+                    Log.d("waitForRestart", "was RESTART_WAIT");
+                    return Transaction.success(mutableData);
+                }
+                mutableData.setValue((long) RESTART_WAIT);
+                Log.d("waitForRestart", "was other");
+                return Transaction.success(mutableData);
+            }
+
+            @Override
+            public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
+                if (databaseError != null) {
+                    Log.w("restart", databaseError.toException());
+                }
+                if (dataSnapshot.getValue() == null) {
+                    Log.d("restart complete", "was null");
+                    return;
+                }
+                int value = ((Long) dataSnapshot.getValue()).intValue();
+                if (value == RESTART_WAIT) {
+                    Log.d("restart complete", "was RESTART_WAIT");
+                    isHost = true;
+                }
+                if (value == RESTART_FINISH) {
+                    Log.d("restart complete", "was RESTART_FINISH");
+                    restartReady = false;
+                    isHost = false;
+                    restartGame();
+                }
+                Log.d("restart complete", "was other");
+            }
+        });
+    }
+
+    private void restartGame() {
+        gameOverDialog.dismiss();
+        score = 0;
+        scoreView.setText(getString(R.string.score, score));
+        if (isHost) {
+            nextPuzzle = generator.generatePuzzle();
+            long puzzle = (long) Game24Generator.hashToInt(nextPuzzle);
+            puzzleReference.setValue(puzzle, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError != null) {
+                        Log.w("restart", databaseError.toException());
+                    } else {
+                        Log.d("restart", "starting new game");
+                        startNewPuzzle();
+                    }
+                }
+            });
+        }
     }
 }

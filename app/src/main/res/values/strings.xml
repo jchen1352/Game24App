@@ -30,4 +30,6 @@
     <string name="enter_room">Room Number:</string>
     <string name="bad_room">Room not found, please try again:</string>
     <string name="check_room">Checking room...</string>
+    <string name="online_win">You Win!</string>
+    <string name="online_lose">You Lose.</string>
 </resources>
