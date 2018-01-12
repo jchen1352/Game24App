@@ -3,7 +3,6 @@ package org.jeff.game24app.game;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -20,7 +19,6 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import org.jeff.game24app.BaseApplication;
 import org.jeff.game24app.HomeActivity;
 import org.jeff.game24app.OnlineActivity;
 import org.jeff.game24app.R;
@@ -38,15 +36,13 @@ import java.lang.annotation.RetentionPolicy;
 public class OnlineGameActivity extends BaseGameActivity {
 
     private boolean isHost;
-    private String unique_id = Settings.Secure.getString(BaseApplication.getContext().getContentResolver(),
-            Settings.Secure.ANDROID_ID);
-    private String room_id;
+    private static String uniqueID = getUniqueID();
     private DatabaseReference winnerReference, puzzleReference, readyReference;
     private boolean restartReady;
 
     @IntDef({READY, GAME_OVER, RESTART_WAIT, RESTART_FINISH})
     @Retention(RetentionPolicy.SOURCE)
-    public @interface State {
+    private @interface State {
     }
 
     public static final int READY = 0;
@@ -121,7 +117,7 @@ public class OnlineGameActivity extends BaseGameActivity {
         Log.d("OnlineGame", isHost ? "isHost" : "not isHost");
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("online");
-        room_id = Integer.toString(intent.getIntExtra(OnlineActivity.ROOM_ID, -1));
+        String room_id = Integer.toString(intent.getIntExtra(OnlineActivity.ROOM_ID, -1));
         puzzleReference = reference.child(room_id).child("puzzle");
         puzzleReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -144,7 +140,7 @@ public class OnlineGameActivity extends BaseGameActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    if (!dataSnapshot.getValue().equals(unique_id)) {
+                    if (!dataSnapshot.getValue().equals(uniqueID)) {
                         //Opponent is winner
                         isHost = false;
                         //To disable further clicks
@@ -223,7 +219,7 @@ public class OnlineGameActivity extends BaseGameActivity {
                 String id = mutableData.getValue(String.class);
                 if (id == null) {
                     //Update winner if no winner
-                    mutableData.setValue(unique_id);
+                    mutableData.setValue(uniqueID);
                     return Transaction.success(mutableData);
                 }
                 //Don't update if not winner
@@ -240,7 +236,7 @@ public class OnlineGameActivity extends BaseGameActivity {
                     Log.d("OnlineGameActivity", "Winner updated to null");
                     return;
                 }
-                if (id.equals(unique_id)) {
+                if (id.equals(uniqueID)) {
                     Log.d("OnlineGameActivity", "Winner updated to this");
                     incrementScore();
                     return;

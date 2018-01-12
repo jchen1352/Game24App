@@ -2,7 +2,7 @@
     <string name="app_name">Game24App</string>
     <string name="credits">Art from Vecteezy</string>
     <string name="start">Play!</string>
-    <string name="time_trial">Time Trial</string>
+    <string name="time_trial">Timed Play</string>
     <string name="free_play">Free Play</string>
     <string name="classic">Classic</string>
     <string name="fractions">Fractions</string>
@@ -21,14 +21,14 @@
     <string name="new_hi_score">New High Score!</string>
     <string name="game_over_replay">Play Again</string>
     <string name="game_over_end">Main Menu</string>
-    <string name="online_play">Online Play</string>
+    <string name="online_play">Multiplayer</string>
     <string name="create_game">Create Game</string>
     <string name="join_game">Join Game</string>
     <string name="submit_room">Submit</string>
     <string name="load_room">Finding you a room...</string>
     <string name="wait_room">Waiting for other player...</string>
     <string name="enter_room">Room Number:</string>
-    <string name="bad_room">Room not found, please try again:</string>
+    <string name="bad_room">Room not found, try again:</string>
     <string name="check_room">Checking room...</string>
     <string name="online_win">You Win!</string>
     <string name="online_lose">You Lose.</string>

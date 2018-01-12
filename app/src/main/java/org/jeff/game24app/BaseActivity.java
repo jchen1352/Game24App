@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.UUID;
+
 /**
  * An Activity that other activities extend. Provides mainly support for audio.
  */
@@ -22,6 +24,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected static final String SOUND_PREF = "sound_pref";
     protected static final String SCORE_PREF = "score_pref";
 
+    private static String uniqueID;
+    private static final String UNIQUE_ID_PREF = "pref_unique_id";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +36,16 @@ public abstract class BaseActivity extends AppCompatActivity {
         playMusic = preferences.getBoolean(MUSIC_PREF, true);
         playSound = preferences.getBoolean(SOUND_PREF, true);
         hiScore = preferences.getInt(SCORE_PREF, 0);
+
+        if (uniqueID == null) {
+            uniqueID = preferences.getString(UNIQUE_ID_PREF, null);
+            if (uniqueID == null) {
+                uniqueID = UUID.randomUUID().toString();
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(UNIQUE_ID_PREF, uniqueID);
+                editor.apply();
+            }
+        }
     }
 
     @Override
@@ -94,5 +109,9 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (playSound) {
             soundManager.playSound(SoundManager.SUCCESS);
         }
+    }
+
+    public static String getUniqueID() {
+        return uniqueID;
     }
 }

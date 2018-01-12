@@ -3,10 +3,8 @@ package org.jeff.game24app;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Intent;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.text.InputType;
 import android.util.Log;
 import android.view.View;
@@ -31,8 +29,7 @@ public class OnlineActivity extends BaseActivity {
 
     private FirebaseDatabase database;
     private DatabaseReference reference;
-    private String unique_id = Settings.Secure.getString(BaseApplication.getContext().getContentResolver(),
-            Settings.Secure.ANDROID_ID);
+    private static String uniqueID = getUniqueID();
     private int room_id = -1;
     Random random = new Random();
 
@@ -76,30 +73,38 @@ public class OnlineActivity extends BaseActivity {
 
         roomText = (TextView) findViewById(R.id.room_text);
         roomText.setVisibility(View.GONE);
+    }
 
+    @Override
+    public void onEnterAnimationComplete() {
+        super.onEnterAnimationComplete();
+        createGame.setVisibility(View.VISIBLE);
+        joinGame.setVisibility(View.VISIBLE);
         fadeIn(createGame);
         fadeIn(joinGame);
     }
 
     private void onCreateGameClicked() {
-        fadeOut(createGame);
-        fadeOut(joinGame);
+        submitRoom.setVisibility(View.GONE);
         roomText.setVisibility(View.VISIBLE);
         roomNumber.setVisibility(View.VISIBLE);
         roomNumber.setInputType(InputType.TYPE_NULL);
+        createGame.setEnabled(false);
+        joinGame.setEnabled(true);
 
         roomText.setText(getString(R.string.load_room));
         getUniqueRoomID();
     }
 
     private void onJoinGameClicked() {
-        fadeOut(createGame);
-        fadeOut(joinGame);
-        fadeIn(submitRoom);
+        submitRoom.setVisibility(View.VISIBLE);
         roomText.setVisibility(View.VISIBLE);
         roomNumber.setVisibility(View.VISIBLE);
         roomNumber.setInputType(InputType.TYPE_CLASS_NUMBER);
         roomNumber.setClickable(true);
+        roomNumber.setText("");
+        joinGame.setEnabled(false);
+        createGame.setEnabled(true);
 
         roomText.setText(getString(R.string.enter_room));
 
@@ -113,7 +118,8 @@ public class OnlineActivity extends BaseActivity {
 
     private void onSubmitGameClicked() {
         roomText.setText(getString(R.string.check_room));
-        room_id = Integer.parseInt(roomNumber.getText().toString());
+        String s = roomNumber.getText().toString();
+        room_id = s.equals("") ? 0 : Integer.parseInt(s);
         checkRoom();
     }
 
@@ -138,7 +144,7 @@ public class OnlineActivity extends BaseActivity {
     }
 
     private void setupJoinOnline() {
-        reference.child(Integer.toString(room_id)).child("p2").setValue(unique_id);
+        reference.child(Integer.toString(room_id)).child("p2").setValue(uniqueID);
         DatabaseReference roomPuzzle = reference.child(Integer.toString(room_id)).child("puzzle");
         ValueEventListener p2PuzzleListener = new ValueEventListener() {
             private boolean changed = false;
@@ -164,7 +170,7 @@ public class OnlineActivity extends BaseActivity {
         roomText.setText(getString(R.string.wait_room));
 
         DatabaseReference roomP2Reference = reference.child(Integer.toString(room_id)).child("p2");
-        reference.child(Integer.toString(room_id)).child("p1").setValue(unique_id);
+        reference.child(Integer.toString(room_id)).child("p1").setValue(uniqueID);
         //reference.child(Integer.toString(room_id)).child("squares").setValue(Arrays.asList(nextPuzzle));
         ValueEventListener room2Listener = new ValueEventListener() {
             private boolean changed = false;
@@ -213,47 +219,13 @@ public class OnlineActivity extends BaseActivity {
         }
         intent.putExtra(ROOM_ID, room_id);
         intent.putExtra(HomeActivity.GEN_FRAC, getIntent().getBooleanExtra(HomeActivity.GEN_FRAC, false));
-        intent.putExtra(HomeActivity.TIME_TRIAL, false);
-        intent.putExtra(HomeActivity.ONLINE, true);
         intent.putExtra(HomeActivity.IS_HOST, isHost);
         startActivity(intent);
     }
 
-    private void fadeIn(final View v) {
+    private void fadeIn(View v) {
         Animator a = AnimatorInflater.loadAnimator(this, R.animator.grow);
         a.setTarget(v);
-        a.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                v.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                v.setClickable(true);
-            }
-        });
-        a.start();
-    }
-
-    private void fadeOut(final View v) {
-        Animator a = AnimatorInflater.loadAnimator(this, R.animator.shrink);
-        a.setTarget(v);
-        a.addListener(new AnimatorListenerAdapter() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                super.onAnimationStart(animation);
-                v.setClickable(false);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                super.onAnimationEnd(animation);
-                v.setVisibility(View.INVISIBLE);
-            }
-        });
         a.start();
     }
 
@@ -264,5 +236,4 @@ public class OnlineActivity extends BaseActivity {
             reference.child(Integer.toString(room_id)).setValue(null);
         }
     }
-
 }

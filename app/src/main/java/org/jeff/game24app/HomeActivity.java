@@ -201,9 +201,6 @@ public class HomeActivity extends BaseActivity {
         playTapSound();
         Intent intent = new Intent(this, TimedGameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
-        intent.putExtra(TIME_TRIAL, true);
-        intent.putExtra(ONLINE, false);
-        intent.putExtra(IS_HOST, false);
         startActivity(intent);
     }
 
@@ -211,16 +208,11 @@ public class HomeActivity extends BaseActivity {
         playTapSound();
         Intent intent = new Intent(this, FreePlayGameActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
-        intent.putExtra(TIME_TRIAL, false);
-        intent.putExtra(ONLINE, false);
-        intent.putExtra(IS_HOST, false);
         startActivity(intent);
     }
 
     private void onOnlinePlayClicked() {
-        fadeOut(timeTrial);
-        fadeOut(freePlay);
-        fadeOut(difficulty);
+        playTapSound();
         Intent intent = new Intent(this, OnlineActivity.class);
         intent.putExtra(GEN_FRAC, difficultyMode);
         startActivity(intent);
