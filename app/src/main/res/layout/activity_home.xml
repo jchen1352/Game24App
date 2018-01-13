@@ -16,7 +16,9 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="4:7">
+        app:layout_constraintDimensionRatio="4:7"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp">
 
         <ImageView
             android:id="@+id/bg0"
@@ -135,8 +137,9 @@
             app:layout_constraintLeft_toRightOf="@id/bg12"
             app:layout_constraintRight_toRightOf="@id/bg0"
             app:layout_constraintDimensionRatio="1:1"
-            android:src="@drawable/ic_help_button"
+            android:src="@drawable/ic_info_outline_black_24dp"
             android:scaleType="fitCenter"
+            android:padding="7dp"
             android:background="@drawable/button_rect_inset"
             android:contentDescription="Help" />
 
@@ -299,18 +302,6 @@
             app:layout_constraintBottom_toBottomOf="@id/bg2"
             android:text="@string/free_play"
             style="@style/HomeButton" />
-
-        <org.jeff.game24app.views.FontButton
-            android:id="@+id/difficulty"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintLeft_toLeftOf="@id/bg3"
-            app:layout_constraintRight_toRightOf="@id/bg3"
-            app:layout_constraintTop_toTopOf="@id/bg3"
-            app:layout_constraintBottom_toBottomOf="@id/bg3"
-            android:text="Mode: Fractions"
-            style="@style/HomeButton"
-            android:visibility="gone" />
 
         <org.jeff.game24app.views.FontButton
             android:id="@+id/online_play"

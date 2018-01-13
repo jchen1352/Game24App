@@ -30,7 +30,7 @@ public abstract class HintGameActivity extends BaseGameActivity {
     private AlertDialog hintDialog;
     private TextView numHintsView;
     private TextView hintMessage;
-    private Button showHintButton, moreHintsButton;
+    protected Button showHintButton, moreHintsButton;
     protected ImageButton hintButton;
 
     private static final boolean HAX_MODE = false; //hint button directly shows hint (for debug)
@@ -43,7 +43,7 @@ public abstract class HintGameActivity extends BaseGameActivity {
         super.onCreate(savedInstanceState);
         hintManager = new HintManager(this);
 
-        hintButton = (ImageButton) findViewById(R.id.hint_button);
+        hintButton = findViewById(R.id.hint_button);
         hintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -58,16 +58,15 @@ public abstract class HintGameActivity extends BaseGameActivity {
             }
         });
 
-        numHintsView = (TextView) findViewById(R.id.num_hints);
+        numHintsView = findViewById(R.id.num_hints);
         numHints = getSharedPreferences(PREFS, 0).getInt(HINT_PREF, MAX_HINTS);
-        numHints = 5;
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_hint, null);
-        hintMessage = (TextView) layout.findViewById(R.id.hint_message);
+        hintMessage = layout.findViewById(R.id.hint_message);
         hintMessage.setText(getString(R.string.hint_message, numHints, MAX_HINTS));
-        showHintButton = (Button) layout.findViewById(R.id.use_hint);
+        showHintButton = layout.findViewById(R.id.use_hint);
         showHintButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +77,7 @@ public abstract class HintGameActivity extends BaseGameActivity {
                 }
             }
         });
-        moreHintsButton = (Button) layout.findViewById(R.id.more_hints);
+        moreHintsButton = layout.findViewById(R.id.more_hints);
         moreHintsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

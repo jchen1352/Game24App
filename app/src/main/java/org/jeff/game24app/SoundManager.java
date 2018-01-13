@@ -13,15 +13,16 @@ import java.lang.annotation.RetentionPolicy;
 public class SoundManager {
 
     private Context context;
-    private MediaPlayer tapPlayer, successPlayer;
+    private MediaPlayer tapPlayer, successPlayer, failPlayer;
 
-    @IntDef({TAP, SUCCESS})
+    @IntDef({TAP, SUCCESS, FAIL})
     @Retention(RetentionPolicy.SOURCE)
     public @interface Sounds {
     }
 
     public static final int TAP = 0;
     public static final int SUCCESS = 1;
+    public static final int FAIL = 2;
 
     public SoundManager(Context c) {
         initialize(c);
@@ -38,6 +39,9 @@ public class SoundManager {
         if (successPlayer == null) {
             successPlayer = MediaPlayer.create(context, R.raw.success_sound);
         }
+        if (failPlayer == null) {
+            failPlayer = MediaPlayer.create(context, R.raw.fail_sound);
+        }
     }
 
     /**
@@ -52,6 +56,9 @@ public class SoundManager {
                 break;
             case SUCCESS:
                 playSound(successPlayer);
+                break;
+            case FAIL:
+                playSound(failPlayer);
                 break;
         }
     }
@@ -77,6 +84,8 @@ public class SoundManager {
         tapPlayer = null;
         successPlayer.release();
         successPlayer = null;
+        failPlayer.release();
+        failPlayer = null;
         context = null;
     }
 }

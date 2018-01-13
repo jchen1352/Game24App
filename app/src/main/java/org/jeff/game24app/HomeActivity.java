@@ -13,7 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -26,24 +28,16 @@ public class HomeActivity extends BaseActivity {
      * Intent key that determines generating fraction puzzles
      */
     public static final String GEN_FRAC = "gen_frac";
-    /**
-     * Intent key that determines time trial mode for game
-     */
-    public static final String TIME_TRIAL = "time_trial";
+    public static final String FRAC_PREF = "frac_pref";
 
-    public static final String ONLINE = "online";
+    private ImageButton start;
 
-    public static final String IS_HOST = "is_host";
-    private ImageButton start, settings, help;
-
-    private Button timeTrial, freePlay, onlinePlay, difficulty;
+    private Button timeTrial, freePlay, onlinePlay;
     /**
      * False is classic, true is fractional
      */
     private boolean difficultyMode;
-    private ToggleButton musicButton, soundButton;
     private AlertDialog settingsDialog;
-    private Animator fadeIn, fadeOut;
     private boolean fadingOut;
     private boolean atSelectionScreen;
 
@@ -52,7 +46,7 @@ public class HomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        start = (ImageButton) findViewById(R.id.start);
+        start = findViewById(R.id.start);
         start.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,16 +54,17 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        settings = (ImageButton) findViewById(R.id.settings);
+        ImageButton settings = findViewById(R.id.settings);
         settings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onSettingsClicked();
             }
         });
+        difficultyMode = getSharedPreferences(PREFS, 0).getBoolean(FRAC_PREF, false);
         setupSettingsDialog();
 
-        help = (ImageButton) findViewById(R.id.help);
+        ImageButton help = findViewById(R.id.help);
         help.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -77,7 +72,7 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        timeTrial = (Button) findViewById(R.id.time_trial);
+        timeTrial = findViewById(R.id.time_trial);
         timeTrial.setVisibility(View.GONE);
         timeTrial.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -86,7 +81,7 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        freePlay = (Button) findViewById(R.id.free_play);
+        freePlay = findViewById(R.id.free_play);
         freePlay.setVisibility(View.GONE);
         freePlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +90,7 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        onlinePlay = (Button) findViewById(R.id.online_play);
+        onlinePlay = findViewById(R.id.online_play);
         onlinePlay.setVisibility(View.GONE);
         onlinePlay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,20 +99,9 @@ public class HomeActivity extends BaseActivity {
             }
         });
 
-        difficulty = (Button) findViewById(R.id.difficulty);
-        difficulty.setVisibility(View.GONE);
-        difficulty.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onDifficultyClicked();
-            }
-        });
-
-        difficultyMode = false;
-        setDifficultyText();
         atSelectionScreen = false;
 
-        final ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.layout);
+        final ConstraintLayout layout = findViewById(R.id.layout);
         layout.getViewTreeObserver().addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -125,7 +109,7 @@ public class HomeActivity extends BaseActivity {
                         layout.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                         //Make the title spread out across the view (at least mostly)
-                        TextView titleTop = (TextView) findViewById(R.id.title_top);
+                        TextView titleTop = findViewById(R.id.title_top);
                         Rect bounds = new Rect();
                         Paint paint = titleTop.getPaint();
                         String text = titleTop.getText().toString();
@@ -134,7 +118,7 @@ public class HomeActivity extends BaseActivity {
                         int viewWidth = titleTop.getWidth();
                         float ems = (viewWidth - textWidth) / titleTop.getTextSize();
                         titleTop.setLetterSpacing(ems / text.length());
-                        TextView titleBottom = (TextView) findViewById(R.id.title_bottom);
+                        TextView titleBottom = findViewById(R.id.title_bottom);
                         paint = titleBottom.getPaint();
                         text = titleBottom.getText().toString();
                         paint.getTextBounds(text, 0, text.length(), bounds);
@@ -150,7 +134,7 @@ public class HomeActivity extends BaseActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_settings, null);
-        musicButton = (ToggleButton) layout.findViewById(R.id.music);
+        ToggleButton musicButton = layout.findViewById(R.id.music);
         musicButton.setChecked(playMusic);
         musicButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,7 +150,7 @@ public class HomeActivity extends BaseActivity {
                 playTapSound();
             }
         });
-        soundButton = (ToggleButton) layout.findViewById(R.id.sound);
+        ToggleButton soundButton = layout.findViewById(R.id.sound);
         soundButton.setChecked(playSound);
         soundButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -174,6 +158,16 @@ public class HomeActivity extends BaseActivity {
                 playSound = ((ToggleButton) v).isChecked();
                 updateSoundPrefs(playSound);
                 playTapSound();
+            }
+        });
+        Switch modeSelect = layout.findViewById(R.id.mode_select);
+        modeSelect.setChecked(difficultyMode);
+        modeSelect.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                playTapSound();
+                difficultyMode = isChecked;
+                getSharedPreferences(PREFS, 0).edit().putBoolean(FRAC_PREF, isChecked).apply();
             }
         });
         builder.setView(layout);
@@ -218,24 +212,11 @@ public class HomeActivity extends BaseActivity {
         startActivity(intent);
     }
 
-    private void onDifficultyClicked() {
-        playTapSound();
-        difficultyMode = !difficultyMode;
-        setDifficultyText();
-    }
-
-    private void setDifficultyText() {
-        String fractional = getString(R.string.fractions);
-        String classic = getString(R.string.classic);
-        difficulty.setText(getString(R.string.difficulty, difficultyMode ? fractional : classic));
-    }
-
     private void fadeTransition() {
         if (fadingOut) {
             if (atSelectionScreen) {
                 fadeIn(timeTrial);
                 fadeIn(freePlay);
-                fadeIn(difficulty);
                 fadeIn(onlinePlay);
             } else {
                 fadeIn(start);
@@ -289,7 +270,6 @@ public class HomeActivity extends BaseActivity {
         if (atSelectionScreen) {
             fadeOut(timeTrial);
             fadeOut(freePlay);
-            fadeOut(difficulty);
             fadeOut(onlinePlay);
             atSelectionScreen = false;
         } else {

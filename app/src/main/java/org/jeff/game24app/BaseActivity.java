@@ -18,11 +18,15 @@ public abstract class BaseActivity extends AppCompatActivity {
     private SoundManager soundManager;
     protected boolean playMusic;
     protected boolean playSound;
-    protected int hiScore;
     protected static final String PREFS = "prefs";
     protected static final String MUSIC_PREF = "music_pref";
     protected static final String SOUND_PREF = "sound_pref";
-    protected static final String SCORE_PREF = "score_pref";
+    protected static final String CLASSIC_SOLVED_PREF = "classic_solved_pref";
+    protected static final String FRAC_SOLVED_PREF = "frac_solved_pref";
+    protected static final String CLASSIC_SCORE_PREF = "classic_score_pref";
+    protected static final String FRAC_SCORE_PREF = "frac_score_pref";
+    protected static final String NUM_WON_PREF = "num_won_pref";
+    protected static final String NUM_PLAYED_PREF = "num_played_pref";
 
     private static String uniqueID;
     private static final String UNIQUE_ID_PREF = "pref_unique_id";
@@ -35,7 +39,6 @@ public abstract class BaseActivity extends AppCompatActivity {
         soundManager = new SoundManager(this);
         playMusic = preferences.getBoolean(MUSIC_PREF, true);
         playSound = preferences.getBoolean(SOUND_PREF, true);
-        hiScore = preferences.getInt(SCORE_PREF, 0);
 
         if (uniqueID == null) {
             uniqueID = preferences.getString(UNIQUE_ID_PREF, null);
@@ -108,6 +111,12 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void playSuccessSound() {
         if (playSound) {
             soundManager.playSound(SoundManager.SUCCESS);
+        }
+    }
+
+    public void playFailSound() {
+        if (playSound) {
+            soundManager.playSound(SoundManager.FAIL);
         }
     }
 

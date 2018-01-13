@@ -26,6 +26,7 @@ public class OnlineActivity extends BaseActivity {
 
     public static final String PUZZLE = "puzzle";
     public static final String ROOM_ID = "room_id";
+    public static final String IS_HOST_KEY = "is_host";
 
     private FirebaseDatabase database;
     private DatabaseReference reference;
@@ -45,7 +46,7 @@ public class OnlineActivity extends BaseActivity {
         database = FirebaseDatabase.getInstance();
         reference = database.getReference().child("online");
 
-        createGame = (Button) findViewById(R.id.create_game);
+        createGame = findViewById(R.id.create_game);
         createGame.setVisibility(View.GONE);
         createGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,7 +55,7 @@ public class OnlineActivity extends BaseActivity {
             }
         });
 
-        joinGame = (Button) findViewById(R.id.join_game);
+        joinGame = findViewById(R.id.join_game);
         joinGame.setVisibility(View.GONE);
         joinGame.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -63,15 +64,15 @@ public class OnlineActivity extends BaseActivity {
             }
         });
 
-        submitRoom = (Button) findViewById(R.id.submit_room);
+        submitRoom = findViewById(R.id.submit_room);
         submitRoom.setVisibility(View.GONE);
         submitRoom.setClickable(false);
 
-        roomNumber = (EditText) findViewById(R.id.room_number);
+        roomNumber = findViewById(R.id.room_number);
         roomNumber.setVisibility(View.GONE);
         roomNumber.setClickable(false);
 
-        roomText = (TextView) findViewById(R.id.room_text);
+        roomText = findViewById(R.id.room_text);
         roomText.setVisibility(View.GONE);
     }
 
@@ -219,7 +220,7 @@ public class OnlineActivity extends BaseActivity {
         }
         intent.putExtra(ROOM_ID, room_id);
         intent.putExtra(HomeActivity.GEN_FRAC, getIntent().getBooleanExtra(HomeActivity.GEN_FRAC, false));
-        intent.putExtra(HomeActivity.IS_HOST, isHost);
+        intent.putExtra(IS_HOST_KEY, isHost);
         startActivity(intent);
     }
 

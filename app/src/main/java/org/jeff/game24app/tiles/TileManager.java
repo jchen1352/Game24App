@@ -144,8 +144,12 @@ public class TileManager {
                             numTile1.setValue(r);
                             numTile0.setExists(false);
                             numExists--;
-                            if (r.equals(Rational.CONST_24) && numExists == 1) {
-                                activity.victory(numTile1);
+                            if (numExists == 1) {
+                                if (r.equals(Rational.CONST_24)) {
+                                    activity.victory(numTile1);
+                                } else {
+                                    activity.fail(numTile1);
+                                }
                             } else {
                                 activity.setIsAnimating(false);
                             }

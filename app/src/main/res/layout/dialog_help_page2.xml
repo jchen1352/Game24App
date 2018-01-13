@@ -1,41 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background_rect">
+    android:background="@color/background_rect"
+    android:orientation="vertical">
 
     <org.jeff.game24app.views.FontTextView
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="10dp"
-        android:text="Statistics"
+        android:text="About"
         style="@style/DialogTitle" />
 
     <TextView
-        android:id="@+id/free_play_stats"
+        android:id="@+id/version"
+        style="@style/DialogTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:text="@string/stats_free_play"
-        style="@style/DialogTextView" />
+        android:paddingRight="10dp"
+        android:text="@string/version" />
 
     <TextView
-        android:id="@+id/timed_play_stats"
+        style="@style/DialogTextView"
+        android:id="@+id/credits"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:text="@string/stats_timed_play"
-        style="@style/DialogTextView" />
+        android:paddingRight="10dp"
+        android:text="@string/credits" />
 
     <TextView
-        android:id="@+id/multiplayer_stats"
+        android:id="@+id/copyright"
+        style="@style/DialogTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
         android:paddingLeft="10dp"
-        android:text="@string/stats_multiplayer"
-        style="@style/DialogTextView" />
+        android:paddingRight="10dp"
+        android:text="@string/copyright" />
 
 </LinearLayout>

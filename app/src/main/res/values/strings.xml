@@ -1,20 +1,24 @@
 <resources>
     <string name="app_name">Game24App</string>
-    <string name="credits">Art from Vecteezy</string>
-    <string name="start">Play!</string>
+    <string name="version">The 24 Game: Version %1$s</string>
+    <string name="copyright">\u00A9 2018 Jeffrey Chen All Rights Reserved</string>
+    <string name="credits">Software: Jeffrey Chen, Blair Chen\nDesign: Jeffrey Chen, Sandra Chen\n\nMusic: "Rainbows" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 3.0 License\nhttp://creativecommons.org/licenses/by/3.0/</string>
     <string name="time_trial">Timed Play</string>
     <string name="free_play">Free Play</string>
     <string name="classic">Classic</string>
     <string name="fractions">Fractions</string>
-    <string name="difficulty">Mode: %1$s</string>
+    <string name="difficulty">Fraction Mode</string>
     <string name="settings_title">Settings</string>
-    <string name="music_credits">Music: "Rainbows" Kevin MacLeod (incompetech.com)\nLicensed under Creative Commons: By Attribution 3.0 License\nhttp://creativecommons.org/licenses/by/3.0/</string>
     <string name="help">The goal of the game is to make 24 using 4 numbers and the 4 arithmetic operations.
         Combine numbers by tapping two numbers and an operation.
         The order you tap the tiles does not matter except for division, where the first number tapped is divided by the second.</string>
+    <string name="stats_free_play"><b>Free Play Stats</b>\nClassic Puzzles Solved: %1$d\nFraction Puzzles Solved: %2$d\n</string>
+    <string name="stats_timed_play"><b>Timed Play Stats</b>\nClassic High Score: %1$d\nFraction High Score: %2$d\n</string>
+    <string name="stats_multiplayer"><b>Multiplayer Stats</b>\nGames Won: %1$d\nGames Completed: %2$d\n</string>
     <string name="score">Score: %1$d</string>
     <string name="num_hints">x%1$d</string>
     <string name="hint_message">Number of hints left: %1$d (max %2$d)</string>
+    <string name="hint_disabled">Ads disabled in timed play.</string>
     <string name="game_over">Time\'s Up!</string>
     <string name="game_over_score">Your Score Was: %1$d</string>
     <string name="game_over_hi_score">Your Highest Score Was: %1$d</string>

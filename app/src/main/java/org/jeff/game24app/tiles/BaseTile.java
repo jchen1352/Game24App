@@ -4,7 +4,6 @@ import android.animation.Animator;
 import android.animation.AnimatorInflater;
 import android.content.Context;
 import android.graphics.Canvas;
-import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
@@ -17,14 +16,12 @@ import org.jeff.game24app.R;
  */
 public abstract class BaseTile extends View {
 
-    private Rect boundingRect;
     private boolean isActive;
     private Animator bobbleAnimator;
     private Drawable tile;
 
     public BaseTile(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        boundingRect = new Rect();
         isActive = false;
         bobbleAnimator = AnimatorInflater.loadAnimator(context, R.animator.bobble);
         bobbleAnimator.setTarget(this);

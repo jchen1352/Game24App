@@ -28,7 +28,8 @@ public abstract class BaseGameActivity extends BaseActivity {
     protected OperationTile[] opTiles;
     private TileManager tileManager;
     private View numTileGroup;
-    private Animator numShrinkAnimator, numGrowAnimator, victoryAnimator, shinyAnimator;
+    private Animator numShrinkAnimator, numGrowAnimator;
+    private Animator victoryAnimator, shinyAnimator, failAnimator;
     private ImageView shiny;
     private boolean isAnimating;
     protected Game24Generator generator;
@@ -40,15 +41,15 @@ public abstract class BaseGameActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-        NumberTile tile0 = (NumberTile) findViewById(R.id.tile0);
-        NumberTile tile1 = (NumberTile) findViewById(R.id.tile1);
-        NumberTile tile2 = (NumberTile) findViewById(R.id.tile2);
-        NumberTile tile3 = (NumberTile) findViewById(R.id.tile3);
+        NumberTile tile0 = findViewById(R.id.tile0);
+        NumberTile tile1 = findViewById(R.id.tile1);
+        NumberTile tile2 = findViewById(R.id.tile2);
+        NumberTile tile3 = findViewById(R.id.tile3);
         numTiles = new NumberTile[]{tile0, tile1, tile2, tile3};
-        OperationTile tileAdd = (OperationTile) findViewById(R.id.tile_add);
-        OperationTile tileSub = (OperationTile) findViewById(R.id.tile_subtract);
-        OperationTile tileMul = (OperationTile) findViewById(R.id.tile_multiply);
-        OperationTile tileDiv = (OperationTile) findViewById(R.id.tile_divide);
+        OperationTile tileAdd = findViewById(R.id.tile_add);
+        OperationTile tileSub = findViewById(R.id.tile_subtract);
+        OperationTile tileMul = findViewById(R.id.tile_multiply);
+        OperationTile tileDiv = findViewById(R.id.tile_divide);
         opTiles = new OperationTile[]{tileAdd, tileSub, tileMul, tileDiv};
 
         tileManager = new TileManager(this);
@@ -92,7 +93,7 @@ public abstract class BaseGameActivity extends BaseActivity {
         });
         numGrowAnimator.setTarget(numTileGroup);
 
-        ImageButton restartButton = (ImageButton) findViewById(R.id.restart_button);
+        ImageButton restartButton = findViewById(R.id.restart_button);
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +103,7 @@ public abstract class BaseGameActivity extends BaseActivity {
             }
         });
 
-        shiny = (ImageView) findViewById(R.id.shiny);
+        shiny = findViewById(R.id.shiny);
         shinyAnimator = AnimatorInflater.loadAnimator(this, R.animator.shiny);
         shinyAnimator.setTarget(shiny);
         victoryAnimator = AnimatorInflater.loadAnimator(this, R.animator.victory);
@@ -112,6 +113,15 @@ public abstract class BaseGameActivity extends BaseActivity {
                 super.onAnimationEnd(animation);
                 shiny.setVisibility(View.GONE);
                 startNewPuzzle();
+            }
+        });
+
+        failAnimator = AnimatorInflater.loadAnimator(this, R.animator.fail);
+        failAnimator.addListener(new AnimatorListenerAdapter() {
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                super.onAnimationEnd(animation);
+                isAnimating = false;
             }
         });
 
@@ -197,6 +207,18 @@ public abstract class BaseGameActivity extends BaseActivity {
         shinyAnimator.start();
         victoryAnimator.setTarget(tile);
         victoryAnimator.start();
+    }
+
+    /**
+     * Displays animation when puzzle failed (1 tile left not 24)
+     *
+     * @param tile the tile to animate around
+     */
+    public void fail(NumberTile tile) {
+        isAnimating = true;
+        playFailSound();
+        failAnimator.setTarget(tile);
+        failAnimator.start();
     }
 
     public boolean isAnimating() {

@@ -33,14 +33,14 @@ public class HintManager {
     private Animator blinkAnimator;
 
     public HintManager(BaseGameActivity a) {
-        numDummy = (NumberTile) a.findViewById(R.id.num_dummy);
+        numDummy = a.findViewById(R.id.num_dummy);
         numDummy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 update();
             }
         });
-        opDummy = (OperationTile) a.findViewById(R.id.op_dummy);
+        opDummy = a.findViewById(R.id.op_dummy);
         opDummy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

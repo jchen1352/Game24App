@@ -16,6 +16,7 @@ import org.jeff.game24app.BaseApplication;
 import org.jeff.game24app.R;
 import org.jeff.game24app.solver.Game24Generator;
 import org.jeff.game24app.solver.Rational;
+import org.jeff.game24app.tiles.NumberTile;
 
 /**
  * The concrete activity that handles free play mode.
@@ -34,6 +35,8 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
      */
     private static final String FRAC_PREF = "puzzle_frac_pref";
 
+    private int numSolved;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,18 +44,18 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
         findViewById(R.id.score).setVisibility(View.GONE);
         findViewById(R.id.time).setVisibility(View.GONE);
 
-        //Get saved puzzle if one exists
         SharedPreferences preferences = getSharedPreferences(PREFS, 0);
-        int puzzleEncoded = preferences.getInt(fracMode ? FRAC_PREF : CLASSIC_PREF, 0);
-        if (puzzleEncoded != 0) {
-            nextPuzzle = Game24Generator.reverseHash(puzzleEncoded);
-        } else {
-            nextPuzzle = getNewPuzzle();
-        }
+        numSolved = preferences.getInt(fracMode ? FRAC_SOLVED_PREF : CLASSIC_SOLVED_PREF, 0);
 
         ad = MobileAds.getRewardedVideoAdInstance(this);
         ad.setRewardedVideoAdListener(this);
         loadRewardedVideoAd();
+    }
+
+    @Override
+    public void victory(NumberTile tile) {
+        super.victory(tile);
+        numSolved++;
     }
 
     @Override
@@ -62,6 +65,7 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
         SharedPreferences preferences = getSharedPreferences(PREFS, 0);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putInt(fracMode ? FRAC_PREF : CLASSIC_PREF, puzzleEncoded);
+        editor.putInt(fracMode ? FRAC_SOLVED_PREF : CLASSIC_SOLVED_PREF, numSolved);
         editor.apply();
     }
 

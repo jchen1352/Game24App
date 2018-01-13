@@ -8,7 +8,6 @@ import java.util.List;
 public class Game24Generator {
 
     private boolean validPuzzle;
-    private Rational[] puzzle;
     private boolean fractional;
 
     /**
@@ -49,7 +48,6 @@ public class Game24Generator {
             }
             validPuzzle = Game24Solver.isSolvable(puzzle);
         }
-        this.puzzle = puzzle;
         return puzzle;
     }
 
@@ -70,7 +68,6 @@ public class Game24Generator {
             }
             validPuzzle = Game24Solver.isSolvable(puzzle);
         }
-        this.puzzle = puzzle;
         return puzzle;
     }
 
@@ -108,15 +105,6 @@ public class Game24Generator {
             int denominator = hash >> (24 - (i * 8)) & 0xF;
             puzzle[i] = new Rational(numerator, denominator);
         }
-        return puzzle;
-    }
-
-    /**
-     * Returns the current puzzle.
-     *
-     * @return the puzzle
-     */
-    public Rational[] restartPuzzle() {
         return puzzle;
     }
 

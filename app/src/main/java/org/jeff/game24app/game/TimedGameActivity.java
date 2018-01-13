@@ -25,7 +25,8 @@ public class TimedGameActivity extends HintGameActivity {
 
     private TextView timeView, scoreView, finalScoreView, finalHiScoreView;
     private int score;
-    private static final long TIME_LIMIT = 1000 * 30 * 1; // 5 minutes, shorter when testing
+    private int hiScore;
+    private static final long TIME_LIMIT = 1000 * 60 * 5; // 5 minutes, shorter when testing
     private static final SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
     private CountDownTimer timer;
     private AlertDialog gameOverDialog;
@@ -34,8 +35,15 @@ public class TimedGameActivity extends HintGameActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        scoreView = (TextView) findViewById(R.id.score);
-        timeView = (TextView) findViewById(R.id.time);
+        //Disable watching ads
+        moreHintsButton.setText(R.string.hint_disabled);
+        moreHintsButton.setEnabled(false);
+        moreHintsButton = null; //To prevent reenabling
+
+        hiScore = getSharedPreferences(PREFS, 0).getInt(fracMode ? FRAC_SCORE_PREF : CLASSIC_SCORE_PREF, 0);
+
+        scoreView = findViewById(R.id.score);
+        timeView = findViewById(R.id.time);
 
         timer = new CountDownTimer(TIME_LIMIT, 1000) {
             @Override
@@ -54,7 +62,7 @@ public class TimedGameActivity extends HintGameActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
         View layout = inflater.inflate(R.layout.dialog_gameover, null);
-        Button replayButton = (Button) layout.findViewById(R.id.restart_button);
+        Button replayButton = layout.findViewById(R.id.restart_button);
         replayButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,7 +74,7 @@ public class TimedGameActivity extends HintGameActivity {
                 gameOverDialog.dismiss();
             }
         });
-        Button returnButton = (Button) layout.findViewById(R.id.return_button);
+        Button returnButton = layout.findViewById(R.id.return_button);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -75,8 +83,8 @@ public class TimedGameActivity extends HintGameActivity {
                 finish();
             }
         });
-        finalScoreView = (TextView) layout.findViewById(R.id.score);
-        finalHiScoreView = (TextView) layout.findViewById(R.id.hi_score);
+        finalScoreView = layout.findViewById(R.id.score);
+        finalHiScoreView = layout.findViewById(R.id.hi_score);
 
         builder.setView(layout);
         builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
@@ -113,7 +121,7 @@ public class TimedGameActivity extends HintGameActivity {
             finalHiScoreView.setText(getString(R.string.new_hi_score));
             SharedPreferences preferences = getSharedPreferences(PREFS, 0);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putInt(SCORE_PREF, hiScore);
+            editor.putInt(fracMode ? FRAC_SCORE_PREF : CLASSIC_SCORE_PREF, hiScore);
             editor.apply();
         } else {
             finalHiScoreView.setText(getString(R.string.game_over_hi_score, hiScore));
@@ -129,9 +137,7 @@ public class TimedGameActivity extends HintGameActivity {
 
     @Override
     protected void onHintClicked() {
-        if (numHints > 0) {
-            showHint();
-        }
+        showHintDialog();
     }
 
     /**
@@ -140,15 +146,5 @@ public class TimedGameActivity extends HintGameActivity {
     @Override
     protected void onMoreHintsClicked() {
 
-    }
-
-    @Override
-    protected void onNumHintsChanged() {
-        super.onNumHintsChanged();
-        if (numHints <= 0) {
-            hintButton.setEnabled(false);
-        } else {
-            hintButton.setEnabled(true);
-        }
     }
 }

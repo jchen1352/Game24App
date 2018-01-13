@@ -2,6 +2,7 @@ package org.jeff.game24app.game;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import com.google.firebase.database.MutableData;
 import com.google.firebase.database.Transaction;
 import com.google.firebase.database.ValueEventListener;
 
-import org.jeff.game24app.HomeActivity;
 import org.jeff.game24app.OnlineActivity;
 import org.jeff.game24app.R;
 import org.jeff.game24app.solver.Game24Generator;
@@ -52,7 +52,7 @@ public class OnlineGameActivity extends BaseGameActivity {
 
     private int score;
     private TextView scoreView;
-    private static final int MAX_SCORE = 2;
+    private static final int MAX_SCORE = 5;
     private AlertDialog gameOverDialog;
     private TextView gameOverTitle, gameOverMessage;
     private Button restartButton;
@@ -65,17 +65,17 @@ public class OnlineGameActivity extends BaseGameActivity {
         findViewById(R.id.hint_button).setVisibility(View.GONE);
         findViewById(R.id.num_hints).setVisibility(View.GONE);
 
-        scoreView = (TextView) findViewById(R.id.score);
+        scoreView = findViewById(R.id.score);
         score = 0;
         scoreView.setText(getString(R.string.score, score));
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         //Reuse layout from TimedGameActivity
         View layout = getLayoutInflater().inflate(R.layout.dialog_gameover, null);
-        gameOverTitle = (TextView) layout.findViewById(R.id.title);
+        gameOverTitle = layout.findViewById(R.id.title);
         gameOverMessage = layout.findViewById(R.id.score);
         layout.findViewById(R.id.hi_score).setVisibility(View.GONE);
-        restartButton = (Button) layout.findViewById(R.id.restart_button);
+        restartButton = layout.findViewById(R.id.restart_button);
         restartButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -94,7 +94,7 @@ public class OnlineGameActivity extends BaseGameActivity {
                 v.setEnabled(false);
             }
         });
-        Button returnButton = (Button) layout.findViewById(R.id.return_button);
+        Button returnButton = layout.findViewById(R.id.return_button);
         returnButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -197,7 +197,7 @@ public class OnlineGameActivity extends BaseGameActivity {
     @Override
     public Rational[] getInitialPuzzle() {
         Intent intent = getIntent();
-        isHost = intent.getBooleanExtra(HomeActivity.IS_HOST, false);
+        isHost = intent.getBooleanExtra(OnlineActivity.IS_HOST_KEY, false);
         if (isHost) {
             return generator.generatePuzzle();
         }
@@ -292,6 +292,14 @@ public class OnlineGameActivity extends BaseGameActivity {
         gameOverMessage.setVisibility(View.GONE);
         restartButton.setEnabled(true);
         gameOverDialog.show();
+
+        SharedPreferences preferences = getSharedPreferences(PREFS, 0);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(NUM_PLAYED_PREF, preferences.getInt(NUM_PLAYED_PREF, 0) + 1);
+        if (win) {
+            editor.putInt(NUM_WON_PREF, preferences.getInt(NUM_WON_PREF, 0) + 1);
+        }
+        editor.apply();
     }
 
     private void waitForRestart() {
