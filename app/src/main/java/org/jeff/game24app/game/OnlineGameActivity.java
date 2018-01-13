@@ -114,7 +114,7 @@ public class OnlineGameActivity extends BaseGameActivity {
         gameOverDialog.setCanceledOnTouchOutside(false);
 
         Intent intent = getIntent();
-        Log.d("OnlineGame", isHost ? "isHost" : "not isHost");
+
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("online");
         String room_id = Integer.toString(intent.getIntExtra(OnlineActivity.ROOM_ID, -1));
@@ -233,15 +233,15 @@ public class OnlineGameActivity extends BaseGameActivity {
                 }
                 String id = dataSnapshot.getValue(String.class);
                 if (id == null) {
-                    Log.d("OnlineGameActivity", "Winner updated to null");
+
                     return;
                 }
                 if (id.equals(uniqueID)) {
-                    Log.d("OnlineGameActivity", "Winner updated to this");
+
                     incrementScore();
                     return;
                 }
-                Log.d("OnlineGameActivity", "Winner updated to other");
+
             }
         });
 
@@ -308,17 +308,17 @@ public class OnlineGameActivity extends BaseGameActivity {
             public Transaction.Result doTransaction(MutableData mutableData) {
                 if (mutableData.getValue() == null) {
                     mutableData.setValue((long) RESTART_WAIT);
-                    Log.d("waitForRestart", "was null");
+
                     return Transaction.success(mutableData);
                 }
                 int value = ((Long) mutableData.getValue()).intValue();
                 if (value == RESTART_WAIT) {
                     mutableData.setValue((long) RESTART_FINISH);
-                    Log.d("waitForRestart", "was RESTART_WAIT");
+
                     return Transaction.success(mutableData);
                 }
                 mutableData.setValue((long) RESTART_WAIT);
-                Log.d("waitForRestart", "was other");
+
                 return Transaction.success(mutableData);
             }
 
@@ -328,21 +328,21 @@ public class OnlineGameActivity extends BaseGameActivity {
                     Log.w("restart", databaseError.toException());
                 }
                 if (dataSnapshot.getValue() == null) {
-                    Log.d("restart complete", "was null");
+
                     return;
                 }
                 int value = ((Long) dataSnapshot.getValue()).intValue();
                 if (value == RESTART_WAIT) {
-                    Log.d("restart complete", "was RESTART_WAIT");
+
                     isHost = true;
                 }
                 if (value == RESTART_FINISH) {
-                    Log.d("restart complete", "was RESTART_FINISH");
+
                     restartReady = false;
                     isHost = false;
                     restartGame();
                 }
-                Log.d("restart complete", "was other");
+
             }
         });
     }
@@ -360,7 +360,7 @@ public class OnlineGameActivity extends BaseGameActivity {
                     if (databaseError != null) {
                         Log.w("restart", databaseError.toException());
                     } else {
-                        Log.d("restart", "starting new game");
+
                         startNewPuzzle();
                     }
                 }

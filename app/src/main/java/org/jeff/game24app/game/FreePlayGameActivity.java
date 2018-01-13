@@ -3,7 +3,6 @@ package org.jeff.game24app.game;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.ads.AdRequest;
@@ -25,6 +24,7 @@ import org.jeff.game24app.tiles.NumberTile;
 public class FreePlayGameActivity extends HintGameActivity implements RewardedVideoAdListener {
 
     private RewardedVideoAd ad;
+    private boolean adShowing;
 
     /**
      * Shared preference key for saved classic puzzle
@@ -50,6 +50,7 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
         ad = MobileAds.getRewardedVideoAdInstance(this);
         ad.setRewardedVideoAdListener(this);
         loadRewardedVideoAd();
+        adShowing = false;
     }
 
     @Override
@@ -86,7 +87,7 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
 
     @Override
     protected void onHintClicked() {
-        Log.d("FreePlayGameActivity", "hintClicked");
+
         showHintDialog();
     }
 
@@ -124,41 +125,51 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
 
     @Override
     public void onRewardedVideoAdLoaded() {
-        Log.d("GameActivity", "ad loaded");
+
     }
 
     @Override
     public void onRewardedVideoAdOpened() {
-        Log.d("GameActivity", "ad opened");
+        stopService(musicIntent);
+        adShowing = true;
     }
 
     @Override
     public void onRewardedVideoStarted() {
-        Log.d("GameActivity", "ad started");
+
     }
 
     @Override
     public void onRewardedVideoAdClosed() {
-        Log.d("GameActivity", "ad closed");
+        if (playMusic) {
+            startService(musicIntent);
+        }
         //preload next ad
         loadRewardedVideoAd();
+        adShowing = false;
     }
 
     @Override
     public void onRewarded(RewardItem rewardItem) {
         numHints++;
         onNumHintsChanged();
-        Log.d("GameActivity", "ad rewarded");
         loadRewardedVideoAd();
     }
 
     @Override
     public void onRewardedVideoAdLeftApplication() {
-        Log.d("GameActivity", "ad left app");
+
     }
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
-        Log.d("GameActivity", "ad failed to load");
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    protected void onEnterForeground() {
+        if (playMusic && !adShowing) {
+            startService(musicIntent);
+        }
     }
 }
