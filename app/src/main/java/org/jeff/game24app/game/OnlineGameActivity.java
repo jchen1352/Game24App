@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -37,10 +38,10 @@ public class OnlineGameActivity extends BaseGameActivity {
 
     private boolean isHost;
     private static String uniqueID = getUniqueID();
-    private DatabaseReference winnerReference, puzzleReference, readyReference;
+    private DatabaseReference winnerReference, puzzleReference, readyReference, gameReference;
     private boolean restartReady;
 
-    @IntDef({READY, GAME_OVER, RESTART_WAIT, RESTART_FINISH})
+    @IntDef({READY, GAME_OVER, RESTART_WAIT, RESTART_FINISH, INIT})
     @Retention(RetentionPolicy.SOURCE)
     private @interface State {
     }
@@ -49,6 +50,7 @@ public class OnlineGameActivity extends BaseGameActivity {
     public static final int GAME_OVER = 1;
     public static final int RESTART_WAIT = 2;
     public static final int RESTART_FINISH = 3;
+    public static final int INIT = 4;
 
     private int score;
     private TextView scoreView;
@@ -118,6 +120,7 @@ public class OnlineGameActivity extends BaseGameActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference reference = database.getReference().child("online");
         String room_id = Integer.toString(intent.getIntExtra(OnlineActivity.ROOM_ID, -1));
+        gameReference = reference.child(room_id);
         puzzleReference = reference.child(room_id).child("puzzle");
         puzzleReference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -156,6 +159,7 @@ public class OnlineGameActivity extends BaseGameActivity {
         });
 
         readyReference = reference.child(room_id).child("ready");
+        readyReference.setValue(INIT);
         readyReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -192,6 +196,29 @@ public class OnlineGameActivity extends BaseGameActivity {
             //nextPuzzle initialized in getInitialPuzzle
             puzzleReference.setValue((long) Game24Generator.hashToInt(nextPuzzle));
         }
+
+        ValueEventListener gameListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() == null) {
+                    Toast.makeText(OnlineGameActivity.this,
+                            "Opponent has left!", Toast.LENGTH_SHORT).show();
+                    OnlineGameActivity.this.finish();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("dbError: Room_ID", databaseError.toException());
+            }
+        };
+        gameReference.addValueEventListener(gameListener);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        gameReference.setValue(null);
     }
 
     @Override
