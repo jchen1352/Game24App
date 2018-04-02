@@ -24,7 +24,7 @@ public class TileManager {
 
     //Refers to sliding animation when completing operation
     private ViewPropertyAnimator animator;
-    private static final long ANIM_DURATION = 300;
+    private static final long ANIM_DURATION = 220;
 
     public TileManager(BaseGameActivity a) {
         numsSelectedLen = 0;

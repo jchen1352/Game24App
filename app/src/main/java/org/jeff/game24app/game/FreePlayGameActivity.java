@@ -95,6 +95,9 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
     protected void onMoreHintsClicked() {
         if (ad.isLoaded()) {
             ad.show();
+        } else {
+            //Sometimes ad isn't loaded, can't pinpoint reason
+            loadRewardedVideoAd();
         }
     }
 
@@ -163,6 +166,11 @@ public class FreePlayGameActivity extends HintGameActivity implements RewardedVi
 
     @Override
     public void onRewardedVideoAdFailedToLoad(int i) {
+        loadRewardedVideoAd();
+    }
+
+    @Override
+    public void onRewardedVideoCompleted() {
         loadRewardedVideoAd();
     }
 
